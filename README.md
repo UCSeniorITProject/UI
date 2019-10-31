@@ -1,2 +1,0 @@
-# UI
-UI for SafeMeds
