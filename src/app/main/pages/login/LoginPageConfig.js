@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Login2PageConfig = {
+export const LoginConfig = {
     settings: {
         layout: {
             config: {}
@@ -9,7 +9,7 @@ export const Login2PageConfig = {
     routes  : [
         {
             path     : '/',
-            component: React.lazy(() => import('./Login2Page'))
+            component: React.lazy(() => import('./LoginPage'))
         }
     ]
 };

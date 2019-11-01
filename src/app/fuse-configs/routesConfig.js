@@ -1,10 +1,10 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
 import {FuseUtils} from '@fuse';
-import {ExampleConfig} from 'app/main/example/ExampleConfig';
+import {LoginConfig} from '../main/pages/login/LoginPageConfig';
 
 const routeConfigs = [
-    ExampleConfig
+		LoginConfig,
 ];
 
 const routes = [
