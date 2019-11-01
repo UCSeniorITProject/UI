@@ -19,7 +19,7 @@ function Login2Page()
     const classes = useStyles();
 
     const {form, handleChange, resetForm} = useForm({
-        email   : '',
+        username   : '',
         password: '',
         remember: true
     });
@@ -27,7 +27,7 @@ function Login2Page()
     function isFormValid()
     {
         return (
-            form.email.length > 0 &&
+            form.username.length > 0 &&
             form.password.length > 0
         );
     }
@@ -77,10 +77,10 @@ function Login2Page()
 
                             <TextField
                                 className="mb-16"
-                                label="Email"
+                                label="Username"
                                 autoFocus
-                                type="email"
-                                name="email"
+                                type="text"
+                                name="username"
                                 value={form.email}
                                 onChange={handleChange}
                                 variant="outlined"
