@@ -49,14 +49,13 @@ function Login2Page()
 
                 <FuseAnimate animation="transition.slideUpIn" delay={300}>
                     <Typography variant="h3" color="inherit" className="font-light">
-                        Welcome to the FUSE!
+                        SafeMeds
                     </Typography>
                 </FuseAnimate>
 
                 <FuseAnimate delay={400}>
                     <Typography variant="subtitle1" color="inherit" className="max-w-512 mt-16">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ullamcorper nisl erat, vel convallis elit fermentum pellentesque. Sed mollis velit
-                        facilisis facilisis.
+												Keeping the world safer through healthcare analytics.
                     </Typography>
                 </FuseAnimate>
             </div>
@@ -131,22 +130,6 @@ function Login2Page()
                             </Button>
 
                         </form>
-
-                        <div className="my-24 flex items-center justify-center">
-                            <Divider className="w-32"/>
-                            <span className="mx-8 font-bold">OR</span>
-                            <Divider className="w-32"/>
-                        </div>
-
-                        <Button variant="contained" color="secondary" size="small"
-                                className="normal-case w-192 mb-8">
-                            Log in with Google
-                        </Button>
-
-                        <Button variant="contained" color="primary" size="small"
-                                className="normal-case w-192">
-                            Log in with Facebook
-                        </Button>
 
                         <div className="flex flex-col items-center justify-center pt-32 pb-24">
                             <span className="font-medium">Don't have an account?</span>

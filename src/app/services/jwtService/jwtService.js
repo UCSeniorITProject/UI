@@ -119,18 +119,32 @@ class jwtService extends FuseUtils.EventEmitter {
         });
     };
 
-    setSession = access_token => {
-        if ( access_token )
+    setSession = (accessToken, refreshToken) => {
+				if(refreshToken) {
+					localStorage.setItem('refreshToken', refreshToken);
+				} else {
+					localStorage.removeItem('refreshToken');
+				}
+        if ( accessToken )
         {
-            localStorage.setItem('jwt_access_token', access_token);
-            axios.defaults.headers.common['Authorization'] = 'Bearer ' + access_token;
+            localStorage.setItem('authToken', accessToken);
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + accessToken;
         }
         else
         {
-            localStorage.removeItem('jwt_access_token');
+            localStorage.removeItem('authToken');
             delete axios.defaults.headers.common['Authorization'];
         }
-    };
+		};
+		
+		refreshAccessToken = async (refreshToken) => {
+			if(!refreshToken){
+				this.setSession(null, null);
+				this.emit('onAutoLogout');
+			}
+
+			
+		};
 
     logout = () => {
         this.setSession(null);
@@ -155,7 +169,7 @@ class jwtService extends FuseUtils.EventEmitter {
     };
 
     getAccessToken = () => {
-        return window.localStorage.getItem('jwt_access_token');
+        return window.localStorage.getItem('authToken');
     };
 }
 

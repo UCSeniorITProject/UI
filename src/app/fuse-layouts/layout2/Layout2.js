@@ -10,7 +10,7 @@ import ToolbarLayout2 from './components/ToolbarLayout2';
 import NavbarWrapperLayout2 from './components/NavbarWrapperLayout2';
 import FooterLayout2 from './components/FooterLayout2';
 import RightSideLayout2 from './components/RightSideLayout2';
-import SettingsPanel from 'app/fuse-layouts/shared-components/SettingsPanel';
+
 
 const useStyles = makeStyles(theme => ({
     root          : {
@@ -115,7 +115,7 @@ function Layout2(props)
                             <FooterLayout2/>
                         )}
 
-                        <SettingsPanel/>
+
 
                     </div>
 
