@@ -1,13 +1,13 @@
 import firebaseService from 'app/services/firebaseService';
-import jwtService from 'app/services/jwtService';
+import jwtService from '../../../services/jwtService';
 import {setUserData} from './user.actions';
 import * as Actions from 'app/store/actions';
 
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 
-export function submitLogin({email, password})
-{
+export function submitLogin(email, password)
+{   
     return (dispatch) =>
         jwtService.signInWithEmailAndPassword(email, password)
             .then((user) => {

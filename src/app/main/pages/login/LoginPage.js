@@ -6,6 +6,8 @@ import {FuseAnimate} from '@fuse';
 import {useForm} from '@fuse/hooks';
 import {Link} from 'react-router-dom';
 import clsx from 'clsx';
+import {submitLogin} from '../../../auth/store/actions/login.actions';
+import {useDispatch} from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -14,14 +16,15 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function Login2Page()
+function LoginPage()
 {
-    const classes = useStyles();
 
+    const classes = useStyles();
+    const dispatch = useDispatch();
     const {form, handleChange, resetForm} = useForm({
         username   : '',
-        password: '',
-        remember: true
+        password   : '',
+        remember   : true
     });
 
     function isFormValid()
@@ -33,9 +36,10 @@ function Login2Page()
     }
 
     function handleSubmit(ev)
-    {
-        ev.preventDefault();
-        resetForm();
+    {   
+        console.log(process.env)
+        const {username, password} = form;
+        submitLogin(username, password)(dispatch);
     }
 
     return (
@@ -125,6 +129,7 @@ function Login2Page()
                                 className="w-full mx-auto mt-16"
                                 aria-label="LOG IN"
                                 disabled={!isFormValid()}
+                                onClick={handleSubmit}
                             >
                                 LOGIN
                             </Button>
@@ -143,4 +148,4 @@ function Login2Page()
     );
 }
 
-export default Login2Page;
+export default LoginPage;
