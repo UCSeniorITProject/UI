@@ -26,7 +26,14 @@ import ImageUpload from "components/CustomUpload/ImageUpload.jsx";
 class Register extends React.Component {
   componentDidMount() {
     this.state = {
-
+      username: '',
+      password: '',
+      phoneNumber: '',
+      profilePicture: '',
+      email: '',
+      firstName: '',
+      lastName: '',
+      tos: false,
     };
     document.body.classList.toggle("register-page");
   }
@@ -35,8 +42,13 @@ class Register extends React.Component {
   }
 
   handleChange(e){
+    console.log({ [e.target.name]: e.target.value})
 		this.setState({ [e.target.name]: e.target.value});
-	}
+  }
+
+  handleImageChange(imageUrl){
+    this.setState({profilePicture: imageUrl});
+  }
 
   render() {
     return (
@@ -93,19 +105,19 @@ class Register extends React.Component {
                     <Col sm="9" md={{ size: 6, offset: 4 }}>
                       <ImageUpload
                         avatar
+                        onChange={this.handleImageChange.bind(this)}
                         addBtnColor="default"
                         changeBtnColor="default"
                         className="pull-right"
                       />
                     </Col>
-
-                      <InputGroup>
+                    <InputGroup>
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
                             <i className="tim-icons icon-single-02" />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="First Name" type="text" />
+                        <Input placeholder="Username" name="username" type="text" onChange={this.handleChange.bind(this)}/>
                       </InputGroup>
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
@@ -113,7 +125,7 @@ class Register extends React.Component {
                             <i className="tim-icons icon-single-02" />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Username" type="text"/>
+                        <Input placeholder="First Name" name="firstName" type="text" onChange={this.handleChange.bind(this)}/>
                       </InputGroup>
                       <InputGroup>
                       <InputGroup>
@@ -122,7 +134,7 @@ class Register extends React.Component {
                             <i className="tim-icons icon-single-02" />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Last name" type="text" />
+                        <Input placeholder="Last name" name="lastName" type="text" onChange={this.handleChange.bind(this)}/>
                       </InputGroup>
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
@@ -130,7 +142,7 @@ class Register extends React.Component {
                             <i className="tim-icons icon-email-85" />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Email" type="text" />
+                        <Input placeholder="Email" name="email" type="text" onChange={this.handleChange.bind(this)}/>
                       </InputGroup>
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
@@ -138,18 +150,18 @@ class Register extends React.Component {
                             <i className="tim-icons icon-lock-circle" />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Password" type="password" />
+                        <Input placeholder="Password" name="password" type="password" onChange={this.handleChange.bind(this)}/>
                       </InputGroup>
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
                             <i className="tim-icons icon-chat-33" />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Phone Number" type="tel"/>
+                        <Input placeholder="Phone Number" name="phoneNumber" type="tel" onChange={this.handleChange.bind(this)}/>
                       </InputGroup>
                       <FormGroup check className="text-left">
                         <Label check>
-                          <Input type="checkbox" />
+                          <Input type="checkbox" name="tos" onChange={this.handleChange.bind(this)}/>
                           <span className="form-check-sign" />I agree to the{" "}
                             terms and conditions.
                         </Label>
