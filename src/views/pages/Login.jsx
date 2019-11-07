@@ -44,7 +44,7 @@ class Login extends React.Component {
 
       localStorage.setItem("accessToken", tokens.data.accessToken);
       localStorage.setItem("refreshToken", tokens.data.refreshToken);
-      this.props.history.push('/admin/dashboard');
+      this.props.history.push('/admin/user-profile');
     } catch (err) {
 
       var options = {};
