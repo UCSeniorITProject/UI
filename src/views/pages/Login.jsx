@@ -14,6 +14,8 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
+import { withRouter } from 'react-router';
+import NotificationAlert from "react-notification-alert";
 import React from "react";
 import Axios from "axios";
 // reactstrap components
@@ -48,17 +50,41 @@ class Login extends React.Component {
 		this.setState({ [e.target.name]: e.target.value});
 	}
   async handleSubmit(){
-    console.log(this.state)
-    const tokens = await Axios.post(`${process.env.REACT_APP_API_URL}/api/security-management/login`, {
-      authDetails: {
-        ...this.state
-      }
-    });
-    console.log(tokens)
+    try{
+      const tokens = await Axios.post(`${process.env.REACT_APP_API_URL}/api/security-management/login`, {
+        authDetails: {
+          ...this.state
+        }
+      });
+
+      localStorage.setItem("accessToken", tokens.data.accessToken);
+      localStorage.setItem("refreshToken", tokens.data.refreshToken);
+      this.props.history.push('/admin/dashboard');
+    } catch (err) {
+
+      var options = {};
+      options = {
+        place: 'tr',
+        message: (
+          <div>
+            <div>
+              Invalid username or password,
+            </div>
+          </div>
+        ),
+        type: 'danger',
+        icon: "tim-icons icon-bell-55",
+        autoDismiss: 7
+      };
+      this.refs.notificationAlert.notificationAlert(options);
+    }
   }
   render() {
     return (
       <>
+        <div className="rna-container">
+          <NotificationAlert ref="notificationAlert" />
+        </div>
         <div className="content">
           <Container>
             <Col className="ml-auto mr-auto" lg="4" md="6">
@@ -86,7 +112,7 @@ class Login extends React.Component {
                           <i className="tim-icons icon-lock-circle" />
                         </InputGroupText>
                       </InputGroupAddon>
-                      <Input placeholder="Password" name="password" type="text" onChange={this.handleChange.bind(this)}/>
+                      <Input placeholder="Password" name="password" type="password" onChange={this.handleChange.bind(this)}/>
                     </InputGroup>
                   </CardBody>
                   <CardFooter>
@@ -133,4 +159,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+export default withRouter(Login);
