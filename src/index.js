@@ -1,24 +1,43 @@
-// By default, this project supports all modern browsers.
-// Support for Internet Explorer 11 requires polyfills.
-// For to support Internet Explorer 11, install react-app-polyfill,
-// https://github.com/facebook/create-react-app/tree/master/packages/react-app-polyfill
-// import 'react-app-polyfill/ie11';
-// import 'react-app-polyfill/stable';
-import 'typeface-muli';
-import './react-table-defaults';
-import './react-chartjs-2-defaults';
-import './styles/index.css';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import * as serviceWorker from './serviceWorker';
-import App from 'app/App';
+/*!
+
+=========================================================
+* Black Dashboard PRO React - v1.0.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/black-dashboard-pro-react
+* Copyright 2019 Creative Tim (https://www.creative-tim.com)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+*/
+import React from "react";
+import ReactDOM from "react-dom";
+import { createBrowserHistory } from "history";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
+
+import AuthLayout from "layouts/Auth/Auth.jsx";
+import AdminLayout from "layouts/Admin/Admin.jsx";
+import RTLLayout from "layouts/RTL/RTL.jsx";
+
+import "assets/css/nucleo-icons.css";
+import "assets/scss/black-dashboard-pro-react.scss?v=1.0.0";
+import "assets/demo/demo.css";
+import "react-notification-alert/dist/animate.css";
+
+const hist = createBrowserHistory();
 
 ReactDOM.render(
-    <App/>,
-    document.getElementById('root')
+  <Router history={hist}>
+    <Switch>
+      <Route path="/auth" render={props => <AuthLayout {...props} />} />
+      <Route path="/admin" render={props => <AdminLayout {...props} />} />
+      <Route path="/rtl" render={props => <RTLLayout {...props} />} />
+      <Redirect from="/" to="/auth/login" />
+    </Switch>
+  </Router>,
+  document.getElementById("root")
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
