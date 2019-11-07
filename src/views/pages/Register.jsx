@@ -25,11 +25,19 @@ import ImageUpload from "components/CustomUpload/ImageUpload.jsx";
 
 class Register extends React.Component {
   componentDidMount() {
+    this.state = {
+
+    };
     document.body.classList.toggle("register-page");
   }
   componentWillUnmount() {
     document.body.classList.toggle("register-page");
   }
+
+  handleChange(e){
+		this.setState({ [e.target.name]: e.target.value});
+	}
+
   render() {
     return (
       <>
