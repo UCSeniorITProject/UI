@@ -21,6 +21,7 @@ import {
   Row,
   Col
 } from "reactstrap";
+import ImageUpload from "components/CustomUpload/ImageUpload.jsx";
 
 class Register extends React.Component {
   componentDidMount() {
@@ -81,6 +82,15 @@ class Register extends React.Component {
                   </CardHeader>
                   <CardBody>
                     <Form className="form">
+                    <Col sm="9" md={{ size: 6, offset: 4 }}>
+                      <ImageUpload
+                        avatar
+                        addBtnColor="default"
+                        changeBtnColor="default"
+                        className="pull-right"
+                      />
+                    </Col>
+
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
@@ -89,6 +99,15 @@ class Register extends React.Component {
                         </InputGroupAddon>
                         <Input placeholder="First Name" type="text" />
                       </InputGroup>
+                      <InputGroup>
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText>
+                            <i className="tim-icons icon-single-02" />
+                          </InputGroupText>
+                        </InputGroupAddon>
+                        <Input placeholder="Username" type="text"/>
+                      </InputGroup>
+                      <InputGroup>
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
@@ -112,6 +131,13 @@ class Register extends React.Component {
                           </InputGroupText>
                         </InputGroupAddon>
                         <Input placeholder="Password" type="password" />
+                      </InputGroup>
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText>
+                            <i className="tim-icons icon-chat-33" />
+                          </InputGroupText>
+                        </InputGroupAddon>
+                        <Input placeholder="Phone Number" type="tel"/>
                       </InputGroup>
                       <FormGroup check className="text-left">
                         <Label check>
