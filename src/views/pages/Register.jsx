@@ -38,13 +38,12 @@ class Register extends React.Component {
               <Col className="ml-auto" md="5">
                 <div className="info-area info-horizontal mt-5">
                   <div className="icon icon-warning">
-                    <i className="tim-icons icon-wifi" />
+                    <i className="tim-icons icon-lock-circle" />
                   </div>
                   <div className="description">
-                    <h3 className="info-title">Marketing</h3>
+                    <h3 className="info-title">Compliance</h3>
                     <p className="description">
-                      We've created the marketing campaign of the website. It
-                      was a very interesting collaboration.
+                      We are increasing the responsibility of organizations to prescribe responsibility.
                     </p>
                   </div>
                 </div>
@@ -53,22 +52,20 @@ class Register extends React.Component {
                     <i className="tim-icons icon-triangle-right-17" />
                   </div>
                   <div className="description">
-                    <h3 className="info-title">Fully Coded in HTML5</h3>
+                    <h3 className="info-title">24/7 Accessibility</h3>
                     <p className="description">
-                      We've developed the website with HTML5 and CSS3. The
-                      client has access to the code using GitHub.
+                      No matter where you are, or when you are using it, SafeMeds is available.
                     </p>
                   </div>
                 </div>
                 <div className="info-area info-horizontal">
                   <div className="icon icon-info">
-                    <i className="tim-icons icon-trophy" />
+                    <i className="tim-icons icon-delivery-fast" />
                   </div>
                   <div className="description">
-                    <h3 className="info-title">Built Audience</h3>
+                    <h3 className="info-title">Smart Trend Analyitics </h3>
                     <p className="description">
-                      There is also a Fully Customizable CMS Admin Dashboard for
-                      this product.
+                      Realize negative trends within your organization before it is too late.
                     </p>
                   </div>
                 </div>
@@ -90,7 +87,15 @@ class Register extends React.Component {
                             <i className="tim-icons icon-single-02" />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Full Name" type="text" />
+                        <Input placeholder="First Name" type="text" />
+                      </InputGroup>
+                      <InputGroup>
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText>
+                            <i className="tim-icons icon-single-02" />
+                          </InputGroupText>
+                        </InputGroupAddon>
+                        <Input placeholder="Last name" type="text" />
                       </InputGroup>
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
@@ -106,7 +111,7 @@ class Register extends React.Component {
                             <i className="tim-icons icon-lock-circle" />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Password" type="text" />
+                        <Input placeholder="Password" type="password" />
                       </InputGroup>
                       <FormGroup check className="text-left">
                         <Label check>

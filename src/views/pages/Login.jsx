@@ -115,8 +115,7 @@ class Login extends React.Component {
                       <h6>
                         <a
                           className="link footer-link"
-                          href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          href="/auth/register"
                         >
                           Create Account
                         </a>
@@ -126,10 +125,9 @@ class Login extends React.Component {
                       <h6>
                         <a
                           className="link footer-link"
-                          href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          href="/auth/register"
                         >
-                          Need Help?
+                          Forgot password?
                         </a>
                       </h6>
                     </div>
