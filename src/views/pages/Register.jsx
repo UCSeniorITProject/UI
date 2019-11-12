@@ -1,6 +1,6 @@
  
 import React from "react";
-
+import {getUserWithFilter} from '../../services/User';
 // reactstrap components
 import {
   Button,
@@ -36,9 +36,13 @@ class Register extends React.Component {
       firstName: '',
       lastName: '',
       tos: false,
-      registerEmailState: '',
-      registerPhoneNumberState: '',
-      registerPasswordState: '',
+      registerEmailState: null,
+      registerPhoneNumberState: null,
+      registerPasswordState: null,
+      registerUsernameState: null,
+      registerFirstNameState: null,
+      registerLastNameState: null,
+      isFormValid: false,
     };
   }
   componentDidMount() {
@@ -46,6 +50,15 @@ class Register extends React.Component {
   }
   componentWillUnmount() {
     document.body.classList.toggle("register-page");
+  }
+
+  handleRegister(){
+
+  }
+
+  isFormValid(){
+    console.log(this.state)
+    return Object.entries(this.state).filter(x => x[0].includes('State') && x[1] ===null || x[0].includes('State') && x[1].includes('has-danger')).length === 0;
   }
 
   alertUserOfPasswordRequirements(){
@@ -59,43 +72,96 @@ class Register extends React.Component {
           </div>
         </div>
       ),
-      type: 'warning',
+      type: 'info',
       icon: "tim-icons icon-bell-55",
       autoDismiss: 7
     };
     this.refs.notificationAlert.notificationAlert(options);
   }
 
+  async isFieldUnique(e){
+    try {
+      const user = await getUserWithFilter({[e.target.name]: e.target.value});
+      return user.users.length === 0;
+    } catch (err) {
+      var options = {};
+      options = {
+        place: 'tr',
+        message: (
+          <div>
+            <div>
+              An internal server error occured. Please try again later.
+            </div>
+          </div>
+        ),
+        type: 'warning',
+        icon: "tim-icons icon-bell-55",
+        autoDismiss: 7
+      };
+      this.refs.notificationAlert.notificationAlert(options);
+    }
+  }
+
+  async handleOnBlur(event, stateName){
+    event.persist();
+    const fieldIsUnique = await this.isFieldUnique(event);
+    if(!fieldIsUnique){
+      var options = {};
+      options = {
+        place: 'tr',
+        message: (
+          <div>
+            <div>
+              A user is already registered with {event.target.value}!
+            </div>
+          </div>
+        ),
+        type: 'warning',
+        icon: "tim-icons icon-bell-55",
+        autoDismiss: 7
+      };
+      this.refs.notificationAlert.notificationAlert(options);
+      this.setState({ [stateName + "State"]: "has-danger" });
+    } else {
+      this.setState({ [stateName + "State"]: "has-success" });
+    }
+  }
+
+  setIsFormValid(){
+    this.setState({isFormValid: this.isFormValid()});
+  }
+
   handleChange(event, stateName, type, stateNameEqualTo, maxValue){
     this.setState({ [event.target.name]: event.target.value});
     switch (type) {
       case "email":
-        if (this.verifyEmail(event.target.value)) {
-          this.setState({ [stateName + "State"]: "has-success" });
+        const isValidEmail = this.verifyEmail(event.target.value)
+        if (isValidEmail) {
+          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
         } else {
-          this.setState({ [stateName + "State"]: "has-danger" });
+          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
         }
         break;
       case "password":
         if (this.verifyLength(event.target.value, 6)
          && event.target.value.toLowerCase() !== event.target.value) {
-          this.setState({ [stateName + "State"]: "has-success" });
+          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
         } else {
-          this.setState({ [stateName + "State"]: "has-danger" });
+          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
         }
         break;
       case "tel":
         if(this.verifyPhone(event.target.value)){
-          this.setState({ [stateName + "State"]: "has-success" });
+          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
         } else {
-          this.setState({ [stateName + "State"]: "has-danger" });
+          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
         }
         break;
       case "length": 
-        if(this.verifyPhone(event.target.length, 1)){
-          this.setState({ [stateName + "State"]: "has-success" });
+        if(this.verifyLength(event.target.value, 3)){
+          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
         } else {
-          this.setState({ [stateName + "State"]: "has-danger" });
+          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
         }
         break;
       default:
@@ -199,26 +265,26 @@ class Register extends React.Component {
                     <InputGroup>
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className="tim-icons icon-single-02" />
+                            <i className={`tim-icons icon-single-02 ${this.state.registerUsernameState}`} />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Username" name="username" type="text" onChange={this.handleChange.bind(this)}/>
+                        <Input placeholder="Username" name="username" type="text" onChange={e => this.handleChange(e, 'registerUsername', 'length')} onBlur={e =>this.handleOnBlur(e, 'registerUsername')}/>
                       </InputGroup>
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className="tim-icons icon-single-02" />
+                            <i className={`tim-icons icon-single-02 ${this.state.registerFirstNameState}`} />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="First Name" name="firstName" type="text" onChange={this.handleChange.bind(this)}/>
+                        <Input placeholder="First Name" name="firstName" type="text" onChange={e => this.handleChange(e, 'registerFirstName', 'length')}/>
                       </InputGroup>
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className="tim-icons icon-single-02" />
+                            <i className={`tim-icons icon-single-02 ${this.state.registerLastNameState}`} />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Last name" name="lastName" type="text" onChange={this.handleChange.bind(this)}/>
+                        <Input placeholder="Last name" name="lastName" type="text" onChange={e => this.handleChange(e, 'registerLastName', 'length')}/>
                       </InputGroup>
                       <InputGroup className={`has-label`}>
                         <InputGroupAddon addonType="prepend">
@@ -226,7 +292,7 @@ class Register extends React.Component {
                             <i className={`tim-icons icon-email-85 ${this.state.registerEmailState}`} />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Email" name="email" type="email" onChange={e => this.handleChange(e, "registerEmail", "email")}/>
+                        <Input placeholder="Email" name="email" type="email" onChange={e => this.handleChange(e, "registerEmail", "email")} onBlur={e =>this.handleOnBlur(e, 'registerEmail')}/>
                       </InputGroup>
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
@@ -242,10 +308,11 @@ class Register extends React.Component {
                             <i className={`tim-icons icon-chat-33 ${this.state.registerPhoneNumberState}`} />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Phone Number" name="phoneNumber" type="text" onChange={e => this.handleChange(e, "registerPhoneNumber", "tel")}/>
+                        <Input placeholder="Phone Number" name="phoneNumber" type="text" onChange={e => this.handleChange(e, "registerPhoneNumber", "tel")} onBlur={e =>this.handleOnBlur(e, 'registerPhoneNumber')}/>
                       </InputGroup>
                       <FormGroup check className="text-left">
                         <Label check>
+                        <Input type="checkbox" />
                           <span className="form-check-sign" />I agree to the{" "}
                             terms and conditions.
                         </Label>
@@ -257,7 +324,8 @@ class Register extends React.Component {
                       className="btn-round"
                       color="primary"
                       href="#pablo"
-                      onClick={e => e.preventDefault()}
+                      onClick={e => this.handleRegister()}
+                      disabled={!this.state.isFormValid}
                       size="lg"
                     >
                       Get Started
