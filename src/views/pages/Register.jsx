@@ -1,6 +1,7 @@
  
 import React from "react";
 import {getUserWithFilter} from '../../services/User';
+import { withRouter } from 'react-router';
 // reactstrap components
 import {
   Button,
@@ -23,6 +24,7 @@ import {
 } from "reactstrap";
 import ImageUpload from "components/CustomUpload/ImageUpload.jsx";
 import NotificationAlert from "react-notification-alert";
+import Axios from "axios";
 
 class Register extends React.Component {
   constructor(props){
@@ -53,7 +55,37 @@ class Register extends React.Component {
   }
 
   handleRegister(){
-
+    try {
+      Axios.post(`${process.env.REACT_APP_API_URL}/api/security-management/user`, {
+        user: {
+          username: this.state.username,
+          password: this.state.password,
+          phoneNumber: this.state.phoneNumber,
+          profilePicture: this.state.profilePicture,
+          email: this.state.email,
+          firstName: this.state.firstName,
+          lastName: this.state.lastName,
+          active:'Y',
+        }
+      });
+      this.props.history.push('/auth/login');
+    } catch (err) {
+      var options = {};
+      options = {
+        place: 'tr',
+        message: (
+          <div>
+            <div>
+              An internal server error occured. Please try again later.
+            </div>
+          </div>
+        ),
+        type: 'warning',
+        icon: "tim-icons icon-bell-55",
+        autoDismiss: 7
+      };
+      this.refs.notificationAlert.notificationAlert(options);
+    }
   }
 
   isFormValid(){
@@ -132,6 +164,7 @@ class Register extends React.Component {
   }
 
   handleChange(event, stateName, type, stateNameEqualTo, maxValue){
+    console.log(this.state.tos)
     this.setState({ [event.target.name]: event.target.value});
     switch (type) {
       case "email":
@@ -312,7 +345,7 @@ class Register extends React.Component {
                       </InputGroup>
                       <FormGroup check className="text-left">
                         <Label check>
-                        <Input type="checkbox" />
+                        <Input type="checkbox" name="tos" onClick={e => this.setState({tos: true})}/>
                           <span className="form-check-sign" />I agree to the{" "}
                             terms and conditions.
                         </Label>
@@ -341,4 +374,4 @@ class Register extends React.Component {
   }
 }
 
-export default Register;
+export default withRouter(Register);
