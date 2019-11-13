@@ -80,6 +80,7 @@ class Admin extends React.Component {
       if (prop.collapse) {
         return this.getRoutes(prop.views);
       }
+      console.log(prop)
       if (prop.layout === "/admin") {
         return (
           <Route

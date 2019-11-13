@@ -18,6 +18,7 @@ const routes = [
         mini: "UP",
         rtlMini: "شع",
         component: User,
+        isHidden: false,
         layout: "/admin"
       },
       {
@@ -25,12 +26,14 @@ const routes = [
         name: "Login",
         mini: "L",
         component: Login,
+        isHidden: true,
         layout: "/auth"
       },
       {
         path: "/register",
         name: "Register",
         mini: "R",
+        isHidden: true,
         component: Register,
         layout: "/auth"
       },
