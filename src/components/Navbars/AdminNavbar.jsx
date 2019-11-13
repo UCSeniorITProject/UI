@@ -32,6 +32,7 @@ class AdminNavbar extends React.Component {
       color: "navbar-transparent",
       profilePicture: decodedToken.profilePicture,
     };
+    console.log(jwtDecode(localStorage.getItem('accessToken')))
   }
   componentDidMount() {
     window.addEventListener("resize", this.updateColor);
@@ -151,7 +152,7 @@ class AdminNavbar extends React.Component {
                   >
                     
                     <div className="photo">
-                      <img alt="..." src={this.state.profilePicture !== '' ? this.state.profilePicture : 'https://via.placeholder.com/150?text=ProfilePicture'} />
+                      <img alt="https://via.placeholder.com/150?text=ProfilePicture" src={jwtDecode(localStorage.getItem('accessToken')).profilePicture} />
                     </div>
                     <b className="caret d-none d-lg-block d-xl-block" />
                     <p className="d-lg-none">Log out</p>

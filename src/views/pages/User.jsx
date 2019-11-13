@@ -29,7 +29,6 @@ class User extends React.Component {
       email: '',
       username: '',
       password: '',
-      profilePicture: '',
     };
   }
 
@@ -49,7 +48,6 @@ class User extends React.Component {
       profilePicture: user.users[0].profilePicture,
     });
     this.refs.ImageUpload.setImage(user.users[0].profilePicture);
-    console.log(this.state.profilePicture)
   }
   render() {
     return (

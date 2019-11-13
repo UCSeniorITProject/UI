@@ -105,7 +105,7 @@ class Login extends React.Component {
                       block
                       className="mb-3"
                       color="primary"
-                      href="#pablo"
+                      href=""
                       onClick={this.handleSubmit.bind(this)}
                       size="lg"
                     >
