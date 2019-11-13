@@ -37,8 +37,8 @@ class AdminNavbar extends React.Component {
     window.removeEventListener("resize", this.updateColor);
   }
   logout(){
-    localStorage.setItem('accessToken', null);
-    localStorage.setItem('refreshToken', null);
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     this.props.history.push('/auth/login');
   }
   // function that adds color white/transparent to the navbar on resize (this is for the collapse)
