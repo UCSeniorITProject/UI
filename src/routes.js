@@ -1,4 +1,5 @@
 import User from "views/pages/User.jsx";
+import Login from "views/pages/Login.jsx";
 
 const routes = [
     {
@@ -18,7 +19,16 @@ const routes = [
           layout: "/admin"
         }
       ]
-    }
+    },
+    {
+      path: "/login",
+      name: "Login",
+      rtlName: "هعذاتسجيل الدخول",
+      mini: "L",
+      rtlMini: "هعذا",
+      component: Login,
+      layout: "/auth"
+    },
   ];
 
 export default routes;

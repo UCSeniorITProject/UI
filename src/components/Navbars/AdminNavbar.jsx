@@ -2,7 +2,7 @@
 import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
-
+import { withRouter } from 'react-router';
 // reactstrap components
 import {
   Button,
@@ -35,6 +35,11 @@ class AdminNavbar extends React.Component {
   }
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateColor);
+  }
+  logout(){
+    localStorage.setItem('accessToken', null);
+    localStorage.setItem('refreshToken', null);
+    this.props.history.push('/auth/login');
   }
   // function that adds color white/transparent to the navbar on resize (this is for the collapse)
   updateColor = () => {
@@ -151,12 +156,9 @@ class AdminNavbar extends React.Component {
                     <NavLink tag="li">
                       <DropdownItem className="nav-item">Profile</DropdownItem>
                     </NavLink>
-                    <NavLink tag="li">
-                      <DropdownItem className="nav-item">Settings</DropdownItem>
-                    </NavLink>
                     <DropdownItem divider tag="li" />
                     <NavLink tag="li">
-                      <DropdownItem className="nav-item">Log out</DropdownItem>
+                      <DropdownItem className="nav-item" onClick={e => this.logout()}>Log out</DropdownItem>
                     </NavLink>
                   </DropdownMenu>
                 </UncontrolledDropdown>
@@ -188,4 +190,4 @@ class AdminNavbar extends React.Component {
   }
 }
 
-export default AdminNavbar;
+export default withRouter(AdminNavbar);
