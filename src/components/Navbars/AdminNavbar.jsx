@@ -3,6 +3,7 @@ import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 import { withRouter } from 'react-router';
+import jwtDecode from 'jwt-decode';
 // reactstrap components
 import {
   Button,
@@ -24,10 +25,12 @@ import {
 class AdminNavbar extends React.Component {
   constructor(props) {
     super(props);
+    const decodedToken = jwtDecode(localStorage.getItem('accessToken'));
     this.state = {
       collapseOpen: false,
       modalSearch: false,
-      color: "navbar-transparent"
+      color: "navbar-transparent",
+      profilePicture: decodedToken.profilePicture,
     };
   }
   componentDidMount() {
@@ -146,8 +149,9 @@ class AdminNavbar extends React.Component {
                     nav
                     onClick={e => e.preventDefault()}
                   >
+                    
                     <div className="photo">
-                      <img alt="..." src={require("assets/img/mike.jpg")} />
+                      <img alt="..." src={this.state.profilePicture !== '' ? this.state.profilePicture : 'https://via.placeholder.com/150?text=ProfilePicture'} />
                     </div>
                     <b className="caret d-none d-lg-block d-xl-block" />
                     <p className="d-lg-none">Log out</p>
