@@ -5,20 +5,6 @@ import Login from "views/pages/Login.jsx";
 
 const routes = [
   {
-    path: "/login",
-    name: "Login",
-    mini: "L",
-    component: Login,
-    layout: "/auth"
-  },
-  {
-    path: "/register",
-    name: "Register",
-    mini: "R",
-    component: Register,
-    layout: "/auth"
-  },
-  {
     collapse: true,
     name: "User",
     rtlName: "",
@@ -33,7 +19,21 @@ const routes = [
         rtlMini: "شع",
         component: User,
         layout: "/admin"
-      }
+      },
+      {
+        path: "/login",
+        name: "Login",
+        mini: "L",
+        component: Login,
+        layout: "/auth"
+      },
+      {
+        path: "/register",
+        name: "Register",
+        mini: "R",
+        component: Register,
+        layout: "/auth"
+      },
     ]
   },
 ];
