@@ -22,10 +22,7 @@ import {
 
 class Login extends React.Component {
   componentDidMount() {
-    this.state = {
-      username: '',
-      password: '',
-    }
+    this.setState({username: '', password: ''});
     document.body.classList.toggle("login-page");
   }
   componentWillUnmount() {
