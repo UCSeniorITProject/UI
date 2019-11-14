@@ -4,6 +4,7 @@ import React from "react";
 import classNames from "classnames";
 import { withRouter } from 'react-router';
 import jwtDecode from 'jwt-decode';
+import {getUserWithFilter} from '../../services/User';
 // reactstrap components
 import {
   Button,
@@ -34,7 +35,11 @@ class AdminNavbar extends React.Component {
     };
     console.log(jwtDecode(localStorage.getItem('accessToken')))
   }
-  componentDidMount() {
+  async componentDidMount() {
+    const user = await getUserWithFilter({id: jwtDecode(localStorage.getItem('accessToken')).userID});
+    this.setState({
+      profilePicture: user.users[0].profilePicture === '' ? 'https://via.placeholder.com/150?text=ProfilePicture' : user.users[0].profilePicture,
+    });
     window.addEventListener("resize", this.updateColor);
   }
   componentWillUnmount() {
@@ -152,7 +157,7 @@ class AdminNavbar extends React.Component {
                   >
                     
                     <div className="photo">
-                      <img alt="https://via.placeholder.com/150?text=ProfilePicture" src={jwtDecode(localStorage.getItem('accessToken')).profilePicture} />
+                      <img alt="https://via.placeholder.com/150?text=ProfilePicture" src={this.state.profilePicture} />
                     </div>
                     <b className="caret d-none d-lg-block d-xl-block" />
                     <p className="d-lg-none">Log out</p>
