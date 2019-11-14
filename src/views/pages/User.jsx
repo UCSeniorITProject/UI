@@ -32,6 +32,44 @@ class User extends React.Component {
     };
   }
 
+  handleChange(event, stateName, type, stateNameEqualTo, maxValue){
+    console.log(this.state.tos)
+    this.setState({ [event.target.name]: event.target.value});
+    switch (type) {
+      case "email":
+        const isValidEmail = this.verifyEmail(event.target.value)
+        if (isValidEmail) {
+          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+        } else {
+          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+        }
+        break;
+      case "password":
+        if (this.verifyLength(event.target.value, 6)
+         && event.target.value.toLowerCase() !== event.target.value) {
+          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+        } else {
+          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+        }
+        break;
+      case "tel":
+        if(this.verifyPhone(event.target.value)){
+          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+        } else {
+          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+        }
+        break;
+      case "length": 
+        if(this.verifyLength(event.target.value, 3)){
+          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+        } else {
+          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+        }
+        break;
+      default:
+        break;
+    }
+  }
 
   handleImageChange = imageUrl => {
     this.setState({profilePicture: imageUrl});
@@ -108,10 +146,16 @@ class User extends React.Component {
                       </Col>
                     </Row>
                     <Row>
-                    <Col className="pr-md-1" md="12">
+                    <Col className="pr-md-1" md="6">
                         <FormGroup>
                           <label>Password</label>
                           <Input defaultValue={this.state.firstName} type="password" />
+                        </FormGroup>
+                      </Col>
+                      <Col className="pl-md-1" md="6">
+                        <FormGroup>
+                          <label>Phone Number</label>
+                          <Input defaultValue={this.state.phoneNumber} type="text" />
                         </FormGroup>
                       </Col>
                     </Row>

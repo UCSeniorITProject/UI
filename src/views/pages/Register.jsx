@@ -164,7 +164,6 @@ class Register extends React.Component {
   }
 
   handleChange(event, stateName, type, stateNameEqualTo, maxValue){
-    console.log(this.state.tos)
     this.setState({ [event.target.name]: event.target.value});
     switch (type) {
       case "email":
