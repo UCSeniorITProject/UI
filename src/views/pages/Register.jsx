@@ -223,8 +223,6 @@ class Register extends React.Component {
     return false;
   };
 
-
-
   handleImageChange = imageUrl => {
     this.setState({profilePicture: imageUrl});
   }
