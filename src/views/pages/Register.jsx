@@ -89,7 +89,6 @@ class Register extends React.Component {
   }
 
   isFormValid(){
-    console.log(this.state)
     return Object.entries(this.state).filter(x => x[0].includes('State') && x[1] ===null || x[0].includes('State') && x[1].includes('has-danger')).length === 0;
   }
 

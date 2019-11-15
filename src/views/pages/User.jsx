@@ -18,6 +18,7 @@ import {
 import ImageUpload from '../../components/CustomUpload/ImageUpload';
 import {getUserWithFilter} from '../../services/User';
 import jwtDecode from 'jwt-decode';
+import Axios from "axios";
 
 class User extends React.Component {
   constructor(props){
@@ -29,16 +30,34 @@ class User extends React.Component {
       email: '',
       username: '',
       password: '',
+      firstNameState: 'has-success',
+      lastNameState: 'has-success',
+      isFormValid: true,
     };
   }
 
+  setIsFormValid(){
+    this.setState({isFormValid: this.isFormValid()});
+  }
+
+
+  isFormValid(){
+    return Object.entries(this.state).filter(x => x[0].includes('State') && x[1] ===null || x[0].includes('State') && x[1].includes('has-danger')).length === 0;
+  }
+
+  // function that verifies if a string has a given length or not
+  verifyLength = (value, length) => {
+    if (value.length >= length) {
+      return true;
+    }
+    return false;
+  };
+
   handleChange(event, stateName, type, stateNameEqualTo, maxValue){
-    console.log(this.state.tos)
     this.setState({ [event.target.name]: event.target.value});
     switch (type) {
-      case "email":
-        const isValidEmail = this.verifyEmail(event.target.value)
-        if (isValidEmail) {
+      case "length": 
+        if(this.verifyLength(event.target.value, 1)){
           this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
         } else {
           this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
@@ -46,21 +65,7 @@ class User extends React.Component {
         break;
       case "password":
         if (this.verifyLength(event.target.value, 6)
-         && event.target.value.toLowerCase() !== event.target.value) {
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
-        } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
-        }
-        break;
-      case "tel":
-        if(this.verifyPhone(event.target.value)){
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
-        } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
-        }
-        break;
-      case "length": 
-        if(this.verifyLength(event.target.value, 3)){
+          && event.target.value.toLowerCase() !== event.target.value) {
           this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
         } else {
           this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
@@ -74,6 +79,10 @@ class User extends React.Component {
   handleImageChange = imageUrl => {
     this.setState({profilePicture: imageUrl});
   }
+  
+  updateUser = () => {
+    Axios.post('')
+  };
 
   async componentDidMount (){
     const user = await getUserWithFilter({id: jwtDecode(localStorage.getItem('accessToken')).userID});
@@ -135,13 +144,23 @@ class User extends React.Component {
                       <Col className="pr-md-1" md="6">
                         <FormGroup>
                           <label>First Name</label>
-                          <Input defaultValue={this.state.firstName} type="text" />
+                          <Input defaultValue={this.state.firstName} type="text" onChange={e => this.handleChange(e, 'firstName', 'length')}/>
+                          {this.state.firstNameState === "has-danger" ? (
+                            <label className="error">
+                              Please enter a valid first name.
+                            </label>
+                          ) : null}
                         </FormGroup>
                       </Col>
                       <Col className="pl-md-1" md="6">
                         <FormGroup>
                           <label>Last Name</label>
-                          <Input defaultValue={this.state.lastName} type="text" />
+                          <Input defaultValue={this.state.lastName} type="text" onChange={e => this.handleChange(e, 'lastName', 'length')}/>
+                          {this.state.lastNameState === "has-danger" ? (
+                            <label className="error">
+                              Please enter a valid last name.
+                            </label>
+                          ) : null}
                         </FormGroup>
                       </Col>
                     </Row>
@@ -162,7 +181,7 @@ class User extends React.Component {
                   </Form>
                 </CardBody>
                 <CardFooter>
-                  <Button className="btn-fill" color="primary" type="submit">
+                  <Button className="btn-fill" color="primary" type="submit" disabled={!this.state.isFormValid}>
                     Save
                   </Button>
                 </CardFooter>

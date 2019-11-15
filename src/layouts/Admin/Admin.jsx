@@ -118,23 +118,11 @@ class Admin extends React.Component {
     this.setState({ activeColor: color });
   };
   handleMiniClick = () => {
-    let notifyMessage = "Sidebar mini ";
     if (document.body.classList.contains("sidebar-mini")) {
       this.setState({ sidebarMini: false });
-      notifyMessage += "deactivated...";
     } else {
       this.setState({ sidebarMini: true });
-      notifyMessage += "activated...";
     }
-    let options = {};
-    options = {
-      place: "tr",
-      message: notifyMessage,
-      type: "primary",
-      icon: "tim-icons icon-bell-55",
-      autoDismiss: 7
-    };
-    this.refs.notificationAlert.notificationAlert(options);
     document.body.classList.toggle("sidebar-mini");
   };
   toggleSidebar = () => {
@@ -172,8 +160,8 @@ class Admin extends React.Component {
           routes={routes}
           activeColor={this.state.activeColor}
           logo={{
-            outterLink: "https://www.creative-tim.com/",
-            text: "Creative Tim",
+            outterLink: "",
+            text: "",
             imgSrc: logo
           }}
           closeSidebar={this.closeSidebar}
