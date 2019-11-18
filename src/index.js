@@ -7,7 +7,6 @@ import { Router, Route, Switch, Redirect } from "react-router-dom";
 import PrivateRoute from './components/DecisionRoute/DecisionRoute';
 import AuthLayout from "layouts/Auth/Auth.jsx";
 import AdminLayout from "layouts/Admin/Admin.jsx";
-import RTLLayout from "layouts/RTL/RTL.jsx";
 
 import "assets/css/nucleo-icons.css";
 import "assets/scss/black-dashboard-pro-react.scss?v=1.0.0";
@@ -21,7 +20,6 @@ ReactDOM.render(
     <Switch>
       <Route path="/auth" render={props => <AuthLayout {...props} />} />
       <PrivateRoute path="/admin" authed = {isAuthorized()} component={AdminLayout} />} />
-      <PrivateRoute path="/rtl" authed = {isAuthorized()} component={RTLLayout} />} />
       <Redirect from="/" to="/auth/login" />
     </Switch>
   </Router>,

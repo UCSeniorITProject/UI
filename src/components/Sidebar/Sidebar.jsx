@@ -49,7 +49,7 @@ class Sidebar extends React.Component {
   createLinks = routes => {
     const { rtlActive } = this.props;
     return routes.map((prop, key) => {
-      if (prop.redirect) {
+      if (prop.redirect || prop.isHidden === true) {
         return null;
       }
       if (prop.collapse) {
@@ -139,53 +139,6 @@ class Sidebar extends React.Component {
     const { activeColor, logo } = this.props;
     let logoImg = null;
     let logoText = null;
-    if (logo !== undefined) {
-      if (logo.outterLink !== undefined) {
-        logoImg = (
-          <a
-            href={logo.outterLink}
-            className="simple-text logo-mini"
-            target="_blank"
-            onClick={this.props.closeSidebar}
-          >
-            <div className="logo-img">
-              <img src={logo.imgSrc} alt="react-logo" />
-            </div>
-          </a>
-        );
-        logoText = (
-          <a
-            href={logo.outterLink}
-            className="simple-text logo-normal"
-            target="_blank"
-            onClick={this.props.closeSidebar}
-          >
-            {logo.text}
-          </a>
-        );
-      } else {
-        logoImg = (
-          <NavLink
-            to={logo.innerLink}
-            className="simple-text logo-mini"
-            onClick={this.props.closeSidebar}
-          >
-            <div className="logo-img">
-              <img src={logo.imgSrc} alt="react-logo" />
-            </div>
-          </NavLink>
-        );
-        logoText = (
-          <NavLink
-            to={logo.innerLink}
-            className="simple-text logo-normal"
-            onClick={this.props.closeSidebar}
-          >
-            {logo.text}
-          </NavLink>
-        );
-      }
-    }
     return (
       <div className="sidebar" data={activeColor}>
         <div className="sidebar-wrapper" ref="sidebar">

@@ -1,6 +1,8 @@
  
 import React from "react";
-
+import NotificationAlert from "react-notification-alert";
+import defaultAvatar from "assets/img/placeholder.jpg";
+import defaultImage from "assets/img/image_placeholder.jpg";
 // reactstrap components
 import {
   Button,
@@ -8,21 +10,215 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  CardText,
   FormGroup,
   Form,
   Input,
   Row,
   Col
 } from "reactstrap";
+import ImageUpload from '../../components/CustomUpload/ImageUpload';
+import {getUserWithFilter} from '../../services/User';
+import jwtDecode from 'jwt-decode';
+import Axios from "axios";
 
 class User extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      firstName: '',
+      lastName: '',
+      phoneNumber: '',
+      email: '',
+      username: '',
+      password: '',
+      firstNameState: 'has-success',
+      lastNameState: 'has-success',
+      passwordState: 'has-success',
+      phoneNumberState: 'has-success',
+      isFormValid: true,
+    };
+  }
+
+  setIsFormValid(){
+    this.setState({isFormValid: this.isFormValid()});
+  }
+
+
+  isFormValid(){
+    return Object.entries(this.state).filter(x => x[0].includes('State') && x[1] ===null || x[0].includes('State') && x[1].includes('has-danger')).length === 0;
+  }
+
+  // function that verifies if a string has a given length or not
+  verifyLength = (value, length) => {
+    if (value.length >= length) {
+      return true;
+    }
+    return false;
+  };
+
+  handleChange(event, stateName, type, stateNameEqualTo, maxValue){
+    this.setState({ [event.target.name]: event.target.value});
+    switch (type) {
+      case "length": 
+        if(this.verifyLength(event.target.value, 1)){
+          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+        } else {
+          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+        }
+        break;
+      case "password":
+        if (this.verifyLength(event.target.value, 6)
+          && event.target.value.toLowerCase() !== event.target.value) {
+          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+        } else {
+          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+        }
+        break;
+      case "tel":
+        if(this.verifyPhone(event.target.value)){
+          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+        } else {
+          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  handleImageChange = imageUrl => {
+    this.setState({profilePicture: imageUrl});
+  }
+
+  verifyPhone = value => {
+    const phoneRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
+    if(phoneRegex.test(value)){
+      return true;
+    }
+    return false;
+  };
+
+  async isFieldUnique(e){
+    try {
+      const user = await getUserWithFilter({[e.target.name]: e.target.value});
+      return user.users.length === 0;
+    } catch (err) {
+      var options = {};
+      options = {
+        place: 'tr',
+        message: (
+          <div>
+            <div>
+              An internal server error occured. Please try again later.
+            </div>
+          </div>
+        ),
+        type: 'warning',
+        icon: "tim-icons icon-bell-55",
+        autoDismiss: 7
+      };
+      this.refs.notificationAlert.notificationAlert(options);
+    }
+  }
+  
+  async handleOnBlur(event, stateName){
+    event.persist();
+    const fieldIsUnique = await this.isFieldUnique(event);
+    if(!fieldIsUnique){
+      var options = {};
+      options = {
+        place: 'tr',
+        message: (
+          <div>
+            <div>
+              A user is already registered with {event.target.value}!
+            </div>
+          </div>
+        ),
+        type: 'warning',
+        icon: "tim-icons icon-bell-55",
+        autoDismiss: 7
+      };
+      this.refs.notificationAlert.notificationAlert(options);
+      this.setState({ [stateName + "State"]: "has-danger" });
+    } else {
+      this.setState({ [stateName + "State"]: "has-success" });
+    }
+  }
+
+  updateUser = async() => {
+    try {
+      const decodedUser = jwtDecode(localStorage.getItem('accessToken'));
+      const user = {
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        phoneNumber: this.state.phoneNumber,
+        profilePicture: this.state.profilePicture,
+        password: this.state.password,
+      }
+      if(this.state.password !== ''){
+        user.password = this.state.password;
+      }
+      await Axios.patch(`${process.env.REACT_APP_API_URL}/api/security-management/user/${decodedUser.userID}`, {
+        user: user,
+      });
+      var options = {};
+      options = {
+        place: 'tr',
+        message: (
+          <div>
+            <div>
+              Succesfully updated your profile!
+            </div>
+          </div>
+        ),
+        type: 'success',
+        icon: "tim-icons icon-bell-55",
+        autoDismiss: 7
+      };
+      this.refs.notificationAlert.notificationAlert(options);
+    } catch (err) {
+      var options = {};
+      options = {
+        place: 'tr',
+        message: (
+          <div>
+            <div>
+              An internal server error occured. Please try again later.
+            </div>
+          </div>
+        ),
+        type: 'warning',
+        icon: "tim-icons icon-bell-55",
+        autoDismiss: 7
+      };
+      this.refs.notificationAlert.notificationAlert(options);
+    }
+  };
+
+  async componentDidMount (){
+    const user = await getUserWithFilter({id: jwtDecode(localStorage.getItem('accessToken')).userID});
+    this.setState({
+      firstName: user.users[0].firstName,
+      lastName: user.users[0].lastName,
+      phoneNumber: user.users[0].phoneNumber,
+      email: user.users[0].email,
+      username: user.users[0].username,
+      profilePicture: user.users[0].profilePicture,
+    });
+    if(user.users[0].profilePicture !== ''){
+      this.refs.ImageUpload.setImage(user.users[0].profilePicture);
+    }
+  }
   render() {
     return (
       <>
+        <div className="rna-container">
+          <NotificationAlert ref="notificationAlert" />
+        </div>
         <div className="content">
           <Row>
-            <Col md="8">
+            <Col md="12">
               <Card>
                 <CardHeader>
                   <h5 className="title">Edit Profile</h5>
@@ -32,24 +228,31 @@ class User extends React.Component {
                     <Row>
                       <Col className="pr-md-1" md="5">
                         <FormGroup>
-                          <label>Company (disabled)</label>
+                          <label>Username</label>
                           <Input
-                            defaultValue="Creative Code Inc."
+                            defaultValue={this.state.username}
                             disabled
                             type="text"
                           />
                         </FormGroup>
                       </Col>
-                      <Col className="px-md-1" md="3">
-                        <FormGroup>
-                          <label>Username</label>
-                          <Input defaultValue="michael23" type="text" />
-                        </FormGroup>
-                      </Col>
                       <Col className="pl-md-1" md="4">
                         <FormGroup>
                           <label>Email address</label>
-                          <Input placeholder="mike@email.com" type="email" />
+                          <Input placeholder={this.state.email} disabled type="email" />
+                        </FormGroup>
+                      </Col>
+
+                      <Col className="pr-md-1" md="3">
+                        <FormGroup>
+                        <ImageUpload
+                          avatar
+                          onChange={this.handleImageChange.bind(this)}
+                          addBtnColor="default"
+                          changeBtnColor="default"
+                          className="pull-right"
+                          ref="ImageUpload"
+                        />
                         </FormGroup>
                       </Col>
                     </Row>
@@ -57,109 +260,56 @@ class User extends React.Component {
                       <Col className="pr-md-1" md="6">
                         <FormGroup>
                           <label>First Name</label>
-                          <Input defaultValue="Mike" type="text" />
+                          <Input defaultValue={this.state.firstName} name="firstName" type="text" onChange={e => this.handleChange(e, 'firstName', 'length')}/>
+                          {this.state.firstNameState === "has-danger" ? (
+                            <label className="error">
+                              Please enter a valid first name.
+                            </label>
+                          ) : null}
                         </FormGroup>
                       </Col>
                       <Col className="pl-md-1" md="6">
                         <FormGroup>
                           <label>Last Name</label>
-                          <Input defaultValue="Andrew" type="text" />
+                          <Input defaultValue={this.state.lastName} name="lastName" type="text" onChange={e => this.handleChange(e, 'lastName', 'length')}/>
+                          {this.state.lastNameState === "has-danger" ? (
+                            <label className="error">
+                              Please enter a valid last name.
+                            </label>
+                          ) : null}
                         </FormGroup>
                       </Col>
                     </Row>
                     <Row>
-                      <Col md="12">
+                    <Col className="pr-md-1" md="6">
                         <FormGroup>
-                          <label>Address</label>
-                          <Input
-                            defaultValue="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
-                            placeholder="Home Address"
-                            type="text"
-                          />
+                          <label>Password</label>
+                          <Input defaultValue="qweqweqweqweqwe" name="password" type="password" onChange={e => this.handleChange(e, 'password', 'password')}/>
+                          {this.state.passwordState === "has-danger" ? (
+                            <label className="error">
+                              Please enter a valid password. It must be more than 6 digits and have one capital letter.
+                            </label>
+                          ) : null}
                         </FormGroup>
                       </Col>
-                    </Row>
-                    <Row>
-                      <Col className="pr-md-1" md="4">
+                      <Col className="pl-md-1" md="6">
                         <FormGroup>
-                          <label>City</label>
-                          <Input defaultValue="Mike" type="text" />
-                        </FormGroup>
-                      </Col>
-                      <Col className="px-md-1" md="4">
-                        <FormGroup>
-                          <label>Country</label>
-                          <Input defaultValue="Andrew" type="text" />
-                        </FormGroup>
-                      </Col>
-                      <Col className="pl-md-1" md="4">
-                        <FormGroup>
-                          <label>Postal Code</label>
-                          <Input placeholder="ZIP Code" type="number" />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col md="8">
-                        <FormGroup>
-                          <label>About Me</label>
-                          <Input
-                            cols="80"
-                            defaultValue="Lamborghini Mercy, Your chick she so thirsty, I'm in
-                            that two seat Lambo."
-                            placeholder="Here can be your description"
-                            rows="4"
-                            type="textarea"
-                          />
+                          <label>Phone Number</label>
+                          <Input defaultValue={this.state.phoneNumber} name="phoneNumber" type="text" onChange={e => this.handleChange(e, 'phoneNumber', 'tel')} onBlur={e => this.handleOnBlur(e, 'phoneNumber')}/>
+                          {this.state.phoneNumberState === "has-danger" ? (
+                            <label className="error">
+                              Please enter a valid phone number.
+                            </label>
+                          ) : null}
                         </FormGroup>
                       </Col>
                     </Row>
                   </Form>
                 </CardBody>
                 <CardFooter>
-                  <Button className="btn-fill" color="primary" type="submit">
+                  <Button className="btn-fill" color="primary" type="submit" disabled={!this.state.isFormValid} onClick={e => this.updateUser()}>
                     Save
                   </Button>
-                </CardFooter>
-              </Card>
-            </Col>
-            <Col md="4">
-              <Card className="card-user">
-                <CardBody>
-                  <CardText />
-                  <div className="author">
-                    <div className="block block-one" />
-                    <div className="block block-two" />
-                    <div className="block block-three" />
-                    <div className="block block-four" />
-                    <a href="#pablo" onClick={e => e.preventDefault()}>
-                      <img
-                        alt="..."
-                        className="avatar"
-                        src={require("assets/img/emilyz.jpg")}
-                      />
-                      <h5 className="title">Mike Andrew</h5>
-                    </a>
-                    <p className="description">Ceo/Co-Founder</p>
-                  </div>
-                  <div className="card-description">
-                    Do not be scared of the truth because we need to restart the
-                    human foundation in truth And I love you like Kanye loves
-                    Kanye I love Rick Owens’ bed design but the back is...
-                  </div>
-                </CardBody>
-                <CardFooter>
-                  <div className="button-container">
-                    <Button className="btn-icon btn-round" color="facebook">
-                      <i className="fab fa-facebook" />
-                    </Button>
-                    <Button className="btn-icon btn-round" color="twitter">
-                      <i className="fab fa-twitter" />
-                    </Button>
-                    <Button className="btn-icon btn-round" color="google">
-                      <i className="fab fa-google-plus" />
-                    </Button>
-                  </div>
                 </CardFooter>
               </Card>
             </Col>

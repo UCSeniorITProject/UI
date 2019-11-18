@@ -1,12 +1,11 @@
 import axios from 'axios';
 
 export default async (store, history) => {
+      //does not matter if token is null -- this makes routes that require no token easier
       axios.interceptors.request.use(async request => {
         const token = localStorage.getItem('accessToken');
-        if(token){
-          return request;
-        }
-        history.push('/auth/login');
+        request.headers.Authorization = `Bearer ${token}`;
+        return request;
       });
 
       axios.interceptors.response.use(response => response, async error => {

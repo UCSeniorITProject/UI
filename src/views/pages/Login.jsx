@@ -25,7 +25,7 @@ class Login extends React.Component {
     this.state = {
       username: '',
       password: '',
-    }
+    };
     document.body.classList.toggle("login-page");
   }
   componentWillUnmount() {
@@ -35,10 +35,11 @@ class Login extends React.Component {
 		this.setState({ [e.target.name]: e.target.value});
 	}
   async handleSubmit(){
-    try{
+    try {
       const tokens = await Axios.post(`${process.env.REACT_APP_API_URL}/api/security-management/login`, {
         authDetails: {
-          ...this.state
+          username: this.state.username,
+          password: this.state.password,
         }
       });
 
@@ -46,7 +47,6 @@ class Login extends React.Component {
       localStorage.setItem("refreshToken", tokens.data.refreshToken);
       this.props.history.push('/admin/user-profile');
     } catch (err) {
-
       var options = {};
       options = {
         place: 'tr',
@@ -105,7 +105,7 @@ class Login extends React.Component {
                       block
                       className="mb-3"
                       color="primary"
-                      href="#pablo"
+                      href=""
                       onClick={this.handleSubmit.bind(this)}
                       size="lg"
                     >

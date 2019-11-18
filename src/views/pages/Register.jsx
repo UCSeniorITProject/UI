@@ -89,7 +89,6 @@ class Register extends React.Component {
   }
 
   isFormValid(){
-    console.log(this.state)
     return Object.entries(this.state).filter(x => x[0].includes('State') && x[1] ===null || x[0].includes('State') && x[1].includes('has-danger')).length === 0;
   }
 
@@ -164,7 +163,6 @@ class Register extends React.Component {
   }
 
   handleChange(event, stateName, type, stateNameEqualTo, maxValue){
-    console.log(this.state.tos)
     this.setState({ [event.target.name]: event.target.value});
     switch (type) {
       case "email":
@@ -224,8 +222,6 @@ class Register extends React.Component {
     }
     return false;
   };
-
-
 
   handleImageChange = imageUrl => {
     this.setState({profilePicture: imageUrl});

@@ -10,7 +10,6 @@ import NotificationAlert from "react-notification-alert";
 import AdminNavbar from "components/Navbars/AdminNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import Sidebar from "components/Sidebar/Sidebar.jsx";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin.jsx";
 
 import routes from "routes.js";
 
@@ -81,6 +80,7 @@ class Admin extends React.Component {
       if (prop.collapse) {
         return this.getRoutes(prop.views);
       }
+      console.log(prop)
       if (prop.layout === "/admin") {
         return (
           <Route
@@ -118,23 +118,11 @@ class Admin extends React.Component {
     this.setState({ activeColor: color });
   };
   handleMiniClick = () => {
-    let notifyMessage = "Sidebar mini ";
     if (document.body.classList.contains("sidebar-mini")) {
       this.setState({ sidebarMini: false });
-      notifyMessage += "deactivated...";
     } else {
       this.setState({ sidebarMini: true });
-      notifyMessage += "activated...";
     }
-    let options = {};
-    options = {
-      place: "tr",
-      message: notifyMessage,
-      type: "primary",
-      icon: "tim-icons icon-bell-55",
-      autoDismiss: 7
-    };
-    this.refs.notificationAlert.notificationAlert(options);
     document.body.classList.toggle("sidebar-mini");
   };
   toggleSidebar = () => {
@@ -172,8 +160,8 @@ class Admin extends React.Component {
           routes={routes}
           activeColor={this.state.activeColor}
           logo={{
-            outterLink: "https://www.creative-tim.com/",
-            text: "Creative Tim",
+            outterLink: "",
+            text: "",
             imgSrc: logo
           }}
           closeSidebar={this.closeSidebar}
@@ -197,12 +185,6 @@ class Admin extends React.Component {
             <Footer fluid />
           )}
         </div>
-        <FixedPlugin
-          activeColor={this.state.activeColor}
-          sidebarMini={this.state.sidebarMini}
-          handleActiveClick={this.handleActiveClick}
-          handleMiniClick={this.handleMiniClick}
-        />
       </div>
     );
   }
