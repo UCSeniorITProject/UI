@@ -8,7 +8,7 @@ const routes = [
     collapse: true,
     name: "User",
     rtlName: "",
-    icon: "tim-icons icon-image-02",
+    icon: "tim-icons icon-single-02",
     state: "pagesCollapse",
     views: [
       {
