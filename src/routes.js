@@ -10,7 +10,7 @@ const routes = [
     name: "User",
     rtlName: "",
     icon: "tim-icons icon-single-02",
-    state: "pagesCollapse",
+    state: "userCollapse",
     views: [
       {
         path: "/user-profile",
@@ -44,7 +44,7 @@ const routes = [
     name: "Pharmacy",
     rtlName: "tim-icons icon-tap-02",
     icon: "tim-icons icon-tap-02",
-    state: "pagesCollapse",
+    state: "pharmacyCollapse",
     views: [
       {
         path: "/prescribe",
