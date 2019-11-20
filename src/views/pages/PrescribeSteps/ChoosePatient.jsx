@@ -42,7 +42,7 @@ class PickPatient extends React.Component {
     return (
       <>
         <h5 className="info-text">
-          Let's start with the basic information (with validation)
+          Start by picking a patient
         </h5>
         <Row className="justify-content-center mt-5">
         

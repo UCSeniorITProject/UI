@@ -11,6 +11,7 @@ const routes = [
     rtlName: "",
     icon: "tim-icons icon-single-02",
     state: "userCollapse",
+    requiredRoles:  [],
     views: [
       {
         path: "/user-profile",
@@ -19,6 +20,7 @@ const routes = [
         mini: "UP",
         component: User,
         isHidden: false,
+        requiredRoles:  [],
         layout: "/admin"
       },
       {
@@ -26,6 +28,7 @@ const routes = [
         name: "Login",
         mini: "L",
         component: Login,
+        requiredRoles:  [],
         isHidden: true,
         layout: "/auth"
       },
@@ -34,6 +37,7 @@ const routes = [
         name: "Register",
         mini: "R",
         isHidden: true,
+        requiredRoles:  [],
         component: Register,
         layout: "/auth"
       },
@@ -45,11 +49,13 @@ const routes = [
     rtlName: "tim-icons icon-tap-02",
     icon: "tim-icons icon-tap-02",
     state: "pharmacyCollapse",
+    requiredRoles:  ['Doctor', 'Pharmacist'],
     views: [
       {
         path: "/prescribe",
         name: "Prescribe",
         mini: "P",
+        requiredRoles:  ['Doctor'],
         component: Prescribe,
         isHidden: false,
         layout: "/admin"
