@@ -33,7 +33,6 @@ class AdminNavbar extends React.Component {
       color: "navbar-transparent",
       profilePicture: decodedToken.profilePicture,
     };
-    console.log(jwtDecode(localStorage.getItem('accessToken')))
   }
   async componentDidMount() {
     const user = await getUserWithFilter({id: jwtDecode(localStorage.getItem('accessToken')).userID});

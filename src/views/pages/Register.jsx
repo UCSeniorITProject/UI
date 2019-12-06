@@ -54,9 +54,9 @@ class Register extends React.Component {
     document.body.classList.toggle("register-page");
   }
 
-  handleRegister(){
+  async handleRegister(){
     try {
-      Axios.post(`${process.env.REACT_APP_API_URL}/api/security-management/user`, {
+      await Axios.post(`${process.env.REACT_APP_API_URL}/api/security-management/user`, {
         user: {
           username: this.state.username,
           password: this.state.password,
@@ -70,21 +70,6 @@ class Register extends React.Component {
       });
       this.props.history.push('/auth/login');
     } catch (err) {
-      var options = {};
-      options = {
-        place: 'tr',
-        message: (
-          <div>
-            <div>
-              An internal server error occured. Please try again later.
-            </div>
-          </div>
-        ),
-        type: 'warning',
-        icon: "tim-icons icon-bell-55",
-        autoDismiss: 7
-      };
-      this.refs.notificationAlert.notificationAlert(options);
     }
   }
 
@@ -129,7 +114,9 @@ class Register extends React.Component {
         icon: "tim-icons icon-bell-55",
         autoDismiss: 7
       };
-      this.refs.notificationAlert.notificationAlert(options);
+      if(this.refs !== undefined){
+        this.refs.notificationAlert.notificationAlert(options);
+      }
     }
   }
 
@@ -151,7 +138,9 @@ class Register extends React.Component {
         icon: "tim-icons icon-bell-55",
         autoDismiss: 7
       };
-      this.refs.notificationAlert.notificationAlert(options);
+      if(this.refs){
+        this.refs.notificationAlert.notificationAlert(options);
+      }
       this.setState({ [stateName + "State"]: "has-danger" });
     } else {
       this.setState({ [stateName + "State"]: "has-success" });

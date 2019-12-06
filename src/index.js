@@ -19,7 +19,7 @@ ReactDOM.render(
   <Router history={hist}>
     <Switch>
       <Route path="/auth" render={props => <AuthLayout {...props} />} />
-      <PrivateRoute path="/admin" authed = {isAuthorized()} component={AdminLayout} />} />
+      <PrivateRoute path="/admin" component={AdminLayout} />} />
       <Redirect from="/" to="/auth/login" />
     </Switch>
   </Router>,
@@ -28,8 +28,9 @@ ReactDOM.render(
 
 
 function isAuthorized(){
-	const token = localStorage.getItem('accessToken');
-	if(token){
+  const token = localStorage.getItem("accessToken");
+  console.log(token)
+	if(token !== null){
 		return true;
 	}
 	return false;
