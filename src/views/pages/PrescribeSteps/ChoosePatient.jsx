@@ -1,12 +1,9 @@
 
 import React from "react";
-import classnames from "classnames";
+import classNames from "classnames";
 // reactstrap components
 import {
-  Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
+  Button,
   Row,
   Col
 } from "reactstrap";
@@ -19,21 +16,52 @@ class PickPatient extends React.Component {
     super(props);
     this.state = {
       patients: [],
+      isPatientPicked: false,
     }
   }
 
   async componentDidMount() {
     const decodedToken = jwtDecode(localStorage.getItem('accessToken'));
     const patients = await getPatientList(decodedToken.userID);
-    this.setState({patients: patients.patients})
+    const patientList = patients.patients.map(x => {return {patientId: x.userId, firstName: x.firstName, lastName: x.lastName, age: 1, gender: 'F', actions: (
+      <div className="actions-right">
+                <Button
+                color="warning"
+                size="sm"
+                className="btn-icon btn-link like btn-neutral"
+              >
+                <i className="tim-icons icon-pencil" />
+              </Button>{" "}
+      </div>
+    )}});
+    this.setState({patients: patientList});
+  }
+
+  isValidated(){
+    return this.state.isPatientPicked;
   }
 
   render() {
     return (
       <>
-        <h5 className="info-text">
-          Start by picking a patient
-        </h5>
+      <Row>
+        <Col md="9">
+        <h5 className="info-text float-left">
+            <b>Patient Picker</b>
+          </h5>
+        </Col>
+        <Col md="3">
+        <Button
+              className="animation-on-hover float-right"
+              color="success"
+              id="addPatient"
+              type="button"
+            >
+              Add Patient
+            </Button>
+        </Col>
+      </Row>
+
         <ReactTable
                     data={this.state.patients}
                     filterable
@@ -41,15 +69,15 @@ class PickPatient extends React.Component {
                     columns={[
                       {
                         Header: "Patient ID",
-                        accessor: "office"
+                        accessor: "patientId",
                       },
                       {
                         Header: "First Name",
-                        accessor: "name"
+                        accessor: "firstName"
                       },
                       {
                         Header: "Last Name",
-                        accessor: "position"
+                        accessor: "lastName"
                       },
                       {
                         Header: "Age",
@@ -57,7 +85,7 @@ class PickPatient extends React.Component {
                       },
                       {
                         Header: "Gender",
-                        accessor: "age"
+                        accessor: "gender"
                       },
                       {
                         Header: "Actions",
@@ -66,7 +94,7 @@ class PickPatient extends React.Component {
                         filterable: false
                       }
                     ]}
-                    defaultPageSize={10}
+                    defaultPageSize={5}
                     showPaginationTop
                     showPaginationBottom={false}
                     className="-striped -highlight"
