@@ -1,6 +1,6 @@
 
 import React from "react";
-import classNames from "classnames";
+
 // reactstrap components
 import {
   Button,
@@ -17,6 +17,8 @@ class PickPatient extends React.Component {
     this.state = {
       patients: [],
       isPatientPicked: false,
+      selectedPatientID: null,
+      selectedIndex: null,
     }
   }
 
@@ -25,20 +27,34 @@ class PickPatient extends React.Component {
     const patients = await getPatientList(decodedToken.userID);
     const patientList = patients.patients.map(x => {return {patientId: x.userId, firstName: x.firstName, lastName: x.lastName, age: 1, gender: 'F', actions: (
       <div className="actions-right">
-                <Button
+              <Button
                 color="warning"
                 size="sm"
                 className="btn-icon btn-link like btn-neutral"
+                value={x.userId}
               >
                 <i className="tim-icons icon-pencil" />
               </Button>{" "}
+
+              <Button
+                className="btn-icon btn-link like btn-neutral"
+                size="sm"
+                color="warning"
+                value={x.userId}
+              >
+                <i className="tim-icons icon-check-2" />
+              </Button>{" "}
       </div>
-    )}});
+    ), selected: false}});
     this.setState({patients: patientList});
   }
 
   isValidated(){
     return this.state.isPatientPicked;
+  }
+
+  onPatientSelect(){
+
   }
 
   render() {

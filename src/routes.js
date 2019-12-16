@@ -3,6 +3,7 @@ import Register from "views/pages/Register.jsx";
 import Prescribe from "views/pages/Prescribe.jsx";
 import User from "views/pages/User.jsx";
 import Login from "views/pages/Login.jsx";
+import AddPatient from "views/pages/AddPatient";
 
 const routes = [
   {
@@ -61,7 +62,26 @@ const routes = [
         layout: "/admin"
       },
     ],
-  }
+  },
+  {
+    collapse: true,
+    name: "Patient",
+    rtlName: "tim-icons icon-badge",
+    icon: "tim-icons icon-badge",
+    state: "patientCollapse",
+    requiredRoles:  ['Doctor', 'Pharmacist'],
+    views: [
+      {
+        path: "/patient",
+        name: "Create New",
+        mini: "P",
+        requiredRoles:  ['Doctor'],
+        component: AddPatient,
+        isHidden: false,
+        layout: "/admin"
+      },
+    ],
+  },
 ];
 
 export default routes;

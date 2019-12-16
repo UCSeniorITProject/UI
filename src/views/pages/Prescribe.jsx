@@ -7,18 +7,13 @@ import { Col } from "reactstrap";
 
 // wizard steps
 import PickPatient from "./PrescribeSteps/ChoosePatient";
-import CreatePatient from "./PrescribeSteps/CreatePatient";
+
 var steps = [
   {
     stepName: "Pick Patient",
     stepIcon: "tim-icons icon-single-02",
     component: PickPatient
   },
-  {
-    stepName: "Pick Drugs",
-    stepIcon:  "tim-icons icon-simple-add",
-    component: CreatePatient,
-  }
 ];
 class Prescribe extends React.Component {
   render() {
