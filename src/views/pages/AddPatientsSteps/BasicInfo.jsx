@@ -1,5 +1,7 @@
 import React from "react";
 import classnames from "classnames";
+import {getUserWithFilter} from '../../../services/User';
+import NotificationAlert from "react-notification-alert";
 // reactstrap components
 import {
   Input,
@@ -37,6 +39,59 @@ class BasicInfo extends React.Component {
       streetAddress: "",
       zipCode: "",
     };
+  }
+
+  async handleOnBlur(event, stateName){
+    event.persist();
+    const fieldIsUnique = await this.isFieldUnique(event);
+    if(!fieldIsUnique){
+      var options = {};
+      options = {
+        place: 'tr',
+        message: (
+          <div>
+            <div>
+              A user is already registered with {event.target.value}!
+            </div>
+          </div>
+        ),
+        type: 'warning',
+        icon: "tim-icons icon-bell-55",
+        autoDismiss: 7,
+      };
+      if(this.refs){
+        console.log(this.refs)
+        this.refs.notificationAlert.notificationAlert(options);
+      }
+      this.setState({ [stateName + "State"]: "has-danger" });
+    } else {
+      this.setState({ [stateName + "State"]: "has-success" });
+    }
+  }
+
+  async isFieldUnique(e){
+    try {
+      const user = await getUserWithFilter({[e.target.name]: e.target.value});
+      return user.users.length === 0;
+    } catch (err) {
+      var options = {};
+      options = {
+        place: 'tr',
+        message: (
+          <div>
+            <div>
+              An internal server error occured. Please try again later.
+            </div>
+          </div>
+        ),
+        type: 'warning',
+        icon: "tim-icons icon-bell-55",
+        autoDismiss: 7
+      };
+      if(this.refs !== undefined){
+        this.refs.notificationAlert.notificationAlert(options);
+      }
+    }
   }
 
   isFormValid(){
@@ -118,6 +173,9 @@ class BasicInfo extends React.Component {
   render() {
     return (
       <>
+        <div className="rna-container">
+          <NotificationAlert ref="notificationAlert" />
+        </div>
         <h5 className="info-text">
           Let's start with the basic patient information 
         </h5>
@@ -161,7 +219,7 @@ class BasicInfo extends React.Component {
                 type="email"
                 onChange={e => this.change(e, "email", "email")}
                 onFocus={e => this.setState({ emailFocus: true })}
-                onBlur={e => this.setState({ emailFocus: false })}
+                onBlur={async e => {this.setState({ emailFocus: false }); await this.handleOnBlur(e, 'email');}}
               />
               {this.state.emailState === "has-danger" ? (
                 <label className="error">This field is required.</label>
@@ -293,7 +351,7 @@ class BasicInfo extends React.Component {
                     defaultChecked
                     defaultValue="Male"
                     id="genderMale"
-                    name="genderMale"
+                    name="gender"
                     type="radio"
                   />
                   <span className="form-check-sign" />
@@ -303,7 +361,7 @@ class BasicInfo extends React.Component {
                   <Input
                     defaultValue="Female"
                     id="genderFemale"
-                    name="genderFemale"
+                    name="gender"
                     type="radio"
                   />
                   <span className="form-check-sign" />
