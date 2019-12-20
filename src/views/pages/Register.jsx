@@ -189,6 +189,10 @@ class Register extends React.Component {
     }
   }
 
+  isValidated(){
+    return this.isFormValid();
+  }
+
   verifyPhone = value => {
     const phoneRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
     if(phoneRegex.test(value)){

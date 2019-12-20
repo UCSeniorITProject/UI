@@ -1,4 +1,5 @@
 import BasicInfo from './AddPatientsSteps/BasicInfo';
+import InsuranceInfo from './AddPatientsSteps/InsuranceInfo';
 import {
   Input,
   InputGroupAddon,
@@ -15,6 +16,11 @@ const steps = [
     stepIcon: "tim-icons icon-single-02",
     component: BasicInfo,
   },
+  {
+    stepName: "Insurance Info",
+    stepIcon: "tim-icons icon-credit-card",
+    component: InsuranceInfo,
+  }
 ];
 
 class AddPatient extends React.Component {

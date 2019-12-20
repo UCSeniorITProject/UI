@@ -1,7 +1,6 @@
 import React from "react";
+import { withRouter } from 'react-router';
 import classnames from "classnames";
-import {getUserWithFilter} from '../../../services/User';
-import {getPatientBySSN} from '../../../services/Patient';
 import NotificationAlert from "react-notification-alert";
 // reactstrap components
 import {
@@ -22,201 +21,15 @@ import {
   Col
 } from "reactstrap";
 
-class BasicInfo extends React.Component {
-  constructor(props) {
+class InsuranceInfo extends React.Component {
+  constructor(props){
     super(props);
     this.state = {
-      firstname: "",
-      lastname: "",
-      email: "",
-      firstnameState: null,
-      lastnameState: null,
-      addressState: null,
-      cityState: null,
-      zipCodeState: null,
-      ssnState: null,
-      emailState: null,
-      gender: "",
-      city: "",
-      streetAddress: "",
-      zipCode: "",
-      ssn: "",
       isFormValid: false,
     };
   }
-
-  async handleOnBlur(event, stateName){
-    event.persist();
-    const fieldIsUnique = await this.isFieldUnique(event);
-    if(!fieldIsUnique){
-      var options = {};
-      options = {
-        place: 'tr',
-        message: (
-          <div>
-            <div>
-              A user is already registered with {event.target.value}!
-            </div>
-          </div>
-        ),
-        type: 'warning',
-        icon: "tim-icons icon-bell-55",
-        autoDismiss: 7,
-      };
-      if(this.refs){
-        this.refs.notificationAlert.notificationAlert(options);
-      }
-      this.setState({ [stateName + "State"]: "has-danger" });
-    } else {
-      this.setState({ [stateName + "State"]: "has-success" });
-    }
-  }
-
-  async setSSNState(ssn){
-    const isUnique = this.isSSNUnique(ssn);
-    if(!isUnique){
-      var options = {};
-      options = {
-        place: 'tr',
-        message: (
-          <div>
-            <div>
-              A patient already exists with that social security number.
-            </div>
-          </div>
-        ),
-        type: 'warning',
-        icon: "tim-icons icon-bell-55",
-        autoDismiss: 7
-      };
-      this.refs.notificationAlert.notificationAlert(options);
-      this.setState({ssnState: "has-danger"});
-    }
-  }
-
-  async isFieldUnique(e){
-    try {
-      const user = await getUserWithFilter({[e.target.name]: e.target.value});
-      return user.users.length === 0;
-    } catch (err) {
-      var options = {};
-      options = {
-        place: 'tr',
-        message: (
-          <div>
-            <div>
-              An internal server error occured. Please try again later.
-            </div>
-          </div>
-        ),
-        type: 'warning',
-        icon: "tim-icons icon-bell-55",
-        autoDismiss: 7
-      };
-      if(this.refs !== undefined){
-        this.refs.notificationAlert.notificationAlert(options);
-      }
-    }
-  }
-
-  async isSSNUnique(ssn){
-    const patient = await getPatientBySSN(ssn);
-    return patient === undefined;
-  }
-
-  isFormValid(){
-    return Object.entries(this.state).filter(x => x[0].includes('State') && x[1] ===null || x[0].includes('State') && x[1].includes('has-danger')).length === 0;
-  }
-
-  setIsFormValid(){
-    this.setState({isFormValid: this.isFormValid()});
-  }
-
-  // function that returns true if value is email, false otherwise
-  verifyEmail = value => {
-    var emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (emailRex.test(value)) {
-      return true;
-    }
-    return false;
-  };
-  // function that verifies if a string has a given length or not
-  verifyLength = (value, length) => {
-    if (value.length >= length) {
-      return true;
-    }
-    return false;
-  };
-  verifyPhone = value => {
-    const phoneRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
-    if(phoneRegex.test(value)){
-      return true;
-    }
-    return false;
-  };
-  // function that verifies if value contains only numbers
-  verifyNumber = value => {
-    var numberRex = new RegExp("^[0-9]+$");
-    if (numberRex.test(value)) {
-      return true;
-    }
-    return false;
-  };
-  change = (event, stateName, type, stateNameEqualTo, maxValue) => {
-    switch (type) {
-      case "email":
-        if (this.verifyEmail(event.target.value)) {
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
-        } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
-        }
-        break;
-      case "length":
-        if (this.verifyLength(event.target.value, stateNameEqualTo)) {
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
-        } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
-        }
-        break;
-      case "number":
-        if (this.verifyNumber(event.target.value, stateNameEqualTo)) {
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
-        } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
-        }
-        break;
-      case "phone":
-        if(this.verifyPhone(event.target.value)){
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
-        } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
-        }
-        break;
-      case "SSN":
-        if(this.verifySSN(event.target.value)){
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
-        } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
-        }
-        break;
-      default:
-        break;
-    }
-    this.setState({ [stateName]: event.target.value });
-  };
-  verifySSN = (value) => {
-    const ssnRegex = /^(\d{3}?\d{2}?\d{4}|XXX-XX-XXXX)$/;
-    if (ssnRegex.test(value)) {
-      return true;
-    }
-    return false;
-  }
-  isValidated = () => {
-    return this.isFormValid();
-  };
-  render() {
-    return (
-      <>
+  render () {
+    return (<>
         <div className="rna-container">
           <NotificationAlert ref="notificationAlert" />
         </div>
@@ -405,9 +218,9 @@ class BasicInfo extends React.Component {
                 name="ssn"
                 placeholder="Social Security Number"
                 type="text"
-                onChange={e => this.change(e, "ssn", "SSN")}
-                onFocus={e => this.setState({ ssnFocus: true })}
-                onBlur={async e => {this.setState({ ssnFocus: false }); this.setSSNState(e.target.value);}}
+                onChange={e => this.change(e, "ssn", "ssn")}
+                onFocus={e => this.setState({ cityFocus: true })}
+                onBlur={e => this.setState({ cityFocus: false })}
               />
             </InputGroup>
             
@@ -439,9 +252,12 @@ class BasicInfo extends React.Component {
               </FormGroup>
           </Col>
         </Row>
-      </>
-    );
+      </>)
+  }
+
+  isValidated(){
+    return this.state.isFormValid;
   }
 }
 
-export default BasicInfo;
+export default withRouter(InsuranceInfo);
