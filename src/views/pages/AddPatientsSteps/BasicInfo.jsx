@@ -48,23 +48,25 @@ class BasicInfo extends React.Component {
   async handleOnBlur(event, stateName){
     event.persist();
     const fieldIsUnique = await this.isFieldUnique(event);
-    if(!fieldIsUnique){
-      var options = {};
-      options = {
-        place: 'tr',
-        message: (
-          <div>
+    if(!fieldIsUnique || event.target.value.length === 0){
+      if(!fieldIsUnique){
+        var options = {};
+        options = {
+          place: 'tr',
+          message: (
             <div>
-              A user is already registered with {event.target.value}!
+              <div>
+                A user is already registered with {event.target.value}!
+              </div>
             </div>
-          </div>
-        ),
-        type: 'warning',
-        icon: "tim-icons icon-bell-55",
-        autoDismiss: 7,
-      };
-      if(this.refs){
-        this.refs.notificationAlert.notificationAlert(options);
+          ),
+          type: 'warning',
+          icon: "tim-icons icon-bell-55",
+          autoDismiss: 7,
+        };
+        if(this.refs){
+          this.refs.notificationAlert.notificationAlert(options);
+        }
       }
       this.setState({ [stateName + "State"]: "has-danger" });
     } else {
@@ -135,7 +137,7 @@ class BasicInfo extends React.Component {
   // function that returns true if value is email, false otherwise
   verifyEmail = value => {
     var emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (emailRex.test(value)) {
+    if (emailRex.test(value) && value.length !== 0) {
       return true;
     }
     return false;
