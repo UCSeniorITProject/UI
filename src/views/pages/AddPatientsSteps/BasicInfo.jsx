@@ -26,6 +26,8 @@ class BasicInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      phoneNumber: "",
+      phoneNumberState: null,
       firstname: "",
       lastname: "",
       email: "",
@@ -46,6 +48,13 @@ class BasicInfo extends React.Component {
   }
 
   async handleOnBlur(event, stateName){
+    if(event.target.value ===  ''){
+      this.change(event, stateName, 'length', 1);
+      return;
+    }
+    if(this.state[`${stateName}State`] === 'has-danger'){
+      return;
+    }
     event.persist();
     const fieldIsUnique = await this.isFieldUnique(event);
     if(!fieldIsUnique || event.target.value.length === 0){
@@ -56,7 +65,7 @@ class BasicInfo extends React.Component {
           message: (
             <div>
               <div>
-                A user is already registered with {event.target.value}!
+                A patient is already registered with {event.target.value}!
               </div>
             </div>
           ),
@@ -99,7 +108,7 @@ class BasicInfo extends React.Component {
   async isFieldUnique(e){
     try {
       const user = await getUserWithFilter({[e.target.name]: e.target.value});
-      return user.users.length === 0;
+      return user.users && user.users.length === 0;
     } catch (err) {
       var options = {};
       options = {
@@ -133,7 +142,7 @@ class BasicInfo extends React.Component {
   setIsFormValid(){
     this.setState({isFormValid: this.isFormValid()});
   }
-
+ 
   // function that returns true if value is email, false otherwise
   verifyEmail = value => {
     var emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -243,34 +252,36 @@ class BasicInfo extends React.Component {
                 type="text"
                 onChange={e => this.change(e, "firstname", "length", 1)}
                 onFocus={e => this.setState({ firstnameFocus: true })}
-                onBlur={e => this.setState({ firstnameFocus: false })}
+                onBlur={e => {this.setState({ firstnameFocus: false });}}
               />
               {this.state.firstnameState === "has-danger" ? (
                 <label className="error">This field is required.</label>
               ) : null}
             </InputGroup>
+          </Col>
+          <Col sm="5">
             <InputGroup
-              className={classnames(this.state.emailState, {
-                "input-group-focus": this.state.emailFocus
-              })}
-            >
-              <InputGroupAddon addonType="prepend">
-                <InputGroupText>
-                  <i className="tim-icons icon-email-85" />
-                </InputGroupText>
-              </InputGroupAddon>
-              <Input
-                name="email"
-                placeholder="Email"
-                type="email"
-                onChange={e => this.change(e, "email", "email")}
-                onFocus={e => this.setState({ emailFocus: true })}
-                onBlur={async e => {this.setState({ emailFocus: false }); await this.handleOnBlur(e, 'email');}}
-              />
-              {this.state.emailState === "has-danger" ? (
-                <label className="error">This field is required.</label>
-              ) : null}
-            </InputGroup>
+                className={classnames(this.state.emailState, {
+                  "input-group-focus": this.state.emailFocus
+                })}
+              >
+                <InputGroupAddon addonType="prepend">
+                  <InputGroupText>
+                    <i className="tim-icons icon-email-85" />
+                  </InputGroupText>
+                </InputGroupAddon>
+                <Input
+                  name="email"
+                  placeholder="Email"
+                  type="email"
+                  onChange={e => this.change(e, "email", "email")}
+                  onFocus={e => this.setState({ emailFocus: true })}
+                  onBlur={async e => {this.setState({ emailFocus: false }); await this.handleOnBlur(e, 'email');}}
+                />
+                              {this.state.emailState === "has-danger" ? (
+                  <label className="error">This field is required.</label>
+                ) : null}
+              </InputGroup>
           </Col>
           <Col sm="5">
             <InputGroup
@@ -289,15 +300,17 @@ class BasicInfo extends React.Component {
                 type="text"
                 onChange={e => this.change(e, "lastname", "length", 1)}
                 onFocus={e => this.setState({ lastnameFocus: true })}
-                onBlur={e => this.setState({ lastnameFocus: false })}
+                onBlur={e => {this.setState({ lastnameFocus: false }); this.change(e, 'lastname', 'length', 1);}}
               />
               {this.state.lastnameState === "has-danger" ? (
                 <label className="error">This field is required.</label>
               ) : null}
             </InputGroup>
+          </Col>
+          <Col sm="5">
             <InputGroup
-              className={classnames(this.state.phoneState, {
-                "input-group-focus": this.state.phoneFocus
+              className={classnames(this.state.phoneNumberState, {
+                "input-group-focus": this.state.phoneNumberFocus
               })}
             >
               <InputGroupAddon addonType="prepend">
@@ -306,14 +319,14 @@ class BasicInfo extends React.Component {
                 </InputGroupText>
               </InputGroupAddon>
               <Input
-                name="number"
+                name="phoneNumber"
                 placeholder="Phone"
                 type="number"
-                onChange={e => this.change(e, "phone", "phone")}
-                onFocus={e => this.setState({ phoneFocus: true })}
-                onBlur={e => this.setState({ phoneFocus: false })}
+                onChange={e => this.change(e, "phoneNumber", "phone")}
+                onFocus={e => this.setState({ phoneNumberFocus: true })}
+                onBlur={e => {this.setState({ phoneNumberFocus: false }); this.handleOnBlur(e, 'phoneNumber');}}
               />
-              {this.state.phoneState === "has-danger" ? (
+              {this.state.phoneNumberState === "has-danger" ? (
                 <label className="error">This field is required.</label>
               ) : null}
             </InputGroup>
@@ -337,8 +350,11 @@ class BasicInfo extends React.Component {
                 type="text"
                 onChange={e => this.change(e, "address", "length", 1)}
                 onFocus={e => this.setState({ addressFocus: true })}
-                onBlur={e => this.setState({ addressFocus: false })}
+                onBlur={e =>{ this.setState({ addressFocus: false }); this.change(e, 'address', 'length', 1)}}
               />
+              {this.state.addressState === "has-danger" ? (
+                <label className="error">This field is required.</label>
+              ) : null}
             </InputGroup>
             
           </Col>
@@ -361,8 +377,11 @@ class BasicInfo extends React.Component {
                 type="text"
                 onChange={e => this.change(e, "zipCode", "length", 1)}
                 onFocus={e => this.setState({ zipCodeFocus: true })}
-                onBlur={e => this.setState({ zipCodeFocus: false })}
+                onBlur={e => {this.setState({ zipCodeFocus: false }); this.change(e, 'zipCode', 'length', 1);}}
               />
+              {this.state.zipCodeState === "has-danger" ? (
+                <label className="error">This field is required.</label>
+              ) : null}
             </InputGroup>
             
           </Col>
@@ -385,8 +404,11 @@ class BasicInfo extends React.Component {
                 type="text"
                 onChange={e => this.change(e, "city", "length", 1)}
                 onFocus={e => this.setState({ cityFocus: true })}
-                onBlur={e => this.setState({ cityFocus: false })}
+                onBlur={e => {this.setState({ cityFocus: false }); this.change(e, 'city', 'length', 1);}}
               />
+              {this.state.cityState === "has-danger" ? (
+                <label className="error">This field is required.</label>
+              ) : null}
             </InputGroup>
             
           </Col>
@@ -409,10 +431,12 @@ class BasicInfo extends React.Component {
                 type="text"
                 onChange={e => this.change(e, "ssn", "SSN")}
                 onFocus={e => this.setState({ ssnFocus: true })}
-                onBlur={async e => {this.setState({ ssnFocus: false }); this.setSSNState(e.target.value);}}
+                onBlur={async e => {this.setState({ ssnFocus: false }); this.setSSNState(e.target.value); this.change(e, 'ssn', 'length', 1);}}
               />
             </InputGroup>
-            
+            {this.state.ssnState === "has-danger" ? (
+                <label className="error">This field is required.</label>
+            ) : null}
           </Col>
           <Col sm="5"></Col>
           <Col sm="5">

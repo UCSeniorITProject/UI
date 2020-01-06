@@ -27,6 +27,9 @@ class AdminNavbar extends React.Component {
   constructor(props) {
     super(props);
     const decodedToken = jwtDecode(localStorage.getItem('accessToken'));
+    if(!decodedToken){
+      this.props.history.push('/auth/login');
+    }
     this.state = {
       collapseOpen: false,
       modalSearch: false,

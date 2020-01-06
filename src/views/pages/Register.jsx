@@ -123,6 +123,9 @@ class Register extends React.Component {
   async handleOnBlur(event, stateName){
     event.persist();
     const fieldIsUnique = await this.isFieldUnique(event);
+    if(this.state[`${stateName}State`] === 'has-danger'){
+      return;
+    }
     if(!fieldIsUnique){
       var options = {};
       options = {
