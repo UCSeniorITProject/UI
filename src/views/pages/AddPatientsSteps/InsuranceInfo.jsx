@@ -8,20 +8,9 @@ import {
   InputGroupAddon,
   InputGroupText,
   InputGroup,
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardTitle,
-  Label,
-  FormGroup,
-  Form,
   Row,
   Col
 } from "reactstrap";
-
-
 
 class InsuranceInfo extends React.Component {
   constructor(props){
@@ -46,7 +35,7 @@ class InsuranceInfo extends React.Component {
   };
 
 
-  change = (event, stateName, type, stateNameEqualTo, maxValue) => {
+  change = async (event, stateName, type, stateNameEqualTo, maxValue) => {
     switch (type) {
       case "length":
         if (this.verifyLength(event.target.value, stateNameEqualTo)) {
@@ -58,8 +47,16 @@ class InsuranceInfo extends React.Component {
       default:
         break;
     }
+
+    if(event.target.value){
+      this.props.onChildStateChange(stateName, event.target.value);
+    }
     this.setState({ [stateName]: event.target.value });
   };
+
+  setIsFormValid(){
+    this.setState({isFormValid: this.isFormValid()});
+  }
 
   isFormValid(){
     return Object.entries(this.state).filter(x => x[0].includes('State') && x[1] ===null || x[0].includes('State') && x[1].includes('has-danger')).length === 0;
@@ -153,10 +150,6 @@ class InsuranceInfo extends React.Component {
         </Row>
       </>)
   }
-
-  isValidated(){
-    return this.state.isFormValid;
-  }
 }
 
-export default withRouter(InsuranceInfo);
+export default InsuranceInfo;

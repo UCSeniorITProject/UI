@@ -27,6 +27,7 @@ class AdminNavbar extends React.Component {
   constructor(props) {
     super(props);
     const decodedToken = jwtDecode(localStorage.getItem('accessToken'));
+    console.log(decodedToken)
     if(!decodedToken){
       this.props.history.push('/auth/login');
     }
@@ -40,7 +41,7 @@ class AdminNavbar extends React.Component {
   async componentDidMount() {
     const user = await getUserWithFilter({id: jwtDecode(localStorage.getItem('accessToken')).userID});
     this.setState({
-      profilePicture: user.users[0].profilePicture === '' ? 'https://via.placeholder.com/150?text=ProfilePicture' : user.users[0].profilePicture,
+      profilePicture: user.users[0].profilePicture === '' || user.users[0].profilePicture === undefined ? 'https://via.placeholder.com/150?text=ProfilePicture' : user.users[0].profilePicture,
     });
     window.addEventListener("resize", this.updateColor);
   }

@@ -28,11 +28,11 @@ class BasicInfo extends React.Component {
     this.state = {
       phoneNumber: "",
       phoneNumberState: null,
-      firstname: "",
-      lastname: "",
+      firstName: "",
+      lastName: "",
       email: "",
-      firstnameState: null,
-      lastnameState: null,
+      firstNameState: null,
+      lastNameState: null,
       addressState: null,
       cityState: null,
       zipCodeState: null,
@@ -213,18 +213,25 @@ class BasicInfo extends React.Component {
       default:
         break;
     }
+
+    if(event.target.value){
+      this.props.onChildStateChange(stateName, event.target.value);
+    }
     this.setState({ [stateName]: event.target.value });
   };
+  
   verifySSN = (value) => {
     const ssnRegex = /^(\d{3}?\d{2}?\d{4}|XXX-XX-XXXX)$/;
     if (ssnRegex.test(value)) {
       return true;
     }
     return false;
-  }
+  };
+
   isValidated = () => {
     return this.isFormValid();
   };
+
   render() {
     return (
       <>
@@ -237,8 +244,8 @@ class BasicInfo extends React.Component {
         <Row className="justify-content-center mt-5">
           <Col sm="5">
             <InputGroup
-              className={classnames(this.state.firstnameState, {
-                "input-group-focus": this.state.firstnameFocus
+              className={classnames(this.state.firstNameState, {
+                "input-group-focus": this.state.firstNameFocus
               })}
             >
               <InputGroupAddon addonType="prepend">
@@ -247,14 +254,14 @@ class BasicInfo extends React.Component {
                 </InputGroupText>
               </InputGroupAddon>
               <Input
-                name="firstname"
+                name="firstName"
                 placeholder="First Name"
                 type="text"
-                onChange={e => this.change(e, "firstname", "length", 1)}
-                onFocus={e => this.setState({ firstnameFocus: true })}
-                onBlur={e => {this.setState({ firstnameFocus: false });}}
+                onChange={e => this.change(e, "firstName", "length", 1)}
+                onFocus={e => this.setState({ firstNameFocus: true })}
+                onBlur={e => {this.setState({ firstNameFocus: false }); this.change(e, 'firstName', 'length', 1)}}
               />
-              {this.state.firstnameState === "has-danger" ? (
+              {this.state.firstNameState === "has-danger" ? (
                 <label className="error">This field is required.</label>
               ) : null}
             </InputGroup>
@@ -278,15 +285,15 @@ class BasicInfo extends React.Component {
                   onFocus={e => this.setState({ emailFocus: true })}
                   onBlur={async e => {this.setState({ emailFocus: false }); await this.handleOnBlur(e, 'email');}}
                 />
-                              {this.state.emailState === "has-danger" ? (
+                {this.state.emailState === "has-danger" ? (
                   <label className="error">This field is required.</label>
                 ) : null}
               </InputGroup>
           </Col>
           <Col sm="5">
             <InputGroup
-              className={classnames(this.state.lastnameState, {
-                "input-group-focus": this.state.lastnameFocus
+              className={classnames(this.state.lastNameState, {
+                "input-group-focus": this.state.lastNameFocus
               })}
             >
               <InputGroupAddon addonType="prepend">
@@ -295,14 +302,14 @@ class BasicInfo extends React.Component {
                 </InputGroupText>
               </InputGroupAddon>
               <Input
-                name="lastname"
+                name="lastName"
                 placeholder="Last Name"
                 type="text"
-                onChange={e => this.change(e, "lastname", "length", 1)}
-                onFocus={e => this.setState({ lastnameFocus: true })}
-                onBlur={e => {this.setState({ lastnameFocus: false }); this.change(e, 'lastname', 'length', 1);}}
+                onChange={e => this.change(e, "lastName", "length", 1)}
+                onFocus={e => this.setState({ lastNameFocus: true })}
+                onBlur={e => {this.setState({ lastNameFocus: false }); this.change(e, 'lastName', 'length', 1);}}
               />
-              {this.state.lastnameState === "has-danger" ? (
+              {this.state.lastNameState === "has-danger" ? (
                 <label className="error">This field is required.</label>
               ) : null}
             </InputGroup>

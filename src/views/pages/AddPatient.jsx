@@ -10,20 +10,53 @@ import {
 } from "reactstrap";
 import ReactWizard from "react-bootstrap-wizard";
 import React from "react";
-const steps = [
-  {
-    stepName: "Basic Info",
-    stepIcon: "tim-icons icon-single-02",
-    component: BasicInfo,
-  },
-  {
-    stepName: "Insurance Info",
-    stepIcon: "tim-icons icon-credit-card",
-    component: InsuranceInfo,
-  }
-];
 
 class AddPatient extends React.Component {
+    constructor(){
+      super();
+      this.state = {
+        firstName: '',
+        lastName: '',
+        address: '',
+        city: '',
+        email: '',
+        phone: '',
+        zipCode: '',
+        ssn: '',
+        gender: '',
+        insuranceName: '',
+        insuranceCoPayAmount: '',
+        insurancePlanNo: ''
+      };
+    }
+    
+    onChildStateChange(stateName, value){
+      return this.setState({[stateName]: value});
+    }
+
+    async onFinishButtonClick(){
+      console.log(this.state, this.props)
+    }
+
+    steps = [
+      {
+        stepName: "Basic Info",
+        stepIcon: "tim-icons icon-single-02",
+        component: BasicInfo,
+        stepProps: {
+          onChildStateChange: this.onChildStateChange.bind(this),
+        }
+      },
+      {
+        stepName: "Insurance Info",
+        stepIcon: "tim-icons icon-credit-card",
+        component: InsuranceInfo,
+        stepProps: {
+          onChildStateChange: this.onChildStateChange.bind(this),
+        },
+      }
+    ];
+
     render() {
       return (
         <>
@@ -31,9 +64,11 @@ class AddPatient extends React.Component {
             <Col className="mr-auto ml-auto" md="10">
               <ReactWizard
                 validate
-                steps={steps}
+                steps={this.steps}
                 navSteps
                 validate
+                onChildStateChange={this.onChildStateChange}
+                finishButtonClick={this.onFinishButtonClick.bind(this)}
                 title="Create a patient"
                 description="This wizard will facilitate the patient creation process"
                 headerTextCenter
