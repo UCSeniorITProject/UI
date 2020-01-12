@@ -1,5 +1,6 @@
 import BasicInfo from './AddPatientsSteps/BasicInfo';
 import InsuranceInfo from './AddPatientsSteps/InsuranceInfo';
+import { withRouter } from 'react-router';
 import {
   Input,
   InputGroupAddon,
@@ -24,6 +25,7 @@ class AddPatient extends React.Component {
         zipCode: '',
         ssn: '',
         gender: '',
+        dob: '',
         insuranceName: '',
         insuranceCoPayAmount: '',
         insurancePlanNo: ''
@@ -35,7 +37,19 @@ class AddPatient extends React.Component {
     }
 
     async onFinishButtonClick(){
-      console.log(this.state, this.props)
+      const patientInfo = {
+        address: this.state.address,
+        city: this.state.city,
+        coPayAmount: this.state.insuranceCoPayAmount,
+        dob: this.state.dob,
+        gender: this.state.gender,
+        insuranceName: this.state.insuranceName,
+        planNo: this.state.insurancePlanNo,
+        ssn: this.state.ssn,
+        state: this.state,
+        userId: 0,
+        zipCode: "string"
+      };
     }
 
     steps = [
@@ -85,4 +99,4 @@ class AddPatient extends React.Component {
     }
 }
 
-export default AddPatient;
+export default withRouter(AddPatient);

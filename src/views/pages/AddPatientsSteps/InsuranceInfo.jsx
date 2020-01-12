@@ -1,5 +1,4 @@
 import React from "react";
-import { withRouter } from 'react-router';
 import classnames from "classnames";
 import NotificationAlert from "react-notification-alert";
 // reactstrap components

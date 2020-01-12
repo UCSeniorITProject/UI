@@ -2,6 +2,7 @@ import React from "react";
 import classnames from "classnames";
 import {getUserWithFilter} from '../../../services/User';
 import {getPatientBySSN} from '../../../services/Patient';
+import ReactDatetime from "react-datetime";
 import NotificationAlert from "react-notification-alert";
 // reactstrap components
 import {
@@ -31,6 +32,7 @@ class BasicInfo extends React.Component {
       firstName: "",
       lastName: "",
       email: "",
+      dob: "",
       firstNameState: null,
       lastNameState: null,
       addressState: null,
@@ -445,7 +447,18 @@ class BasicInfo extends React.Component {
                 <label className="error">This field is required.</label>
             ) : null}
           </Col>
-          <Col sm="5"></Col>
+          <Col sm="5">
+            <FormGroup>
+              <ReactDatetime
+                inputProps={{
+                  className: "form-control",
+                  placeholder: "Date of Birth"
+                }}
+                onBlur={e => {this.setState({dob: e.toDate()}); this.onChildStateChange('dob', e.toDate());}}
+                timeFormat={false}
+              />
+            </FormGroup>
+          </Col>
           <Col sm="5">
             <FormGroup check inline className="form-check-radio">
                 <Label check>
