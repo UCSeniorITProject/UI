@@ -198,16 +198,18 @@ class User extends React.Component {
 
   async componentDidMount (){
     const user = await getUserWithFilter({id: jwtDecode(localStorage.getItem('accessToken')).userID});
-    this.setState({
-      firstName: user.users[0].firstName,
-      lastName: user.users[0].lastName,
-      phoneNumber: user.users[0].phoneNumber,
-      email: user.users[0].email,
-      username: user.users[0].username,
-      profilePicture: user.users[0].profilePicture,
-    });
-    if(user.users[0].profilePicture !== ''){
-      this.refs.ImageUpload.setImage(user.users[0].profilePicture);
+    if(user.users.length){
+      this.setState({
+        firstName: user.users[0].firstName,
+        lastName: user.users[0].lastName,
+        phoneNumber: user.users[0].phoneNumber,
+        email: user.users[0].email,
+        username: user.users[0].username,
+        profilePicture: user.users[0].profilePicture,
+      });
+      if(user.users[0].profilePicture !== ''){
+        this.refs.ImageUpload.setImage(user.users[0].profilePicture);
+      }
     }
   }
   render() {

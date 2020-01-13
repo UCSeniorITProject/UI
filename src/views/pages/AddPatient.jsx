@@ -46,9 +46,9 @@ class AddPatient extends React.Component {
         insuranceName: this.state.insuranceName,
         planNo: this.state.insurancePlanNo,
         ssn: this.state.ssn,
-        state: this.state,
+        state: this.state.state,
         userId: 0,
-        zipCode: "string"
+        zipCode: this.state.zipCode
       };
     }
 

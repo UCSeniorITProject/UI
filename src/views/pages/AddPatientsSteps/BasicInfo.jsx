@@ -27,6 +27,8 @@ class BasicInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      state: "",
+      stateState: null,
       phoneNumber: "",
       phoneNumberState: null,
       firstName: "",
@@ -340,7 +342,7 @@ class BasicInfo extends React.Component {
               ) : null}
             </InputGroup>
           </Col>
-          <Col sm="5">
+          <Col sm="3">
             <InputGroup
               className={classnames(
                 this.state.addressState,
@@ -367,7 +369,34 @@ class BasicInfo extends React.Component {
             </InputGroup>
             
           </Col>
-          <Col sm="5">
+          <Col sm="3">
+            <InputGroup
+              className={classnames(
+                this.state.stateState,
+                {
+                "input-group-focus": this.state.stateFocus
+              })}
+            >
+              <InputGroupAddon addonType="prepend">
+                <InputGroupText>
+                  <i className="tim-icons icon-square-pin" />
+                </InputGroupText>
+              </InputGroupAddon>
+              <Input
+                name="state"
+                placeholder="State"
+                type="text"
+                onChange={e => this.change(e, "state", "length", 1)}
+                onFocus={e => this.setState({ stateFocus: true })}
+                onBlur={e =>{ this.setState({ stateFocus: false }); this.change(e, 'address', 'length', 1)}}
+              />
+              {this.state.stateState === "has-danger" ? (
+                <label className="error">This field is required.</label>
+              ) : null}
+            </InputGroup>
+            
+          </Col>
+          <Col sm="4">
             <InputGroup
               className={classnames(
                 this.state.zipCodeState,
