@@ -7,7 +7,7 @@ import { Router, Route, Switch, Redirect } from "react-router-dom";
 import PrivateRoute from './components/DecisionRoute/DecisionRoute';
 import AuthLayout from "layouts/Auth/Auth.jsx";
 import AdminLayout from "layouts/Admin/Admin.jsx";
-
+import {refreshAccessToken} from './services/User';
 import "assets/css/nucleo-icons.css";
 import "assets/scss/black-dashboard-pro-react.scss?v=1.0.0";
 import "assets/demo/demo.css";
@@ -26,11 +26,11 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-
-function isAuthorized(){
-  const token = localStorage.getItem("accessToken");
-	if(token !== null){
-		return true;
-	}
-	return false;
-}
+setInterval(async () => {
+  const refreshToken = localStorage.getItem('refreshToken');
+  if(refreshToken !== 'undefined'){
+    const tokens = await refreshAccessToken(refreshToken);
+    localStorage.setItem('accessToken', tokens.accessToken);
+    localStorage.setItem('refreshToken', tokens.refreshToken);
+  }
+}, process.env.REACT_APP_TOKEN_TIMEOUT);

@@ -211,9 +211,9 @@ class BasicInfo extends React.Component {
         break;
     }
 
-    if(type !== 'dob' && event.target.value){
-      this.props.onChildStateChange(stateName, event.target.value);
-      this.setState({ [stateName]: event.target.value});
+    if(type !== 'dob'){
+      this.props.onChildStateChange(stateName, event.target.value || '');
+      this.setState({ [stateName]: event.target.value || ''});
     } else {
       this.props.onChildStateChange(stateName, event.toDate());
     }

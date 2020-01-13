@@ -10,6 +10,7 @@ import {
   Row,
   Col
 } from "reactstrap";
+import {createUser} from '../../services/User';
 import ReactWizard from "react-bootstrap-wizard";
 import React from "react";
 
@@ -28,6 +29,8 @@ class AddPatient extends React.Component {
         gender: '',
         dob: '',
         insuranceName: '',
+        username: '',
+        password: '',
         insuranceCoPayAmount: '',
         insurancePlanNo: ''
       };
@@ -38,6 +41,17 @@ class AddPatient extends React.Component {
     }
 
     async onFinishButtonClick(){
+      const userInfo = {
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        username: this.state.username,
+        email: this.state.email,
+        phoneNumber: this.state.phone,
+        profilePicture: '',
+        active: 'Y',
+      };
+      console.log(this.state)
+      const user = await createUser(userInfo);
       const patientInfo = {
         address: this.state.address,
         city: this.state.city,
