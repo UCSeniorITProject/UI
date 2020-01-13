@@ -492,6 +492,7 @@ class BasicInfo extends React.Component {
                     id="genderMale"
                     name="gender"
                     type="radio"
+                    onClick={e => this.setState({gender: 'Male'})}
                   />
                   <span className="form-check-sign" />
                   Male
@@ -502,6 +503,7 @@ class BasicInfo extends React.Component {
                     id="genderFemale"
                     name="gender"
                     type="radio"
+                    onClick={e => this.setState({gender: 'Female'})}
                   />
                   <span className="form-check-sign" />
                   Female
