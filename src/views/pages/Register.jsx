@@ -77,24 +77,6 @@ class Register extends React.Component {
     return Object.entries(this.state).filter(x => x[0].includes('State') && x[1] ===null || x[0].includes('State') && x[1].includes('has-danger')).length === 0;
   }
 
-  alertUserOfPasswordRequirements(){
-    var options = {};
-    options = {
-      place: 'tr',
-      message: (
-        <div>
-          <div>
-            Your password must be 6 characters or more and include one capital later.
-          </div>
-        </div>
-      ),
-      type: 'info',
-      icon: "tim-icons icon-bell-55",
-      autoDismiss: 7
-    };
-    this.refs.notificationAlert.notificationAlert(options);
-  }
-
   async isFieldUnique(e){
     try {
       const user = await getUserWithFilter({[e.target.name]: e.target.value});
@@ -152,6 +134,24 @@ class Register extends React.Component {
 
   setIsFormValid(){
     this.setState({isFormValid: this.isFormValid()});
+  }
+
+  alertUserOfPasswordRequirements(){
+    var options = {};
+    options = {
+      place: 'tr',
+      message: (
+        <div>
+          <div>
+            Your password must be 6 characters or more and include one capital later.
+          </div>
+        </div>
+      ),
+      type: 'info',
+      icon: "tim-icons icon-bell-55",
+      autoDismiss: 7
+    };
+    this.refs.notificationAlert.notificationAlert(options);
   }
 
   handleChange(event, stateName, type, stateNameEqualTo, maxValue){

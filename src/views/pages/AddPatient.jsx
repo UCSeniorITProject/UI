@@ -1,5 +1,6 @@
 import BasicInfo from './AddPatientsSteps/BasicInfo';
 import InsuranceInfo from './AddPatientsSteps/InsuranceInfo';
+import UserInfo from './AddPatientsSteps/UserInfo';
 import { withRouter } from 'react-router';
 import {
   Input,
@@ -57,6 +58,14 @@ class AddPatient extends React.Component {
         stepName: "Basic Info",
         stepIcon: "tim-icons icon-single-02",
         component: BasicInfo,
+        stepProps: {
+          onChildStateChange: this.onChildStateChange.bind(this),
+        }
+      },
+      {
+        stepName: "User Info",
+        stepIcon: "tim-icons icon-single-02",
+        component: UserInfo,
         stepProps: {
           onChildStateChange: this.onChildStateChange.bind(this),
         }

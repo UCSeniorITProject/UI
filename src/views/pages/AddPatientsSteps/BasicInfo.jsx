@@ -10,15 +10,8 @@ import {
   InputGroupAddon,
   InputGroupText,
   InputGroup,
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardTitle,
   Label,
   FormGroup,
-  Form,
   Row,
   Col
 } from "reactstrap";
@@ -218,10 +211,12 @@ class BasicInfo extends React.Component {
         break;
     }
 
-    if(event.target.value){
+    if(type !== 'dob' && event.target.value){
       this.props.onChildStateChange(stateName, event.target.value);
+      this.setState({ [stateName]: event.target.value});
+    } else {
+      this.props.onChildStateChange(stateName, event.toDate());
     }
-    this.setState({ [stateName]: event.target.value });
   };
   
   verifySSN = (value) => {
@@ -483,7 +478,7 @@ class BasicInfo extends React.Component {
                   className: "form-control",
                   placeholder: "Date of Birth"
                 }}
-                onBlur={e => {this.setState({dob: e.toDate()}); this.onChildStateChange('dob', e.toDate());}}
+                onBlur={e => {this.setState({dob: e.toDate()}); this.change(e, 'dob', 'dob',  0)}}
                 timeFormat={false}
               />
             </FormGroup>

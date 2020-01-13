@@ -77,7 +77,7 @@ class InsuranceInfo extends React.Component {
           <Col sm="6">
           <InputGroup
               className={classnames(this.state.insuranceNameState, {
-                "input-group-focus": this.state.insuranceNameState
+                "input-group-focus": this.state.insuranceNameFocus
               })}
             >
               <InputGroupAddon addonType="prepend">
@@ -101,7 +101,7 @@ class InsuranceInfo extends React.Component {
           <Col sm="6">
             <InputGroup
                 className={classnames(this.state.insurancePlanNoState, {
-                  "input-group-focus": this.state.insurancePlanNoState
+                  "input-group-focus": this.state.insurancePlanNoFocus
                 })}
               >
                 <InputGroupAddon addonType="prepend">
@@ -125,7 +125,7 @@ class InsuranceInfo extends React.Component {
           <Col sm="6">
             <InputGroup
                 className={classnames(this.state.insuranceCoPayAmountState, {
-                  "input-group-focus": this.state.insuranceCoPayAmountState
+                  "input-group-focus": this.state.insuranceCoPayAmountFocus
                 })}
               >
                 <InputGroupAddon addonType="prepend">
