@@ -488,22 +488,22 @@ class BasicInfo extends React.Component {
                 <Label check>
                   <Input
                     defaultChecked
-                    defaultValue="Male"
+                    defaultValue="M"
                     id="genderMale"
                     name="gender"
                     type="radio"
-                    onClick={e => this.setState({gender: 'Male'})}
+                    onClick={e => this.setState({gender: 'M'})}
                   />
                   <span className="form-check-sign" />
                   Male
                 </Label>
                 <Label check>
                   <Input
-                    defaultValue="Female"
+                    defaultValue="F"
                     id="genderFemale"
                     name="gender"
                     type="radio"
-                    onClick={e => this.setState({gender: 'Female'})}
+                    onClick={e => this.setState({gender: 'F'})}
                   />
                   <span className="form-check-sign" />
                   Female

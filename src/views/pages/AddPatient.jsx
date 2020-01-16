@@ -13,6 +13,7 @@ import {
 import {createUser} from '../../services/User';
 import ReactWizard from "react-bootstrap-wizard";
 import React from "react";
+import { createPatient } from '../../services/Patient';
 
 class AddPatient extends React.Component {
     constructor(){
@@ -26,7 +27,7 @@ class AddPatient extends React.Component {
         phoneNumber: '',
         zipCode: '',
         ssn: '',
-        gender: 'Male',
+        gender: 'M',
         dob: '',
         insuranceName: '',
         username: '',
@@ -47,10 +48,10 @@ class AddPatient extends React.Component {
         username: this.state.username,
         email: this.state.email,
         phoneNumber: this.state.phoneNumber,
+        password: this.state.password,
         profilePicture: '',
         active: 'Y',
       };
-      console.log(this.state)
       const user = await createUser(userInfo);
       const patientInfo = {
         address: this.state.address,
@@ -62,9 +63,11 @@ class AddPatient extends React.Component {
         planNo: this.state.insurancePlanNo,
         ssn: this.state.ssn,
         state: this.state.state,
-        userId: 0,
+        userId: user.id,
         zipCode: this.state.zipCode
       };
+      const patient = await createPatient(patientInfo);
+      this.props.history.push('/admin/user-profile');
     }
 
     steps = [

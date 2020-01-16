@@ -9,23 +9,8 @@ export default async (store, history) => {
       });
 
       axios.interceptors.response.use(response => response, async error => {
-        if(error.config.url === `${process.env.REACT_APP_API_URL}/api/security-management/user/token/refresh`){
-          return Promise.resolve();
-        }
-        if (error.response.status === 401) {
-          const refreshToken = localStorage.getItem("refreshToken");
-          if(refreshToken){
-            try {
-              const tokens = refreshAccessToken(refreshAccessToken)
-              localStorage.setItem('accessToken', tokens.accessToken);
-              localStorage.setItem('refreshToken', tokens.refreshToken);
-              error.response.config.headers['Authorization'] = `Bearer ${tokens.accessToken}`;
-              return axios(error.response.config);
-            } catch (err) {
-              history.push('/auth/login');
-              return Promise.reject(error);
-            }
-          }
+        if(error.response.status === 401){
+          history.push('/auth/login');
         }
     });
 };

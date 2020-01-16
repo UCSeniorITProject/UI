@@ -4,6 +4,7 @@ import Prescribe from "views/pages/Prescribe.jsx";
 import User from "views/pages/User.jsx";
 import Login from "views/pages/Login.jsx";
 import AddPatient from "views/pages/AddPatient";
+import PatientList from "./views/pages/PatientList";
 
 const routes = [
   {
@@ -72,11 +73,20 @@ const routes = [
     requiredRoles:  ['Doctor', 'Pharmacist'],
     views: [
       {
-        path: "/patient",
+        path: "/patient/new",
         name: "Create New",
         mini: "P",
         requiredRoles:  ['Doctor'],
         component: AddPatient,
+        isHidden: false,
+        layout: "/admin"
+      },
+      {
+        path: "/patient/",
+        name: "View List",
+        mini: "P",
+        requiredRoles:  ['Doctor'],
+        component: PatientList,
         isHidden: false,
         layout: "/admin"
       },

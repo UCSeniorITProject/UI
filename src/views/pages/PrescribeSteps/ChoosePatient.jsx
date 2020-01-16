@@ -1,6 +1,6 @@
 
 import React from "react";
-
+import { withRouter } from 'react-router';
 // reactstrap components
 import {
   Button,
@@ -72,6 +72,7 @@ class PickPatient extends React.Component {
               color="success"
               id="addPatient"
               type="button"
+              onClick={e => this.props.history.push('/admin/patient/new')}
             >
               Add Patient
             </Button>
@@ -120,4 +121,4 @@ class PickPatient extends React.Component {
   }
 }
 
-export default PickPatient;
+export default withRouter(PickPatient);
