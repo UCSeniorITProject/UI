@@ -30,7 +30,9 @@ setInterval(async () => {
   const refreshToken = localStorage.getItem('refreshToken');
   if(refreshToken !== 'undefined'){
     const tokens = await refreshAccessToken(refreshToken);
-    localStorage.setItem('accessToken', tokens.accessToken);
-    localStorage.setItem('refreshToken', tokens.refreshToken);
+    if(tokens !== null){
+      localStorage.setItem('accessToken', tokens.accessToken);
+      localStorage.setItem('refreshToken', tokens.refreshToken);
+    }
   }
 }, process.env.REACT_APP_TOKEN_TIMEOUT);

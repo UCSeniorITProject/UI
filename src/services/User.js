@@ -20,6 +20,8 @@ export async function refreshAccessToken(refreshToken){
   const tokens = await Axios.post(`${process.env.REACT_APP_API_URL}/api/security-management/token/refresh`, {
     refreshToken,
   });
-
-  return tokens.data;
+  if('data' in  tokens){
+    return tokens.data;
+  }
+  return null;
 }

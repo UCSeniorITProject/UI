@@ -10,7 +10,7 @@ import {
 import jwtDecode from 'jwt-decode';
 import {getPatientList} from '../../services/Patient';
 import ReactTable from "react-table";
-
+import { withRouter } from 'react-router';
 class PatientList extends React.Component  {
   constructor(props) {
     super(props);
@@ -32,6 +32,7 @@ class PatientList extends React.Component  {
                 size="md"
                 className="btn-fill"
                 value={x.userId}
+                onClick={e => this.props.history.push(`/admin/patient/profile/${x.userId}/`)}
               >
                 EDIT
               </Button>
@@ -98,4 +99,4 @@ class PatientList extends React.Component  {
   }
 }
 
-export default PatientList;
+export default withRouter(PatientList);

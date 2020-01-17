@@ -1,11 +1,10 @@
 import Register from "views/pages/Register.jsx";
-
 import Prescribe from "views/pages/Prescribe.jsx";
 import User from "views/pages/User.jsx";
 import Login from "views/pages/Login.jsx";
 import AddPatient from "views/pages/AddPatient";
 import PatientList from "./views/pages/PatientList";
-
+import PatientProfile from "./views/pages/PatientProfile";
 const routes = [
   {
     collapse: true,
@@ -79,6 +78,15 @@ const routes = [
         requiredRoles:  ['Doctor'],
         component: AddPatient,
         isHidden: false,
+        layout: "/admin"
+      },
+      {
+        path: "/patient/profile/:id/",
+        name: "Patient Profile",
+        mini: "P",
+        requiredRoles:  ['Doctor'],
+        component: PatientProfile,
+        isHidden: true,
         layout: "/admin"
       },
       {
