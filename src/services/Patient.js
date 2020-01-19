@@ -12,5 +12,10 @@ export async function getPatientBySSN(ssn){
 
 export async function createPatient(patientInfo){
   const patient = await Axios.post(`${process.env.REACT_APP_API_URL}/api/patient-service/patient`, {patient: {...patientInfo}});
-  console.log(patient)
+  return patient;
+}
+
+export async function getPatientByUserId(patientId){
+  const patient = await Axios.get(`${process.env.REACT_APP_API_URL}/api/patient-service/patient/${patientId}`);
+  return patient;
 }

@@ -13,6 +13,8 @@ import {
   Row,
   Col
 } from "reactstrap";
+import ReactDatetime from "react-datetime";
+import ImageUpload from '../../components/CustomUpload/ImageUpload';
 
 class PatientProfile extends React.Component {
   constructor(props){
@@ -44,53 +46,14 @@ class PatientProfile extends React.Component {
       usernameState: null,
       password: '',
       passwordState: null,
+      confirmPassword: '',
+      confirmPasswordState: null,
       insuranceCoPayAmount: '',
       insuranceCoPayAmountState: null,
       insurancePlanNo: '',
       insurancePlanNoState: null,
       state: '',
       stateState:null,
-
-
-
-            // register form
-            registerEmail: "",
-            registerPassword: "",
-            registerConfirmPassword: "",
-            registerEmailState: "",
-            registerPasswordState: "",
-            registerConfirmPasswordState: "",
-            // login form
-            loginFullName: "",
-            loginEmail: "",
-            loginPassword: "",
-            loginFullNameState: "",
-            loginEmailState: "",
-            loginPasswordState: "",
-            // type validation form
-            required: "",
-            email: "",
-            number: "",
-            url: "",
-            source: "",
-            destination: "",
-            requiredState: "",
-            emailState: "",
-            numberState: "",
-            urlState: "",
-            sourceState: "",
-            destinationState: "",
-            // range validation form
-            minLength: "",
-            maxLength: "",
-            range: "",
-            min: "",
-            max: "",
-            minLengthState: "",
-            maxLengthState: "",
-            rangeState: "",
-            minState: "",
-            maxState: ""
     }
   }
 
@@ -217,6 +180,13 @@ class PatientProfile extends React.Component {
             this.setState({ [stateName + "State"]: "has-danger" });
           }
           break;
+        case "phone":
+          if(this.verifyPhone(event.target.value)){
+            this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+          } else {
+            this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+          }
+          break;
         default:
           break;
       }
@@ -245,6 +215,9 @@ class PatientProfile extends React.Component {
         this.setState({ loginPasswordState: "has-danger" });
       }
     };
+    handleImageChange = e => {
+
+    }
     typeClick = () => {
       if (this.state.requiredState === "") {
         this.setState({ requiredState: "has-danger" });
@@ -287,30 +260,15 @@ class PatientProfile extends React.Component {
       }
     };
 
+    verifyPhone = value => {
+      const phoneRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
+      if(phoneRegex.test(value)){
+        return true;
+      }
+      return false;
+    };
+
   render(){
-    let {
-      // register form
-      registerEmailState,
-      registerPasswordState,
-      registerConfirmPasswordState,
-      // login form
-      loginFullNameState,
-      loginEmailState,
-      loginPasswordState,
-      // type validation form
-      requiredState,
-      emailState,
-      numberState,
-      urlState,
-      sourceState,
-      destinationState,
-      // range validation form
-      minLengthState,
-      maxLengthState,
-      rangeState,
-      minState,
-      maxState
-    } = this.state;
     return (
       <>
         <div className="content">
@@ -355,7 +313,7 @@ class PatientProfile extends React.Component {
                         </FormGroup>
                       </Col>
 
-                      <Col md="12">
+                      <Col md="6">
                         <FormGroup className={`has-label ${this.state.addressState}`}>
                             <label>Street Address</label>
                             <Input
@@ -369,6 +327,31 @@ class PatientProfile extends React.Component {
                               </label>
                             ) : null}
                         </FormGroup>
+                      </Col>
+
+                      <Col md="6">
+                        <FormGroup
+                          className={`has-label ${this.state.zipCodeState}`}
+                          >
+                            <label>Zip Code</label>
+                            <Input
+                              id="zipCode"
+                              name="zipcode"
+                              type="text"
+                              onChange={e =>
+                                this.change(
+                                  e,
+                                  "zipCode",
+                                  "length",
+                                  1
+                                )
+                              }
+                            />
+                            {this.state.zipCodeState ===
+                            "has-danger" ? (
+                              <label className="error">This field is required.</label>
+                            ) : null}
+                          </FormGroup> 
                       </Col>
 
                       <Col md="6">  
@@ -391,21 +374,20 @@ class PatientProfile extends React.Component {
 
                       <Col md="6">
                         <FormGroup
-                        className={`has-label ${registerConfirmPasswordState}`}
+                        className={`has-label ${this.state.cityState}`}
                         >
                           <label>City</label>
                           <Input
-                            equalto="#registerPassword"
-                            id="registerPasswordConfirmation"
-                            name="password_confirmation"
-                            type="password"
+                            id="city"
+                            name="city"
+                            type="text"
                             autoComplete="off"
                             onChange={e =>
                               this.change(
                                 e,
-                                "registerConfirmPassword",
-                                "equalTo",
-                                "registerPassword"
+                                "city",
+                                "length",
+                                1
                               )
                             }
                           />
@@ -415,338 +397,214 @@ class PatientProfile extends React.Component {
                           ) : null}
                         </FormGroup>   
                       </Col>
-                    </Row>
-                  </CardBody>
-                  <CardFooter className="text-right">
-                    <Button color="primary" onClick={this.registerClick}>
-                      Save
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </Form>
-            </Col>
-            <Col md="6">
-              <Form id="LoginValidation">
-                <Card>
-                  <CardHeader>
-                    <CardTitle tag="h4">Login Form</CardTitle>
-                  </CardHeader>
-                  <CardBody>
-                    <FormGroup className={`has-label ${loginFullNameState}`}>
-                      <label>Full Name *</label>
-                      <Input
-                        name="fullname"
-                        type="text"
-                        onChange={e =>
-                          this.change(e, "loginFullName", "length", 1)
-                        }
-                      />
-                      {this.state.loginFullNameState === "has-danger" ? (
-                        <label className="error">This field is required.</label>
-                      ) : null}
-                    </FormGroup>
-                    <FormGroup className={`has-label ${loginEmailState}`}>
-                      <label>Email Address *</label>
-                      <Input
-                        name="email"
-                        type="email"
-                        onChange={e => this.change(e, "loginEmail", "email")}
-                      />
-                      {this.state.loginEmailState === "has-danger" ? (
-                        <label className="error">
-                          Please enter a valid email address.
-                        </label>
-                      ) : null}
-                    </FormGroup>
-                    <FormGroup className={`has-label ${loginPasswordState}`}>
-                      <label>Password *</label>
-                      <Input
-                        name="password"
-                        type="password"
-                        autoComplete="off"
-                        onChange={e =>
-                          this.change(e, "loginPassword", "password")
-                        }
-                      />
-                      {this.state.loginPasswordState === "has-danger" ? (
-                        <label className="error">This field is required.</label>
-                      ) : null}
-                    </FormGroup>
-                    <div className="category form-category">
-                      * Required fields
-                    </div>
-                  </CardBody>
-                  <CardFooter className="text-left">
-                    <Button color="primary" onClick={this.loginClick}>
-                      Login
-                    </Button>
-                    <a
-                      href="#pablo"
-                      className="pull-right"
-                      onClick={e => e.preventDefault}
-                    >
-                      Forgot password?
-                    </a>
-                  </CardFooter>
-                </Card>
-              </Form>
-            </Col>
-            <Col md="12">
-              <Form className="form-horizontal" id="TypeValidation">
-                <Card>
-                  <CardHeader>
-                    <CardTitle tag="h4">Type Validation</CardTitle>
-                  </CardHeader>
-                  <CardBody>
-                    <Row>
-                      <Label sm="2">Required Text</Label>
-                      <Col sm="7">
-                        <FormGroup className={requiredState}>
-                          <Input
-                            name="required"
-                            type="text"
-                            onChange={e =>
-                              this.change(e, "required", "length", 1)
-                            }
-                          />
-                          {this.state.requiredState === "has-danger" ? (
-                            <label className="error">
-                              This field is required.
-                            </label>
-                          ) : null}
+                          
+                      <Col md="6">
+                          <FormGroup className={`has-label ${this.state.addressState}`}>
+                            <label>Social Security Number</label>
+                            <Input
+                              name="address"
+                              type="text"
+                              onChange={e => this.change(e, "registerAddress", "length", 1)}
+                            />
+                            {this.state.registerEmailState === "has-danger" ? (
+                              <label className="error">
+                                Please enter a valid address.
+                              </label>
+                            ) : null}
+                        </FormGroup> 
+                      </Col>
+
+                      <Col md="6">
+                        <FormGroup className='has-label'>
+                            <label>Date of Birth</label>
+                            <ReactDatetime
+                              inputProps={{
+                                className: "form-control",
+                                placeholder: "Date of Birth"
+                              }}
+                              onBlur={e => {this.setState({dob: e.toDate()}); this.change(e, 'dob', 'dob',  0)}}
+                              timeFormat={false}
+                            />
                         </FormGroup>
                       </Col>
-                      <Col className="label-on-right" tag="label" sm="3">
-                        <code>required</code>
-                      </Col>
                     </Row>
+                  </CardBody>
+                </Card>
+              </Form>
+            </Col>
+
+            <Col md="6">
+              <Form>
+                <Card>
+                  <CardHeader>
+                    <CardTitle tag="h4">User Info</CardTitle>
+                  </CardHeader>
+                  <CardBody>
                     <Row>
-                      <Label sm="2">Email</Label>
-                      <Col sm="7">
-                        <FormGroup className={emailState}>
+                      <Col md="12">
+                        <FormGroup className={`has-label`}>
+                          <label>Username</label>
+                          <Input
+                            name="fullname"
+                            type="text"
+                            readOnly
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col md="12">
+                        <FormGroup className={`has-label`}>
+                          <label>Email Address</label>
                           <Input
                             name="email"
-                            type="text"
-                            onChange={e => this.change(e, "email", "email")}
+                            type="email"
+                            readOnly
                           />
-                          {this.state.emailState === "has-danger" ? (
-                            <label className="error">
-                              Please enter a valid email address.
-                            </label>
-                          ) : null}
                         </FormGroup>
                       </Col>
-                      <Col className="label-on-right" tag="label" sm="3">
-                        <code>type="email"</code>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Label sm="2">Number</Label>
-                      <Col sm="7">
-                        <FormGroup className={numberState}>
+
+                      <Col md="6">
+                        <FormGroup className={`has-label ${this.state.passwordState}`}>
+                          <label>Password</label>
                           <Input
-                            name="number"
-                            type="text"
-                            onChange={e => this.change(e, "number", "number")}
-                          />
-                          {this.state.numberState === "has-danger" ? (
-                            <label className="error">
-                              Please enter a valid number.
-                            </label>
-                          ) : null}
-                        </FormGroup>
-                      </Col>
-                      <Col className="label-on-right" tag="label" sm="3">
-                        <code>type="number"</code>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Label sm="2">Url</Label>
-                      <Col sm="7">
-                        <FormGroup className={urlState}>
-                          <Input
-                            name="url"
-                            type="text"
-                            onChange={e => this.change(e, "url", "url")}
-                          />
-                          {this.state.urlState === "has-danger" ? (
-                            <label className="error">
-                              Please enter a valid URL.
-                            </label>
-                          ) : null}
-                        </FormGroup>
-                      </Col>
-                      <Col className="label-on-right" tag="label" sm="3">
-                        <code>type="url"</code>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Label sm="2">Equal to</Label>
-                      <Col sm="3">
-                        <FormGroup className={sourceState}>
-                          <Input
-                            id="idSource"
-                            placeholder="#idSource"
-                            type="text"
+                            name="password"
+                            type="password"
+                            autoComplete="off"
                             onChange={e =>
-                              this.change(e, "source", "equalTo", "destination")
+                              this.change(e, "password", "password")
                             }
                           />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="3">
-                        <FormGroup className={destinationState}>
-                          <Input
-                            id="idDestination"
-                            placeholder="#idDestination"
-                            type="text"
-                            onChange={e =>
-                              this.change(e, "destination", "equalTo", "source")
-                            }
-                          />
-                          {this.state.destinationState === "has-danger" ? (
-                            <label className="error">
-                              Please enter the same value.
-                            </label>
+                          {this.state.passwordState === "has-danger" ? (
+                            <label className="error">This field is required.</label>
                           ) : null}
                         </FormGroup>
                       </Col>
-                      <Col className="label-on-right" tag="label" sm="4">
-                        <code>equalTo="#idSource"</code>
+                      <Col md="6">
+                        <FormGroup className={`has-label ${this.state.confirmPasswordState}`}>
+                          <label>Confirm Password</label>
+                          <Input
+                            name="password"
+                            type="password"
+                            autoComplete="off"
+                            onChange={e =>
+                              this.change(e, "confirmPassword", "password")
+                            }
+                          />
+                          {this.state.confirmPasswordState === "has-danger" ? (
+                            <label className="error">This field is required.</label>
+                          ) : null}
+                        </FormGroup>
+                      </Col>
+
+                      <Col md="12">
+                        <FormGroup className={`has-label ${this.state.phoneNumberState}`}>
+                            <label>Phone Number</label>
+                            <Input
+                              name="phoneNumber"
+                              type="text"
+                              autoComplete="off"
+                              onChange={e =>
+                                this.change(e, "phoneNumber", "phone")
+                              }
+                            />
+                            {this.state.phoneNumberState === "has-danger" ? (
+                              <label className="error">This field is required.</label>
+                            ) : null}
+                          </FormGroup>
                       </Col>
                     </Row>
                   </CardBody>
-                  <CardFooter className="text-center">
-                    <Button color="primary" onClick={this.typeClick}>
-                      Validate Inputs
-                    </Button>
-                  </CardFooter>
                 </Card>
               </Form>
             </Col>
-            <Col md="12">
-              <Form className="form-horizontal" id="RangeValidation">
+
+            <Col md="6">
+              <Form>
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Range Validation</CardTitle>
+                    <CardTitle tag="h4">Insurance Info</CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <Col md="12">
+                        <FormGroup className={`has-label ${this.state.insuranceNameState}`}>
+                            <label>Insurance Name</label>
+                            <Input
+                              name="insurancename"
+                              type="text"
+                              autoComplete="off"
+                              onChange={e =>
+                                this.change(e, "insuranceName", "length", 1)
+                              }
+                            />
+                            {this.state.insuranceNameState === "has-danger" ? (
+                              <label className="error">This field is required.</label>
+                            ) : null}
+                          </FormGroup>
+                      </Col>
+                      <Col md="12">
+                        <FormGroup className={`has-label ${this.state.insurancePlanNoState}`}>
+                            <label>Insurance Plan Number</label>
+                            <Input
+                              name="insuranceplanno"
+                              type="text"
+                              autoComplete="off"
+                              onChange={e =>
+                                this.change(e, "insurancePlanNo", "length", 1)
+                              }
+                            />
+                            {this.state.insurancePlanNoState === "has-danger" ? (
+                              <label className="error">This field is required.</label>
+                            ) : null}
+                          </FormGroup>
+                      </Col>
+                      <Col md="12">
+                        <FormGroup className={`has-label ${this.state.insuranceCoPayAmountState}`}>
+                            <label>Insurance Co-Pay Amount</label>
+                            <Input
+                              name="insurancecopayamount"
+                              type="text"
+                              autoComplete="off"
+                              onChange={e =>
+                                this.change(e, "insuranceCoPayAmount", "length", 1)
+                              }
+                            />
+                            {this.state.insuranceCoPayAmountState === "has-danger" ? (
+                              <label className="error">This field is required.</label>
+                            ) : null}
+                          </FormGroup>
+                      </Col>
+                  </CardBody>
+                </Card>
+              </Form>
+            </Col>
+
+            <Col md="6">
+              <Form>
+                <Card>
+                  <CardHeader>
+                    <CardTitle tag="h4">Profile</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Row>
-                      <Label sm="2">Min Length</Label>
-                      <Col sm="7">
-                        <FormGroup className={minLengthState}>
-                          <Input
-                            name="min_length"
-                            type="text"
-                            onChange={e =>
-                              this.change(e, "minLength", "length", 5)
-                            }
+                      <Col md="4">
+                      </Col>
+                      <Col md="8">
+                        <FormGroup>
+                          <ImageUpload
+                            avatar
+                            onChange={this.handleImageChange.bind(this)}
+                            addBtnColor="default"
+                            changeBtnColor="default"
+                            ref="ImageUpload"
                           />
-                          {this.state.minLengthState === "has-danger" ? (
-                            <label className="error">
-                              Please enter at least 5 characters.
-                            </label>
-                          ) : null}
                         </FormGroup>
-                      </Col>
-                      <Col className="label-on-right" tag="label" sm="3">
-                        <code>minLength="5"</code>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Label sm="2">Max Length</Label>
-                      <Col sm="7">
-                        <FormGroup className={maxLengthState}>
-                          <Input
-                            name="max_length"
-                            type="text"
-                            onChange={e =>
-                              this.change(e, "maxLength", "max-length", 5)
-                            }
-                          />
-                          {this.state.maxLengthState === "has-danger" ? (
-                            <label className="error">
-                              Please enter 5 or less characters.
-                            </label>
-                          ) : null}
-                        </FormGroup>
-                      </Col>
-                      <Col className="label-on-right" tag="label" sm="3">
-                        <code>maxLength="5"</code>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Label sm="2">Range</Label>
-                      <Col sm="7">
-                        <FormGroup className={rangeState}>
-                          <Input
-                            name="range"
-                            type="text"
-                            onChange={e =>
-                              this.change(e, "range", "range", 6, 10)
-                            }
-                          />
-                          {this.state.rangeState === "has-danger" ? (
-                            <label className="error">
-                              Please enter a value between 6 and 10.
-                            </label>
-                          ) : null}
-                        </FormGroup>
-                      </Col>
-                      <Col className="label-on-right" tag="label" sm="3">
-                        <code>min="6" max="10"</code>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Label sm="2">Min Value</Label>
-                      <Col sm="7">
-                        <FormGroup className={minState}>
-                          <Input
-                            name="min"
-                            type="text"
-                            onChange={e =>
-                              this.change(e, "min", "min-value", 6)
-                            }
-                          />
-                          {this.state.minState === "has-danger" ? (
-                            <label className="error">
-                              Please enter a value greater than or equal to 6.
-                            </label>
-                          ) : null}
-                        </FormGroup>
-                      </Col>
-                      <Col className="label-on-right" tag="label" sm="3">
-                        <code>min="6"</code>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Label sm="2">Max Value</Label>
-                      <Col sm="7">
-                        <FormGroup className={maxState}>
-                          <Input
-                            name="max"
-                            type="text"
-                            onChange={e =>
-                              this.change(e, "max", "max-value", 6)
-                            }
-                          />
-                          {this.state.maxState === "has-danger" ? (
-                            <label className="error">
-                              Please enter a value less than or equal to 6.
-                            </label>
-                          ) : null}
-                        </FormGroup>
-                      </Col>
-                      <Col className="label-on-right" tag="label" sm="3">
-                        <code>max="6"</code>
                       </Col>
                     </Row>
                   </CardBody>
-                  <CardFooter className="text-center">
-                    <Button color="primary" onClick={this.rangeClick}>
-                      Validate Inputs
+                  <CardFooter>
+                    <Button className="btn-fill pull-right" color="primary" type="submit">
+                      Save Patient
                     </Button>
-                  </CardFooter>
+                </CardFooter>
                 </Card>
               </Form>
             </Col>

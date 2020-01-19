@@ -247,14 +247,14 @@ class User extends React.Component {
 
                       <Col className="pr-md-1" md="3">
                         <FormGroup>
-                        <ImageUpload
-                          avatar
-                          onChange={this.handleImageChange.bind(this)}
-                          addBtnColor="default"
-                          changeBtnColor="default"
-                          className="pull-right"
-                          ref="ImageUpload"
-                        />
+                          <ImageUpload
+                            avatar
+                            onChange={this.handleImageChange.bind(this)}
+                            addBtnColor="default"
+                            changeBtnColor="default"
+                            className="pull-right"
+                            ref="ImageUpload"
+                          />
                         </FormGroup>
                       </Col>
                     </Row>
