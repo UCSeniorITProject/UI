@@ -15,6 +15,7 @@ import {
 } from "reactstrap";
 import ReactDatetime from "react-datetime";
 import ImageUpload from '../../components/CustomUpload/ImageUpload';
+import { getPatientByUserId, getPatientByPatientId } from "../../services/Patient";
 
 class PatientProfile extends React.Component {
   constructor(props){
@@ -54,8 +55,24 @@ class PatientProfile extends React.Component {
       insurancePlanNoState: null,
       state: '',
       stateState:null,
+      profilePicture: '',
     }
   }
+
+    async componentDidMount(){
+      const patientId = this.props.match.params.id;
+      const patient = await getPatientByPatientId(patientId);
+      console.log(patient)
+      this.setState({
+        firstName: patient.firstName,
+        lastName: patient.lastName,
+        address: patient.address,
+        city: patient.city,
+        state: patient.state,
+        insurancePlanNo: patient.planNo,
+      });
+      console.log(patient)
+    }
 
     // function that returns true if value is email, false otherwise
     verifyEmail = value => {
@@ -289,6 +306,7 @@ class PatientProfile extends React.Component {
                             name="firstname"
                             type="text"
                             onChange={e => this.change(e, "firstName", "length", '1')}
+                            defaultValue={this.state.firstName}
                           />
                           {this.state.firstNameState === "has-danger" ? (
                             <label className="error">
@@ -304,6 +322,7 @@ class PatientProfile extends React.Component {
                             name="lastname"
                             type="text"
                             onChange={e => this.change(e, "registerEmail", "email")}
+                            defaultValue={this.state.lastName}
                           />
                           {this.state.lastNameState === "has-danger" ? (
                             <label className="error">
@@ -320,6 +339,7 @@ class PatientProfile extends React.Component {
                               name="address"
                               type="text"
                               onChange={e => this.change(e, "registerAddress", "length", 1)}
+                              defaultValue={this.state.address}
                             />
                             {this.state.registerEmailState === "has-danger" ? (
                               <label className="error">
@@ -338,6 +358,7 @@ class PatientProfile extends React.Component {
                               id="zipCode"
                               name="zipcode"
                               type="text"
+                              defaultValue={this.state.zipCode}
                               onChange={e =>
                                 this.change(
                                   e,
@@ -362,6 +383,7 @@ class PatientProfile extends React.Component {
                             name="state"
                             type="teext"
                             autoComplete="off"
+                            defaultValue={this.state.state}
                             onChange={e =>
                               this.change(e, "registerPassword", "password")
                             }
@@ -382,6 +404,7 @@ class PatientProfile extends React.Component {
                             name="city"
                             type="text"
                             autoComplete="off"
+                            defaultValue={this.state.city}
                             onChange={e =>
                               this.change(
                                 e,
@@ -405,6 +428,7 @@ class PatientProfile extends React.Component {
                               name="address"
                               type="text"
                               onChange={e => this.change(e, "registerAddress", "length", 1)}
+                              defaultValue={this.state.ssn}
                             />
                             {this.state.registerEmailState === "has-danger" ? (
                               <label className="error">
@@ -447,6 +471,7 @@ class PatientProfile extends React.Component {
                           <Input
                             name="fullname"
                             type="text"
+                            defaultValue={this.state.username}
                             readOnly
                           />
                         </FormGroup>
@@ -457,6 +482,7 @@ class PatientProfile extends React.Component {
                           <Input
                             name="email"
                             type="email"
+                            defaultValue={this.state.email}
                             readOnly
                           />
                         </FormGroup>
@@ -499,6 +525,7 @@ class PatientProfile extends React.Component {
                         <FormGroup className={`has-label ${this.state.phoneNumberState}`}>
                             <label>Phone Number</label>
                             <Input
+                              defaultValue={this.state.phoneNumber}
                               name="phoneNumber"
                               type="text"
                               autoComplete="off"
@@ -528,6 +555,7 @@ class PatientProfile extends React.Component {
                         <FormGroup className={`has-label ${this.state.insuranceNameState}`}>
                             <label>Insurance Name</label>
                             <Input
+                              defaultValue={this.state.insuranceName}
                               name="insurancename"
                               type="text"
                               autoComplete="off"
@@ -544,6 +572,7 @@ class PatientProfile extends React.Component {
                         <FormGroup className={`has-label ${this.state.insurancePlanNoState}`}>
                             <label>Insurance Plan Number</label>
                             <Input
+                              defaultValue={this.state.insurancePlanNo}
                               name="insuranceplanno"
                               type="text"
                               autoComplete="off"
@@ -560,6 +589,7 @@ class PatientProfile extends React.Component {
                         <FormGroup className={`has-label ${this.state.insuranceCoPayAmountState}`}>
                             <label>Insurance Co-Pay Amount</label>
                             <Input
+                              defaultValue={this.state.insuranceCoPayAmount}
                               name="insurancecopayamount"
                               type="text"
                               autoComplete="off"

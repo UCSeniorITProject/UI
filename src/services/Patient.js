@@ -15,7 +15,7 @@ export async function createPatient(patientInfo){
   return patient;
 }
 
-export async function getPatientByUserId(patientId){
+export async function getPatientByPatientId(patientId){
   const patient = await Axios.get(`${process.env.REACT_APP_API_URL}/api/patient-service/patient/${patientId}`);
-  return patient;
+  return patient.data.patient;
 }
