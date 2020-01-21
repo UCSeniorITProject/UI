@@ -16,6 +16,8 @@ import {
 import ReactDatetime from "react-datetime";
 import ImageUpload from '../../components/CustomUpload/ImageUpload';
 import { getPatientByUserId, getPatientByPatientId } from "../../services/Patient";
+import { getUserWithFilter } from "../../services/User";
+import moment from "moment";
 
 class PatientProfile extends React.Component {
   constructor(props){
@@ -56,22 +58,40 @@ class PatientProfile extends React.Component {
       state: '',
       stateState:null,
       profilePicture: '',
+      truncatedSsn: '***-**-****'
     }
   }
 
     async componentDidMount(){
       const patientId = this.props.match.params.id;
       const patient = await getPatientByPatientId(patientId);
-      console.log(patient)
-      this.setState({
-        firstName: patient.firstName,
-        lastName: patient.lastName,
+      const users = await getUserWithFilter({id: patient.userId});
+      const user = users.users[0];
+      await this.setState({
+        firstName: user.firstName || patient.firstName,
+        lastName: user.lastName || patient.lastName,
         address: patient.address,
         city: patient.city,
         state: patient.state,
         insurancePlanNo: patient.planNo,
+        dob: patient.dob,
+        email: user.email,
+        username: user.username,
+        ssn: patient.ssn,
+        phoneNumber: user.phoneNumber,
+        insuranceName: patient.insuranceName,
+        insuranceCoPayAmount: patient.coPayAmount,
+        zipCode: patient.zipCode,
+        profilePicture: user.profilePicture,
+        truncatedSsn: `***-**-${patient.ssn.substr(patient.ssn.length - 3, patient.ssn.length)}`,
       });
-      console.log(patient)
+      if(user.profilePicture !== ''){
+        this.refs.ImageUpload.setImage(user.profilePicture);
+      }
+    }
+
+    handleImageChange(e) {
+
     }
 
     // function that returns true if value is email, false otherwise
@@ -209,74 +229,6 @@ class PatientProfile extends React.Component {
       }
       this.setState({ [stateName]: event.target.value });
     };
-    registerClick = () => {
-      if (this.state.registerEmailState === "") {
-        this.setState({ registerEmailState: "has-danger" });
-      }
-      if (
-        this.state.registerPasswordState === "" ||
-        this.state.registerConfirmPasswordState === ""
-      ) {
-        this.setState({ registerPasswordState: "has-danger" });
-        this.setState({ registerConfirmPasswordState: "has-danger" });
-      }
-    };
-    loginClick = () => {
-      if (this.state.loginFullNameState === "") {
-        this.setState({ loginFullNameState: "has-danger" });
-      }
-      if (this.state.loginEmailState === "") {
-        this.setState({ loginEmailState: "has-danger" });
-      }
-      if (this.state.loginPasswordState === "") {
-        this.setState({ loginPasswordState: "has-danger" });
-      }
-    };
-    handleImageChange = e => {
-
-    }
-    typeClick = () => {
-      if (this.state.requiredState === "") {
-        this.setState({ requiredState: "has-danger" });
-      }
-      if (this.state.emailState === "") {
-        this.setState({ emailState: "has-danger" });
-      }
-      if (this.state.numberState === "") {
-        this.setState({ numberState: "has-danger" });
-      }
-      if (this.state.urlState === "") {
-        this.setState({ urlState: "has-danger" });
-      }
-      if (this.state.sourceState === "" || this.state.destinationState === "") {
-        this.setState({ sourceState: "has-danger" });
-        this.setState({ destinationState: "has-danger" });
-      }
-    };
-    rangeClick = () => {
-      if (this.state.minLengthState === "") {
-        this.setState({ minLengthState: "has-danger" });
-      }
-      if (this.state.maxLengthState === "") {
-        this.setState({ maxLengthState: "has-danger" });
-      }
-      if (this.state.rangeState === "") {
-        this.setState({ rangeState: "has-danger" });
-      }
-      if (this.state.minValueState === "") {
-        this.setState({ minValueState: "has-danger" });
-      }
-      if (this.state.maxValueState === "") {
-        this.setState({ maxValueState: "has-danger" });
-      }
-      if (this.state.minState === "") {
-        this.setState({ minState: "has-danger" });
-      }
-      if (this.state.maxState === "") {
-        this.setState({ maxState: "has-danger" });
-      }
-    };
-
     verifyPhone = value => {
       const phoneRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
       if(phoneRegex.test(value)){
@@ -321,7 +273,7 @@ class PatientProfile extends React.Component {
                           <Input
                             name="lastname"
                             type="text"
-                            onChange={e => this.change(e, "registerEmail", "email")}
+                            onChange={e => this.change(e, "lastName", "length", 1)}
                             defaultValue={this.state.lastName}
                           />
                           {this.state.lastNameState === "has-danger" ? (
@@ -338,7 +290,7 @@ class PatientProfile extends React.Component {
                             <Input
                               name="address"
                               type="text"
-                              onChange={e => this.change(e, "registerAddress", "length", 1)}
+                              onChange={e => this.change(e, "address", "length", 1)}
                               defaultValue={this.state.address}
                             />
                             {this.state.registerEmailState === "has-danger" ? (
@@ -381,11 +333,11 @@ class PatientProfile extends React.Component {
                           <Input
                             id="state"
                             name="state"
-                            type="teext"
+                            type="text"
                             autoComplete="off"
                             defaultValue={this.state.state}
                             onChange={e =>
-                              this.change(e, "registerPassword", "password")
+                              this.change(e, "state", "length", 1)
                             }
                           />
                           {this.state.stateState === "has-danger" ? (
@@ -414,7 +366,7 @@ class PatientProfile extends React.Component {
                               )
                             }
                           />
-                          {this.state.registerConfirmPasswordState ===
+                          {this.state.cityState ===
                           "has-danger" ? (
                             <label className="error">This field is required.</label>
                           ) : null}
@@ -422,19 +374,14 @@ class PatientProfile extends React.Component {
                       </Col>
                           
                       <Col md="6">
-                          <FormGroup className={`has-label ${this.state.addressState}`}>
+                          <FormGroup className={`has-label ${this.state.ssnState}`}>
                             <label>Social Security Number</label>
                             <Input
                               name="address"
                               type="text"
-                              onChange={e => this.change(e, "registerAddress", "length", 1)}
-                              defaultValue={this.state.ssn}
+                              value={this.state.truncatedSsn}
+                              readOnly
                             />
-                            {this.state.registerEmailState === "has-danger" ? (
-                              <label className="error">
-                                Please enter a valid address.
-                              </label>
-                            ) : null}
                         </FormGroup> 
                       </Col>
 
@@ -446,6 +393,7 @@ class PatientProfile extends React.Component {
                                 className: "form-control",
                                 placeholder: "Date of Birth"
                               }}
+                              value={moment(this.state.dob).toDate()}
                               onBlur={e => {this.setState({dob: e.toDate()}); this.change(e, 'dob', 'dob',  0)}}
                               timeFormat={false}
                             />
