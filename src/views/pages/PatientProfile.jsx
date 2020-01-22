@@ -18,7 +18,7 @@ import ImageUpload from '../../components/CustomUpload/ImageUpload';
 import { getPatientByUserId, getPatientByPatientId } from "../../services/Patient";
 import { getUserWithFilter } from "../../services/User";
 import moment from "moment";
-
+import NotificationAlert from "react-notification-alert";
 class PatientProfile extends React.Component {
   constructor(props){
     super(props);
@@ -39,7 +39,7 @@ class PatientProfile extends React.Component {
       zipCodeState: null,
       ssn: '',
       ssnState: null,
-      gender: 'M',
+      gender: '',
       genderState: null,
       dob: '',
       dobState: null,
@@ -67,6 +67,7 @@ class PatientProfile extends React.Component {
       const patient = await getPatientByPatientId(patientId);
       const users = await getUserWithFilter({id: patient.userId});
       const user = users.users[0];
+      console.log(patient)
       await this.setState({
         firstName: user.firstName || patient.firstName,
         lastName: user.lastName || patient.lastName,
@@ -77,6 +78,7 @@ class PatientProfile extends React.Component {
         dob: patient.dob,
         email: user.email,
         username: user.username,
+        gender: patient.gender,
         ssn: patient.ssn,
         phoneNumber: user.phoneNumber,
         insuranceName: patient.insuranceName,
@@ -90,8 +92,51 @@ class PatientProfile extends React.Component {
       }
     }
 
-    handleImageChange(e) {
+    onSaveClick(e){
+      if(!this.isFormValid()){
+        var options = {};
+        options = {
+          place: 'tr',
+          message: (
+            <div>
+              <div>
+                Please correct the validation errors before saving!
+              </div>
+            </div>
+          ),
+          type: 'warning',
+          icon: "tim-icons icon-bell-55",
+          autoDismiss: 7,
+        };
+        if(this.refs){
+          this.refs.notificationAlert.notificationAlert(options);
+        }
+      } else {
+        const patientInfoToSave = {
+          address: this.state.address,
+          city: this.state.city,
+          zipCode: this.state.zipCode,
+          firstName: this.state.firstName,
+          lastName: this.state.lastName,
+          coPayAmount: this.state.insuranceCoPayAmount,
+          dob: this.state.dob,
+          gender: this.state.gender,
+          insuranceName: this.state.insuranceName,
+          planNo: this.state.insurancePlanNo,
+          ssn: this.state.ssn,
+        };
+        const userInfoToSavee = {
+          firstName: this.state.firstName,
+          lastName: this.state.lastName,
+          phoneNumber: this.state.phoneNumber,
+          password: this.state.password,
+          profilePicture: this.state.profilePicture
+        };
+      }
+    }
 
+    handleImageChange(imageUrl) {
+      this.setState({profilePicture: imageUrl});
     }
 
     // function that returns true if value is email, false otherwise
@@ -133,6 +178,61 @@ class PatientProfile extends React.Component {
         return false;
       }
     };
+
+    async handleOnBlur(event, stateName){
+      if(event.target.value ===  ''){
+        this.change(event, stateName, 'length', 1);
+        return;
+      }
+      if(this.state[`${stateName}State`] === 'has-danger'){
+        return;
+      }
+      event.persist();
+      const fieldIsUnique = await this.isFieldUnique(event);
+      if(!fieldIsUnique || event.target.value.length === 0){
+        if(!fieldIsUnique){
+          var options = {};
+          options = {
+            place: 'tr',
+            message: (
+              <div>
+                <div>
+                  A patient is already registered with {event.target.value}!
+                </div>
+              </div>
+            ),
+            type: 'warning',
+            icon: "tim-icons icon-bell-55",
+            autoDismiss: 7,
+          };
+          if(this.refs){
+            this.refs.notificationAlert.notificationAlert(options);
+          }
+        }
+        this.setState({ [stateName + "State"]: "has-danger" });
+      } else {
+        this.setState({ [stateName + "State"]: "has-success" });
+      }
+    }
+
+    alertUserOfPasswordRequirements(){
+      var options = {};
+      options = {
+        place: 'tr',
+        message: (
+          <div>
+            <div>
+              Your password must be 6 characters or more and include one capital later.
+            </div>
+          </div>
+        ),
+        type: 'info',
+        icon: "tim-icons icon-bell-55",
+        autoDismiss: 7
+      };
+      this.refs.notificationAlert.notificationAlert(options);
+    }
+
     change = (event, stateName, type, stateNameEqualTo, maxValue) => {
       switch (type) {
         case "email":
@@ -143,19 +243,11 @@ class PatientProfile extends React.Component {
           }
           break;
         case "password":
-          if (this.verifyLength(event.target.value, 1)) {
-            this.setState({ [stateName + "State"]: "has-success" });
+          if (this.verifyLength(event.target.value, 6)
+          && event.target.value.toLowerCase() !== event.target.value) {
+            this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
           } else {
-            this.setState({ [stateName + "State"]: "has-danger" });
-          }
-          break;
-        case "equalTo":
-          if (this.compare(event.target.value, this.state[stateNameEqualTo])) {
-            this.setState({ [stateName + "State"]: "has-success" });
-            this.setState({ [stateNameEqualTo + "State"]: "has-success" });
-          } else {
-            this.setState({ [stateName + "State"]: "has-danger" });
-            this.setState({ [stateNameEqualTo + "State"]: "has-danger" });
+            this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
           }
           break;
         case "number":
@@ -172,13 +264,13 @@ class PatientProfile extends React.Component {
             this.setState({ [stateName + "State"]: "has-danger" });
           }
           break;
-        case "max-length":
-          if (!this.verifyLength(event.target.value, stateNameEqualTo + 1)) {
-            this.setState({ [stateName + "State"]: "has-success" });
+        case "confirmPassword":
+          if(this.state.password !== this.state.confirmPassword && this.state.confirmPassword.length !== 0){
+            this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
           } else {
-            this.setState({ [stateName + "State"]: "has-danger" });
+            this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
           }
-          break;
+        break;
         case "url":
           if (this.verifyUrl(event.target.value)) {
             this.setState({ [stateName + "State"]: "has-success" });
@@ -229,6 +321,35 @@ class PatientProfile extends React.Component {
       }
       this.setState({ [stateName]: event.target.value });
     };
+    async isFieldUnique(e){
+      try {
+        const user = await getUserWithFilter({[e.target.name]: e.target.value});
+        return user.users.length === 0;
+      } catch (err) {
+        var options = {};
+        options = {
+          place: 'tr',
+          message: (
+            <div>
+              <div>
+                An internal server error occured. Please try again later.
+              </div>
+            </div>
+          ),
+          type: 'warning',
+          icon: "tim-icons icon-bell-55",
+          autoDismiss: 7
+        };
+        this.refs.notificationAlert.notificationAlert(options);
+      }
+    }
+    isFormValid(){
+      return Object.entries(this.state).filter(x => x[0].includes('State') && x[1].includes('has-danger')).length === 0;
+    }
+  
+    setIsFormValid(){
+      this.setState({isFormValid: this.isFormValid()});
+    }
     verifyPhone = value => {
       const phoneRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
       if(phoneRegex.test(value)){
@@ -240,6 +361,9 @@ class PatientProfile extends React.Component {
   render(){
     return (
       <>
+        <div className="rna-container">
+          <NotificationAlert ref="notificationAlert" />
+        </div>
         <div className="content">
           <Row>
             <Col md="6">
@@ -446,9 +570,10 @@ class PatientProfile extends React.Component {
                             onChange={e =>
                               this.change(e, "password", "password")
                             }
+                            onClick={e => this.alertUserOfPasswordRequirements()}
                           />
                           {this.state.passwordState === "has-danger" ? (
-                            <label className="error">This field is required.</label>
+                            <label className="error">This password does not meet the requirements.</label>
                           ) : null}
                         </FormGroup>
                       </Col>
@@ -464,12 +589,22 @@ class PatientProfile extends React.Component {
                             }
                           />
                           {this.state.confirmPasswordState === "has-danger" ? (
-                            <label className="error">This field is required.</label>
+                            <label className="error">This password does not match.</label>
                           ) : null}
                         </FormGroup>
                       </Col>
-
-                      <Col md="12">
+                      <Col md="6">
+                      <FormGroup className={`has-label`}>
+                          <label>Gender</label>
+                          <Input
+                            name="gender"
+                            type="text"
+                            value={this.state.gender === 'M' ? 'Male' : 'Female'}
+                            readOnly
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col md="6">
                         <FormGroup className={`has-label ${this.state.phoneNumberState}`}>
                             <label>Phone Number</label>
                             <Input
@@ -480,6 +615,7 @@ class PatientProfile extends React.Component {
                               onChange={e =>
                                 this.change(e, "phoneNumber", "phone")
                               }
+                              onBlur={e => this.handleOnBlur(e, 'phoneNumber')}
                             />
                             {this.state.phoneNumberState === "has-danger" ? (
                               <label className="error">This field is required.</label>
