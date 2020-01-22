@@ -311,44 +311,6 @@ class PatientProfile extends React.Component {
             this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
           }
         break;
-        case "url":
-          if (this.verifyUrl(event.target.value)) {
-            this.setState({ [stateName + "State"]: "has-success" });
-          } else {
-            this.setState({ [stateName + "State"]: "has-danger" });
-          }
-          break;
-        case "min-value":
-          if (
-            this.verifyNumber(event.target.value) &&
-            event.target.value >= stateNameEqualTo
-          ) {
-            this.setState({ [stateName + "State"]: "has-success" });
-          } else {
-            this.setState({ [stateName + "State"]: "has-danger" });
-          }
-          break;
-        case "max-value":
-          if (
-            this.verifyNumber(event.target.value) &&
-            event.target.value <= stateNameEqualTo
-          ) {
-            this.setState({ [stateName + "State"]: "has-success" });
-          } else {
-            this.setState({ [stateName + "State"]: "has-danger" });
-          }
-          break;
-        case "range":
-          if (
-            this.verifyNumber(event.target.value) &&
-            event.target.value >= stateNameEqualTo &&
-            event.target.value <= maxValue
-          ) {
-            this.setState({ [stateName + "State"]: "has-success" });
-          } else {
-            this.setState({ [stateName + "State"]: "has-danger" });
-          }
-          break;
         case "phone":
           if(this.verifyPhone(event.target.value)){
             this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
@@ -359,6 +321,7 @@ class PatientProfile extends React.Component {
         default:
           break;
       }
+      this.setState({[stateName]: event.target.value});
     };
     async isFieldUnique(e){
       try {
