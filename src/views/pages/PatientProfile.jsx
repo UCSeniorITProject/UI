@@ -15,8 +15,8 @@ import {
 } from "reactstrap";
 import ReactDatetime from "react-datetime";
 import ImageUpload from '../../components/CustomUpload/ImageUpload';
-import { getPatientByUserId, getPatientByPatientId } from "../../services/Patient";
-import { getUserWithFilter } from "../../services/User";
+import { getPatientByUserId, getPatientByPatientId, patchPatient } from "../../services/Patient";
+import { getUserWithFilter, patchUser } from "../../services/User";
 import moment from "moment";
 import NotificationAlert from "react-notification-alert";
 class PatientProfile extends React.Component {
@@ -58,7 +58,8 @@ class PatientProfile extends React.Component {
       state: '',
       stateState:null,
       profilePicture: '',
-      truncatedSsn: '***-**-****'
+      truncatedSsn: '***-**-****',
+      userId: '',
     }
   }
 
@@ -67,7 +68,6 @@ class PatientProfile extends React.Component {
       const patient = await getPatientByPatientId(patientId);
       const users = await getUserWithFilter({id: patient.userId});
       const user = users.users[0];
-      console.log(patient)
       await this.setState({
         firstName: user.firstName || patient.firstName,
         lastName: user.lastName || patient.lastName,
@@ -86,13 +86,14 @@ class PatientProfile extends React.Component {
         zipCode: patient.zipCode,
         profilePicture: user.profilePicture,
         truncatedSsn: `***-**-${patient.ssn.substr(patient.ssn.length - 3, patient.ssn.length)}`,
+        userId: user.id,
       });
       if(user.profilePicture !== ''){
         this.refs.ImageUpload.setImage(user.profilePicture);
       }
     }
 
-    onSaveClick(e){
+    async onSaveClick(e){
       if(!this.isFormValid()){
         var options = {};
         options = {
@@ -125,13 +126,52 @@ class PatientProfile extends React.Component {
           planNo: this.state.insurancePlanNo,
           ssn: this.state.ssn,
         };
-        const userInfoToSavee = {
+        const userInfoToSave = {
           firstName: this.state.firstName,
           lastName: this.state.lastName,
           phoneNumber: this.state.phoneNumber,
           password: this.state.password,
           profilePicture: this.state.profilePicture
         };
+        try {
+          await patchUser(this.state.userId,  userInfoToSave);
+          await patchPatient(this.props.match.params.id, patientInfoToSave);
+          var options = {};
+          options = {
+            place: 'tr',
+            message: (
+              <div>
+                <div>
+                  Succesfully saved the patient!
+                </div>
+              </div>
+            ),
+            type: 'success',
+            icon: "tim-icons icon-bell-55",
+            autoDismiss: 7,
+          };
+          if(this.refs){
+            this.refs.notificationAlert.notificationAlert(options);
+          }
+        } catch (err) {
+          var options = {};
+          options = {
+            place: 'tr',
+            message: (
+              <div>
+                <div>
+                  An error occured while saving, please try again later.
+                </div>
+              </div>
+            ),
+            type: 'warning',
+            icon: "tim-icons icon-bell-55",
+            autoDismiss: 7,
+          };
+          if(this.refs){
+            this.refs.notificationAlert.notificationAlert(options);
+          }
+        }
       }
     }
 
@@ -319,7 +359,6 @@ class PatientProfile extends React.Component {
         default:
           break;
       }
-      this.setState({ [stateName]: event.target.value });
     };
     async isFieldUnique(e){
       try {
@@ -344,7 +383,11 @@ class PatientProfile extends React.Component {
       }
     }
     isFormValid(){
-      return Object.entries(this.state).filter(x => x[0].includes('State') && x[1].includes('has-danger')).length === 0;
+      return Object.entries(this.state).filter(x => x[1] !== null && x[0].includes('State') && x[1].includes('has-danger')).length === 0;
+    }
+
+    handleDateChange(e){
+      this.setState({dob: e.toDate()});
     }
   
     setIsFormValid(){
@@ -517,8 +560,9 @@ class PatientProfile extends React.Component {
                                 className: "form-control",
                                 placeholder: "Date of Birth"
                               }}
+                              onChange={this.handleDateChange.bind(this)}
                               value={moment(this.state.dob).toDate()}
-                              onBlur={e => {this.setState({dob: e.toDate()}); this.change(e, 'dob', 'dob',  0)}}
+                              onBlur={async e => {await this.setState({dob: e.toDate()});}}
                               timeFormat={false}
                             />
                         </FormGroup>
@@ -715,7 +759,7 @@ class PatientProfile extends React.Component {
                     </Row>
                   </CardBody>
                   <CardFooter>
-                    <Button className="btn-fill pull-right" color="primary" type="submit">
+                    <Button className="btn-fill pull-right" color="primary" onClick={e => this.onSaveClick(e)}>
                       Save Patient
                     </Button>
                 </CardFooter>

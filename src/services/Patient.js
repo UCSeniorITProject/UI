@@ -19,3 +19,8 @@ export async function getPatientByPatientId(patientId){
   const patient = await Axios.get(`${process.env.REACT_APP_API_URL}/api/patient-service/patient/${patientId}`);
   return patient.data.patient;
 }
+
+export async function patchPatient(patientId, dataToPatch){
+  const patient = await Axios.patch(`${process.env.REACT_APP_API_URL}/api/patient-service/patient/${patientId}`, {patient: dataToPatch});
+  return patient.data.patient;
+}

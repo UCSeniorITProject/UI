@@ -25,3 +25,7 @@ export async function refreshAccessToken(refreshToken){
   }
   return null;
 }
+
+export async function patchUser(userId, dataToUpdate){
+  const patint = await Axios.patch(`${process.env.REACT_APP_API_URL}/api/security-management/user/${userId}`, {user:  dataToUpdate})
+}
