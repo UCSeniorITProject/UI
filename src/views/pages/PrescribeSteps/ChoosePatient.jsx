@@ -31,16 +31,15 @@ class PickPatient extends React.Component {
                 color="warning"
                 size="sm"
                 className="btn-icon btn-link like btn-neutral"
-                value={x.userId}
+                onClick={e => this.props.history.push(`/admin/patient/profile/${x.userId}/`)}
               >
                 <i className="tim-icons icon-pencil" />
-              </Button>{" "}
+              </Button >{" "}
 
               <Button
                 className="btn-icon btn-link like btn-neutral"
                 size="sm"
                 color="warning"
-                value={x.userId}
               >
                 <i className="tim-icons icon-check-2" />
               </Button>{" "}
