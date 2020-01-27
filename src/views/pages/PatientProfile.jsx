@@ -85,7 +85,7 @@ class PatientProfile extends React.Component {
         insuranceCoPayAmount: patient.coPayAmount,
         zipCode: patient.zipCode,
         profilePicture: user.profilePicture,
-        truncatedSsn: `***-**-${patient.ssn.substr(patient.ssn.length - 3, patient.ssn.length)}`,
+        truncatedSsn: `***-**-${patient.ssn !== null && patient.ssn !== '' ? patient.ssn.substr(patient.ssn.length - 3, patient.ssn.length) : ''}`,
         userId: user.id,
       });
       if(user.profilePicture !== ''){

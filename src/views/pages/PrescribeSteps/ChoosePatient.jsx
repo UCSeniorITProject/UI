@@ -66,7 +66,7 @@ class PickPatient extends React.Component {
           </h5>
         </Col>
         <Col md="3">
-        <Button
+          <Button
               className="animation-on-hover float-right"
               color="success"
               id="addPatient"

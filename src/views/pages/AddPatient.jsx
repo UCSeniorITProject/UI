@@ -67,7 +67,7 @@ class AddPatient extends React.Component {
         zipCode: this.state.zipCode
       };
       const patient = await createPatient(patientInfo);
-      this.props.history.push('/admin/user-profile');
+      this.props.history.push(`/admin/patient/profile/${patient.id}`);
     }
 
     steps = [
