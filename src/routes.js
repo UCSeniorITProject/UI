@@ -5,6 +5,7 @@ import Login from "views/pages/Login.jsx";
 import AddPatient from "views/pages/AddPatient";
 import PatientList from "./views/pages/PatientList";
 import PatientProfile from "./views/pages/PatientProfile";
+import AddPharmacy from "./views/pages/AddPharmacy";
 const routes = [
   {
     collapse: true,
@@ -53,11 +54,20 @@ const routes = [
     requiredRoles:  ['Doctor', 'Pharmacist'],
     views: [
       {
-        path: "/prescribe",
+        path: "/pharmacy/prescribe",
         name: "Prescribe",
         mini: "P",
         requiredRoles:  ['Doctor'],
         component: Prescribe,
+        isHidden: false,
+        layout: "/admin"
+      },
+      {
+        path: "/pharmacy/new",
+        name: "Create Pharmacy",
+        mini: "P",
+        requiredRoles:  ['Doctor'],
+        component: AddPharmacy,
         isHidden: false,
         layout: "/admin"
       },
@@ -74,7 +84,7 @@ const routes = [
       {
         path: "/patient/new",
         name: "Create New",
-        mini: "P",
+        mini: "C",
         requiredRoles:  ['Doctor'],
         component: AddPatient,
         isHidden: false,
@@ -90,7 +100,7 @@ const routes = [
         layout: "/admin"
       },
       {
-        path: "/patient/",
+        path: "/patient/list",
         name: "View List",
         mini: "P",
         requiredRoles:  ['Doctor'],
