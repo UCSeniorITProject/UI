@@ -15,7 +15,7 @@ import {
 } from "reactstrap";
 import ReactDatetime from "react-datetime";
 import ImageUpload from '../../components/CustomUpload/ImageUpload';
-import { getPatientByUserId, getPatientByPatientId, patchPatient } from "../../services/Patient";
+import { getPatientByPatientId, patchPatient } from "../../services/Patient";
 import { getUserWithFilter, patchUser } from "../../services/User";
 import moment from "moment";
 import NotificationAlert from "react-notification-alert";

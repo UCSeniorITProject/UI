@@ -6,6 +6,9 @@ import AddPatient from "views/pages/AddPatient";
 import PatientList from "./views/pages/PatientList";
 import PatientProfile from "./views/pages/PatientProfile";
 import AddPharmacy from "./views/pages/AddPharmacy";
+import PharmacyList from "./views/pages/PharmacyList";
+import PharamacyProfile from "./views/pages/PharamacyProfile";
+
 const routes = [
   {
     collapse: true,
@@ -66,11 +69,28 @@ const routes = [
         path: "/pharmacy/new",
         name: "Create Pharmacy",
         mini: "P",
-        requiredRoles:  ['Doctor'],
+        requiredRoles:  ['Doctor, Pharmacist', 'Admin'],
         component: AddPharmacy,
         isHidden: false,
         layout: "/admin"
       },
+      {
+        path: "/pharmacy/list",
+        name: "Pharmacy List",
+        mini: "PL",
+        requiredRoles:  ['Doctor', 'Pharmacist', 'Admin'],
+        component: PharmacyList,
+        isHidden: false,
+        layout: "/admin"
+      },
+      {
+        path: "/pharmacy/profile/:id/",
+        name: "Pharmacy Profile",
+        mini: "PP",
+        component: PharamacyProfile,
+        isHidden: true,
+        layout: "/admin" 
+      }
     ],
   },
   {

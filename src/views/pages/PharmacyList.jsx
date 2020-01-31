@@ -11,34 +11,32 @@ import jwtDecode from 'jwt-decode';
 import {getPatientList} from '../../services/Patient';
 import ReactTable from "react-table";
 import { withRouter } from 'react-router';
-class PatientList extends React.Component  {
+import { getPharmacyList } from "../../services/Pharmacy";
+class PharmacyList extends React.Component  {
   constructor(props) {
     super(props);
     this.state = {
-      patients: [],
+      pharmacies: [],
       isPatientPicked: false,
-      selectedPatientID: null,
-      selectedIndex: null,
     }
   }
 
   async componentDidMount() {
-    const decodedToken = jwtDecode(localStorage.getItem('accessToken'));
-    const patients = await getPatientList(decodedToken.userID);
-    const patientList = patients.patients.map(x => {return {patientId: x.userId, firstName: x.firstName, lastName: x.lastName, age: 1, gender: x.gender, actions: (
+    const pharmacies = await getPharmacyList();
+    const pharmacyList = pharmacies.map(x => {return {name: x.pharmacyName, address: x.address, state: x.state, zipCode: x.zipCode, city: x.city, actions: (
       <div className="actions-right">
               <Button
                 color="primary"
                 size="md"
                 className="btn-fill"
                 value={x.userId}
-                onClick={e => this.props.history.push(`/admin/patient/profile/${x.userId}/`)}
+                onClick={e => this.props.history.push(`/admin/pharmacy/profile/${x.pharmacyId}/`)}
               >
                 EDIT
               </Button>
       </div>
     ), selected: false}});
-    this.setState({patients: patientList});
+    this.setState({pharmacyList});
   }
 
   render (){
@@ -49,33 +47,33 @@ class PatientList extends React.Component  {
           <Col md="12">
             <Card>
               <CardHeader>
-                <h5 className="title">Edit Profile</h5> 
+                <h5 className="title">Pharmacy List</h5> 
               </CardHeader>
               <CardBody>
                   <ReactTable
-                          data={this.state.patients}
+                          data={this.state.pharmacyList}
                           filterable
                           resizable={false}
                           columns={[
                             {
-                              Header: "Patient ID",
-                              accessor: "patientId",
+                              Header: "Name",
+                              accessor: "name",
                             },
                             {
-                              Header: "First Name",
-                              accessor: "firstName"
+                              Header: "Address",
+                              accessor: "address"
                             },
                             {
-                              Header: "Last Name",
-                              accessor: "lastName"
+                              Header: "State",
+                              accessor: "state"
                             },
                             {
-                              Header: "Age",
-                              accessor: "age"
+                              Header: "Zip Code",
+                              accessor: "zipCode"
                             },
                             {
-                              Header: "Gender",
-                              accessor: "gender"
+                              Header: "City",
+                              accessor: "city"
                             },
                             {
                               Header: "Actions",
@@ -99,4 +97,4 @@ class PatientList extends React.Component  {
   }
 }
 
-export default withRouter(PatientList);
+export default withRouter(PharmacyList);
