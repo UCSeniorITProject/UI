@@ -17,20 +17,19 @@ import {
 import React from 'react';
 import classnames from 'classnames';
 import NotificationAlert from "react-notification-alert";
-import {getPharmacyById, deletePharmacy, patchPharmacy} from '../../services/Pharmacy';
-import { throws } from 'assert';
+import {getPharmacyWithFilter, deletePharmacy, patchPharmacy} from '../../services/Pharmacy';
 
 class PharmacyProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pharmacyName: '',
+      name: '',
       zipCode: '',
       address: '',
       city: '',
       state: '',
       active: 'Y',
-      pharmacyNameState: null,
+      nameState: null,
       zipCodeState: null,
       addressState: null,
       cityState: null,
@@ -41,13 +40,13 @@ class PharmacyProfile extends React.Component {
 
   async componentDidMount(){
     const pharmacyId = this.props.match.params.id;
-    const pharmacy = await getPharmacyById(pharmacyId);
+		const pharmacy = await getPharmacyWithFilter({pharmacyId});
     this.setState({
-      pharmacyName: pharmacy.pharmacyName,
-      zipCode: pharmacy.zipCode,
-      address: pharmacy.address,
-      city: pharmacy.city,
-      state: pharmacy.state,
+      name: pharmacy[0].name,
+      zipCode: pharmacy[0].zipCode,
+      address: pharmacy[0].address,
+      city: pharmacy[0].city,
+      state: pharmacy[0].state,
     });
   }
 
@@ -69,32 +68,6 @@ class PharmacyProfile extends React.Component {
     }
     return false;
   };
-
-  async deletePharmacy(){
-    const pharmacyId = this.props.match.params.id;
-    try {
-      await deletePharmacy(pharmacyId);
-      this.props.history.push('/admin/pharmacy/list');
-    } catch (err){
-      var options = {};
-      options = {
-        place: 'tr',
-        message: (
-          <div>
-            <div>
-              A pharmacy with history cannot be deleted!
-            </div>
-          </div>
-        ),
-        type: 'warning',
-        icon: "tim-icons icon-bell-55",
-        autoDismiss: 7,
-      };
-      if(this.refs){
-        this.refs.notificationAlert.notificationAlert(options);
-      }
-    }
-  }
 
   isFormValid(){
     return Object.entries(this.state).filter(x => x[1] !== null && x[0].includes('State') && x[1].includes('has-danger')).length === 0;
@@ -122,10 +95,10 @@ class PharmacyProfile extends React.Component {
 
       return;
     }
-    console.log(this.state)
-    const pharmacyId = this.props.match.params.id;
+
+		const pharmacyId = this.props.match.params.id;
     const pharmacyInfo = {
-      pharmacyName: this.state.pharmacyName,
+      name: this.state.name,
       state: this.state.state,
       city: this.state.city,
       zipCode: this.state.zipCode,
@@ -212,8 +185,8 @@ class PharmacyProfile extends React.Component {
                     <Row>
                     <Col className="pr-md-1" md="6">
                         <InputGroup
-                          className={classnames(this.state.pharmacyNameState, {
-                            "input-group-focus": this.state.pharmacyNameFocus
+                          className={classnames(this.state.nameState, {
+                            "input-group-focus": this.state.nameFocus
                           })}
                         >
                           <InputGroupAddon addonType="prepend">
@@ -225,10 +198,10 @@ class PharmacyProfile extends React.Component {
                             name="firstName"
                             placeholder="Pharmacy Name"
                             type="text"
-                            defaultValue={this.state.pharmacyName}
-                            onChange={e => this.change(e, "pharmacyName", "length", 1)}
-                            onFocus={e => this.setState({ pharmacyNameFocus: true })}
-                            onBlur={e => {this.setState({ pharmacyNameFocus: false }); this.change(e, 'pharmacyName', 'length', 1)}}
+                            defaultValue={this.state.name}
+                            onChange={e => this.change(e, "name", "length", 1)}
+                            onFocus={e => this.setState({ nameFocus: true })}
+                            onBlur={e => {this.setState({ nameFocus: false }); this.change(e, 'name', 'length', 1)}}
                           />
                         </InputGroup>
                       </Col>
@@ -324,9 +297,6 @@ class PharmacyProfile extends React.Component {
                   </Form>
                 </CardBody>
                 <CardFooter>
-                  <Button className="btn-fill pull-left" color="danger" type='submit' onClick={e => this.deletePharmacy()}>
-                    Delete Pharmacy
-                  </Button>
                   <Button className="btn-fill pull-right" color="primary" type="submit" onClick={e => this.updatePharmacy()}>
                     Update Pharmacy
                   </Button>

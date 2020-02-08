@@ -11,7 +11,7 @@ import jwtDecode from 'jwt-decode';
 import {getPatientList} from '../../services/Patient';
 import ReactTable from "react-table";
 import { withRouter } from 'react-router';
-import { getPharmacyList } from "../../services/Pharmacy";
+import { getPharmacyWithFilter } from "../../services/Pharmacy";
 class PharmacyList extends React.Component  {
   constructor(props) {
     super(props);
@@ -22,8 +22,8 @@ class PharmacyList extends React.Component  {
   }
 
   async componentDidMount() {
-    const pharmacies = await getPharmacyList();
-    const pharmacyList = pharmacies.map(x => {return {name: x.pharmacyName, address: x.address, state: x.state, zipCode: x.zipCode, city: x.city, actions: (
+		const pharmacies = await getPharmacyWithFilter();
+    const pharmacyList = pharmacies.map(x => {return {name: x.name, address: x.address, state: x.state, zipCode: x.zipCode, city: x.city, actions: (
       <div className="actions-right">
               <Button
                 color="primary"

@@ -7,7 +7,7 @@ import PatientList from "./views/pages/PatientList";
 import PatientProfile from "./views/pages/PatientProfile";
 import AddPharmacy from "./views/pages/AddPharmacy";
 import PharmacyList from "./views/pages/PharmacyList";
-import PharamacyProfile from "./views/pages/PharamacyProfile";
+import PharamacyProfile from "./views/pages/PharmacyProfile";
 
 const routes = [
   {
@@ -21,7 +21,6 @@ const routes = [
       {
         path: "/user-profile",
         name: "User Profile",
-        rtlName: "ملف تعريفي للمستخدم",
         mini: "UP",
         component: User,
         isHidden: false,

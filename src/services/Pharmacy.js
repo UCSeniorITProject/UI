@@ -5,8 +5,8 @@ export async function createPharmacy(pharmacy){
   return pharm;
 }
 
-export async function getPharmacyList(){
-  const pharmacies = await Axios.get(`${process.env.REACT_APP_API_URL}/api/pharmacy-service/pharmacy/list`);
+export async function getPharmacyWithFilter(filter){
+  const pharmacies = await Axios.get(`${process.env.REACT_APP_API_URL}/api/pharmacy-service/pharmacy`, {params: filter});
   return pharmacies.data.pharmacies;
 };
 
