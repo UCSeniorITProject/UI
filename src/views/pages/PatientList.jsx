@@ -8,7 +8,7 @@ import {
   Col
 } from "reactstrap";
 import jwtDecode from 'jwt-decode';
-import {getPatientList} from '../../services/Patient';
+import {getPatientWithFilter} from '../../services/Patient';
 import ReactTable from "react-table";
 import { withRouter } from 'react-router';
 class PatientList extends React.Component  {
@@ -24,7 +24,7 @@ class PatientList extends React.Component  {
 
   async componentDidMount() {
     const decodedToken = jwtDecode(localStorage.getItem('accessToken'));
-    const patients = await getPatientList(decodedToken.userID);
+    const patients = await getPatientWithFilter({patientUserId: decodedToken.userID});
     const patientList = patients.patients.map(x => {return {patientId: x.userId, firstName: x.firstName, lastName: x.lastName, age: 1, gender: x.gender, actions: (
       <div className="actions-right">
               <Button
