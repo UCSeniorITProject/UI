@@ -22,7 +22,7 @@ class PharmacyList extends React.Component  {
   }
 
   async componentDidMount() {
-		const pharmacies = await getPharmacyWithFilter();
+		const pharmacies = await getPharmacyWithFilter({active: 'Y'});
     const pharmacyList = pharmacies.map(x => {return {name: x.name, address: x.address, state: x.state, zipCode: x.zipCode, city: x.city, actions: (
       <div className="actions-right">
               <Button
