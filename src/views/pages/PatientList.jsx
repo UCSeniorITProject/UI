@@ -7,10 +7,10 @@ import {
   Row,
   Col
 } from "reactstrap";
-import jwtDecode from 'jwt-decode';
 import {getPatientWithFilter} from '../../services/Patient';
 import ReactTable from "react-table";
 import { withRouter } from 'react-router';
+import moment from 'moment';
 class PatientList extends React.Component  {
   constructor(props) {
     super(props);
@@ -23,16 +23,15 @@ class PatientList extends React.Component  {
   }
 
   async componentDidMount() {
-    const decodedToken = jwtDecode(localStorage.getItem('accessToken'));
-    const patients = await getPatientWithFilter({patientUserId: decodedToken.userID});
-    const patientList = patients.patients.map(x => {return {patientId: x.userId, firstName: x.firstName, lastName: x.lastName, age: 1, gender: x.gender, actions: (
+    const patients = await getPatientWithFilter();
+    const patientList = patients.map(x => {return {patientId: x.patientUserId, firstName: x.firstName, lastName: x.lastName, birthDate: moment(x.dateOfBirth).format("MM/DD/YYYY"), gender: x.gender === 'M' ? 'Male' : 'Female', actions: (
       <div className="actions-right">
               <Button
                 color="primary"
                 size="md"
                 className="btn-fill"
                 value={x.userId}
-                onClick={e => this.props.history.push(`/admin/patient/profile/${x.userId}/`)}
+                onClick={e => this.props.history.push(`/admin/patient/profile/${x.patientId}/`)}
               >
                 EDIT
               </Button>
@@ -70,8 +69,8 @@ class PatientList extends React.Component  {
                               accessor: "lastName"
                             },
                             {
-                              Header: "Age",
-                              accessor: "age"
+                              Header: "Birth Date",
+                              accessor: "birthDate"
                             },
                             {
                               Header: "Gender",

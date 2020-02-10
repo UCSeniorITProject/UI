@@ -1,9 +1,9 @@
 import Axios from 'axios';
 
 export async function getPatientWithFilter(filter){
-  const patients = await Axios.get(`${process.env.REACT_APP_API_URL}/api/patient-service/patient`, {params: filter});
-  console.log(patients)
-  return patients.data.patients || {patients: []};
+	const patients = await Axios.get(`${process.env.REACT_APP_API_URL}/api/patient-service/patient`, {params: filter});
+	console.log(patients.data.patients)
+  return patients.data.patients;
 }
 
 export async function createPatient(patientInfo){

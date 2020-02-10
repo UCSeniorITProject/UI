@@ -65,31 +65,32 @@ class PatientProfile extends React.Component {
 
     async componentDidMount(){
       const patientId = this.props.match.params.id;
-      const patient = await getPatientWithFilter({patientId});
-      const users = await getUserWithFilter({id: patient.userId});
-      const user = users.users[0];
+			const patient = await getPatientWithFilter({patientId});
+			console.log(patient)
+			const user = await getUserWithFilter({id: patient[0].patientUserId});
+			console.log(user)
       await this.setState({
-        firstName: user.firstName || patient.firstName,
-        lastName: user.lastName || patient.lastName,
-        address: patient.address,
-        city: patient.city,
-        state: patient.state,
-        insurancePlanNo: patient.planNo,
-        dob: patient.dob,
-        email: user.email,
-        username: user.username,
-        gender: patient.gender,
-        ssn: patient.ssn,
-        phoneNumber: user.phoneNumber,
-        insuranceName: patient.insuranceName,
-        insuranceCoPayAmount: patient.coPayAmount,
-        zipCode: patient.zipCode,
-        profilePicture: user.profilePicture,
-        truncatedSsn: `***-**-${patient.ssn !== null && patient.ssn !== '' ? patient.ssn.substr(patient.ssn.length - 3, patient.ssn.length) : ''}`,
-        userId: user.id,
+        firstName: user.users[0].firstName,
+        lastName:  user.users[0].lastName,
+        address: patient[0].address,
+        city: patient[0].city,
+        state: patient[0].state,
+        insurancePlanNo: patient[0].insurancePlanNo,
+        dob: patient[0].dateOfBirth,
+        email:  user.users[0].email,
+        username:  user.users[0].username,
+        gender: patient[0].gender,
+        ssn: patient[0].ssn,
+        phoneNumber:  user.users[0].phoneNumber,
+        insuranceName: patient[0].insuranceName,
+        insuranceCoPayAmount: patient[0].insuranceCoPayAmount,
+        zipCode: patient[0].zipCode,
+        profilePicture:  user.users[0].profilePicture,
+        truncatedSsn: `***-**-${patient[0].socialSecurityNumber !== null && patient[0].socialSecurityNumber !== '' ? patient[0].socialSecurityNumber.substr(patient[0].socialSecurityNumber.length - 3, patient[0].socialSecurityNumber.length) : ''}`,
+        userId: user.users[0].id,
       });
-      if(user.profilePicture !== ''){
-        this.refs.ImageUpload.setImage(user.profilePicture);
+      if(user.users[0].profilePicture !== ''){
+        this.refs.ImageUpload.setImage(user.users[0].profilePicture);
       }
     }
 
@@ -117,14 +118,12 @@ class PatientProfile extends React.Component {
           address: this.state.address,
           city: this.state.city,
           zipCode: this.state.zipCode,
-          firstName: this.state.firstName,
-          lastName: this.state.lastName,
-          coPayAmount: this.state.insuranceCoPayAmount,
-          dob: this.state.dob,
+          insuranceCoPayAmount: this.state.insuranceCoPayAmount,
+          dateOfBirth: this.state.dob,
           gender: this.state.gender,
           insuranceName: this.state.insuranceName,
-          planNo: this.state.insurancePlanNo,
-          ssn: this.state.ssn,
+					insurancePlanNo: this.state.insurancePlanNo,
+          socialSecurityNumber: this.state.ssn,
         };
         const userInfoToSave = {
           firstName: this.state.firstName,
