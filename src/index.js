@@ -8,7 +8,7 @@ import PrivateRoute from './components/DecisionRoute/DecisionRoute';
 import AuthLayout from "layouts/Auth/Auth.jsx";
 import AdminLayout from "layouts/Admin/Admin.jsx";
 import {refreshAccessToken} from './services/User';
-import "assets/css/nucleo-icons.css";
+import "./assets/css/nucleo-icons.css";
 import "assets/scss/black-dashboard-pro-react.scss?v=1.0.0";
 import "assets/demo/demo.css";
 import "react-notification-alert/dist/animate.css";
