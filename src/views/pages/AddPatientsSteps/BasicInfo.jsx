@@ -1,7 +1,7 @@
 import React from "react";
 import classnames from "classnames";
 import {getUserWithFilter} from '../../../services/User';
-import {getPatientBySSN} from '../../../services/Patient';
+import {getPatientWithFilter} from '../../../services/Patient';
 import ReactDatetime from "react-datetime";
 import NotificationAlert from "react-notification-alert";
 // reactstrap components
@@ -128,8 +128,8 @@ class BasicInfo extends React.Component {
   }
 
   async isSSNUnique(ssn){
-    const patient = await getPatientBySSN(ssn);
-    return patient === undefined;
+    const patient = await getPatientWithFilter({socialSecurityNumber: ssn});
+    return patient.length === 0;
   }
 
   isFormValid(){

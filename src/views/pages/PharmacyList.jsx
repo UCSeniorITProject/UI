@@ -7,8 +7,6 @@ import {
   Row,
   Col
 } from "reactstrap";
-import jwtDecode from 'jwt-decode';
-import {getPatientList} from '../../services/Patient';
 import ReactTable from "react-table";
 import { withRouter } from 'react-router';
 import { getPharmacyWithFilter } from "../../services/Pharmacy";

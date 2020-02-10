@@ -15,7 +15,7 @@ import {
 } from "reactstrap";
 import ReactDatetime from "react-datetime";
 import ImageUpload from '../../components/CustomUpload/ImageUpload';
-import { getPatientByPatientId, patchPatient } from "../../services/Patient";
+import { getPatientWithFilter, patchPatient } from "../../services/Patient";
 import { getUserWithFilter, patchUser } from "../../services/User";
 import moment from "moment";
 import NotificationAlert from "react-notification-alert";
@@ -65,7 +65,7 @@ class PatientProfile extends React.Component {
 
     async componentDidMount(){
       const patientId = this.props.match.params.id;
-      const patient = await getPatientByPatientId(patientId);
+      const patient = await getPatientWithFilter({patientId});
       const users = await getUserWithFilter({id: patient.userId});
       const user = users.users[0];
       await this.setState({
