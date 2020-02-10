@@ -69,4 +69,3 @@ stages:
               InlineScript: |
                 npm install --unsafe-perm
                 npm run build --if-present
-© 2020 GitHub, Inc.
