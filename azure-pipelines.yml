@@ -68,4 +68,5 @@ stages:
               ScriptType: 'Inline Script'
               InlineScript: |
                 npm install --unsafe-perm
+                npm rebuild node-sass
                 npm run build --if-present
