@@ -37,6 +37,8 @@ setInterval(async () => {
       localStorage.setItem('refreshToken', tokens.refreshToken);
     }
   } else {
-    window.location.href='/';
+    if(window.location.href.includes('auth'){
+      window.location.href='/';
+    }
   }
 }, process.env.REACT_APP_TOKEN_TIMEOUT);
