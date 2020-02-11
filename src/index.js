@@ -13,6 +13,7 @@ import "./assets/css/nucleo-icons.css";
 import "./assets/scss/black-dashboard-pro-react.scss?v=1.0.0";
 import "./assets/demo/demo.css";
 import "react-notification-alert/dist/animate.css";
+import "./ecosystem.config.js";
 import SetupAxiosInterceptors from './services/SetupAxiosInterceptors';
 const hist = createBrowserHistory();
 SetupAxiosInterceptors(null, hist);
