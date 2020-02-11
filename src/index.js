@@ -29,6 +29,9 @@ ReactDOM.render(
 );
 
 setInterval(async () => {
+   if(window.location.href.includes('auth')){
+    return;
+   }
   const refreshToken = localStorage.getItem('refreshToken');
   if(refreshToken !== 'undefined'){
     const tokens = await refreshAccessToken(refreshToken);
@@ -37,8 +40,6 @@ setInterval(async () => {
       localStorage.setItem('refreshToken', tokens.refreshToken);
     }
   } else {
-    if(!window.location.href.includes('auth')){
-      window.location.href='/';
-    }
+     window.location.href='/';
   }
 }, process.env.REACT_APP_TOKEN_TIMEOUT);
