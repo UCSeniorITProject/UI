@@ -55,7 +55,11 @@ stages:
     strategy:
       runOnce:
         deploy:
-          steps:            
+          steps: 
+          - task: NodeTool@0
+            inputs:
+                versionSpec: '12.x' 
+                checkLatest: true # Optional
           - task: AzureRmWebAppDeployment@4
             displayName: 'Azure App Service Deploy: SafeMeds'
             inputs:
