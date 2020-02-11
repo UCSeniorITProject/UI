@@ -37,7 +37,7 @@ setInterval(async () => {
       localStorage.setItem('refreshToken', tokens.refreshToken);
     }
   } else {
-    if(window.location.href.includes('auth'){
+    if(!window.location.href.includes('auth')){
       window.location.href='/';
     }
   }
