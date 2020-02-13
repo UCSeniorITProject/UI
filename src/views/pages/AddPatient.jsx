@@ -16,8 +16,8 @@ import React from "react";
 import { createPatient } from '../../services/Patient';
 
 class AddPatient extends React.Component {
-    constructor(){
-      super();
+    constructor(props){
+      super(props);
       this.state = {
         firstName: '',
         lastName: '',

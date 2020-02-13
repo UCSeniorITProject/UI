@@ -66,9 +66,7 @@ class PatientProfile extends React.Component {
     async componentDidMount(){
       const patientId = this.props.match.params.id;
 			const patient = await getPatientWithFilter({patientId});
-			console.log(patient)
 			const user = await getUserWithFilter({id: patient[0].patientUserId});
-			console.log(user)
       await this.setState({
         firstName: user.users[0].firstName,
         lastName:  user.users[0].lastName,

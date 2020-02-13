@@ -8,8 +8,28 @@ import PatientProfile from "./views/pages/PatientProfile";
 import AddPharmacy from "./views/pages/AddPharmacy";
 import PharmacyList from "./views/pages/PharmacyList";
 import PharamacyProfile from "./views/pages/PharmacyProfile";
+import AddDrug from "./views/pages/AddDrug";
 
 const routes = [
+	{
+		collapse: true,
+    name: "Drugs",
+    rtlName: "",
+    icon: "tim-icons icon-book-bookmark",
+    state: "drugCollapse",
+    requiredRoles:  [],
+    views: [
+			{
+        path: "/drug/new",
+        name: "Add Drug",
+        mini: "UP",
+        component: AddDrug,
+        isHidden: false,
+        requiredRoles:  [],
+        layout: "/admin"
+			},
+		],
+	},
   {
     collapse: true,
     name: "User",
