@@ -27,16 +27,25 @@ class AddDrug extends React.Component {
 			nonGenericParentIdState: null,
 			federalDrugIdentifier: '',
 			federalDrugIdentifierState: null,
+			isGeneric: false,
 		};
 	}
 
 	render(){
 
 		let parentDrugSelect;
-		
 		if(this.state.isGeneric){
 			parentDrugSelect = (
 			<Col className="pr-md-1" md="6">
+				<p className="category">Generic Drug</p>
+				<Switch
+					onChange={async e => this.setState({isGeneric: false})}
+					defaultValue={false}
+					offColor=""
+					offText=""
+					onColor=""
+					onText=""
+				/>{" "}
 				<Select
 						className="react-select info"
 						classNamePrefix="react-select"
@@ -51,7 +60,7 @@ class AddDrug extends React.Component {
 						options={[
 							{
 								value: "",
-								label: " Multiple Options",
+								label: "Non-Generic Drugs",
 								isDisabled: true
 							},
 							{ value: "2", label: "Paris " },
@@ -80,6 +89,7 @@ class AddDrug extends React.Component {
 			<Col className="pr-md-1" md="6">
 				<p className="category">Generic Drug</p>
 				<Switch
+					onChange={async e => this.setState({isGeneric: true})}
 					defaultValue={false}
 					offColor=""
 					offText=""
