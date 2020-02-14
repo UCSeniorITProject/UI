@@ -165,7 +165,7 @@ class UserInfo extends React.Component {
           <NotificationAlert ref="notificationAlert" />
         </div>
         <h5 className="info-text">
-          Now, onto the insurance information.
+          Now, onto the user information.
         </h5>
         <Row className="justify-content-center mt-5">
           <Col sm="6">
