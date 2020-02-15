@@ -88,7 +88,7 @@ const routes = [
         path: "/pharmacy/new",
         name: "Create Pharmacy",
         mini: "P",
-        requiredRoles:  ['Doctor, Pharmacist', 'Admin'],
+        requiredRoles:  ['Doctor', 'Pharmacist', 'Admin'],
         component: AddPharmacy,
         isHidden: false,
         layout: "/admin"

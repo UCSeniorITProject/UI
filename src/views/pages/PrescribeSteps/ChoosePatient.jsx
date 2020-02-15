@@ -10,6 +10,7 @@ import {
 import jwtDecode from 'jwt-decode';
 import {getPatientWithFilter} from '../../../services/Patient';
 import ReactTable from "react-table";
+import moment from "moment";
 
 class PickPatient extends React.Component {
   constructor(props) {
@@ -24,8 +25,9 @@ class PickPatient extends React.Component {
 
   async componentDidMount() {
     const decodedToken = jwtDecode(localStorage.getItem('accessToken'));
-    const patients = await getPatientWithFilter({patientUserId: decodedToken.userID});
-    const patientList = patients.patients.map(x => {return {patientId: x.userId, firstName: x.firstName, lastName: x.lastName, age: 1, gender: 'F', actions: (
+    const patients = await getPatientWithFilter();
+    console.log(patients)
+    const patientList = patients.map(x => {return {patientId: x.patientUserId, firstName: x.firstName, lastName: x.lastName, birthDate: moment(x.dateOfBirth).format("MM/DD/YYYY"), gender: x.gender === 'M' ? 'Male' : 'Female', actions: (
       <div className="actions-right">
               <Button
                 color="warning"
@@ -96,8 +98,8 @@ class PickPatient extends React.Component {
                         accessor: "lastName"
                       },
                       {
-                        Header: "Age",
-                        accessor: "age"
+                        Header: "Date of Birth",
+                        accessor: "dob"
                       },
                       {
                         Header: "Gender",
