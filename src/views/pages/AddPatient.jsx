@@ -3,11 +3,6 @@ import InsuranceInfo from './AddPatientsSteps/InsuranceInfo';
 import UserInfo from './AddPatientsSteps/UserInfo';
 import { withRouter } from 'react-router';
 import {
-  Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
-  Row,
   Col
 } from "reactstrap";
 import {createUser} from '../../services/User';

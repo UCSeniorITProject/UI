@@ -1,6 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import {getDrugWithFilter} from "../../services/Drug";
+import {getDrugWithFilter, createDrug} from "../../services/Drug";
 import {
   Row,
 	Col,
@@ -12,6 +12,8 @@ import {
 	Input,
 	InputGroupAddon,
 	InputGroupText,
+	CardFooter,
+	Button,
 } from "reactstrap";
 import classnames from "classnames";
 import Select from "react-select";
@@ -25,8 +27,8 @@ class AddDrug extends React.Component {
 			nameState: null,
 			manufacturer: '',
 			manufacturerState: null,
-			nonGenericParentId: '',
-			nonGenericParentIdState: null,
+			nonGenericParentId: null,
+			nonGenericParentIdState: 'has-success',
 			federalDrugIdentifier: '',
 			federalDrugIdentifierState: null,
 			isGeneric: false,
@@ -34,10 +36,73 @@ class AddDrug extends React.Component {
 		};
 	}
 
+	setIsFormValid(){
+    this.setState({isFormValid: this.isFormValid()});
+  }
+
+	change = (event, stateName, type, stateNameEqualTo, maxValue) => {
+		switch (type) {
+			case "length":
+				if (this.verifyLength(event.target.value, stateNameEqualTo)) {
+					this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+				} else {
+					this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+				}
+				break;
+			default:
+				break;
+		}
+		console.log(this.state)
+		this.setState({ [stateName]: event.target.value || ''});
+	};
+
+  isFormValid(){
+    return Object.entries(this.state).filter(x => x[0].includes('State') && x[1] ===null || x[0].includes('State') && x[1].includes('has-danger')).length === 0;
+  }
+
+  // function that verifies if a string has a given length or not
+  verifyLength = (value, length) => {
+    if (value.length >= length) {
+      return true;
+    }
+    return false;
+  };
+
+  handleChange(event, stateName, type, stateNameEqualTo, maxValue){
+		console.log(this.state)
+    this.setState({ [event.target.name]: event.target.value});
+    switch (type) {
+      case "length": 
+        if(this.verifyLength(event.target.value, 1)){
+          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+        } else {
+          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+        }
+        break;
+      case "password":
+        if (this.verifyLength(event.target.value, 6)
+          && event.target.value.toLowerCase() !== event.target.value) {
+          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+        } else {
+          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+        }
+        break;
+      case "tel":
+        if(this.verifyPhone(event.target.value)){
+          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+        } else {
+          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
 	async componentDidMount(){
 		try{
 			const drugs = await getDrugWithFilter({nonGenericParentId: null});
-			this.setState({parentDrugs: drugs.map(x => {return {id: x.drugId, name: x.name}})});
+			this.setState({parentDrugs: drugs.map(x => {return {id: x.drugId, label: x.name}})});
 		} catch (err) {
 			var options = {};
 			options = {
@@ -55,7 +120,33 @@ class AddDrug extends React.Component {
 			};
 			this.refs.notificationAlert.notificationAlert(options);
 		}
+	}
 
+	async createDrug(){
+		try {
+			const drug = await createDrug({
+				name: this.state.name,
+				manufacturer: this.state.manufacturer,
+				federalDrugIdentifier: this.state.federalDrugIdentifier,
+				nonGenericParentId: this.state.nonGenericParentId,
+			});
+		} catch (err) {
+			var options = {};
+			options = {
+				place: 'tr',
+				message: (
+					<div>
+						<div>
+							An error occured. Please try again later
+						</div>
+					</div>
+				),
+				type: 'error',
+				icon: "tim-icons icon-bell-55",
+				autoDismiss: 7
+			};
+			this.refs.notificationAlert.notificationAlert(options);
+		}
 	}
 
 	render(){
@@ -81,8 +172,11 @@ class AddDrug extends React.Component {
 						closeMenuOnSelect={false}
 						isMulti
 						value={this.state.multipleSelect}
-						onChange={value =>
-							this.setState({ multipleSelect: value })
+						onChange={value => {
+								if(value.length > 0){
+									this.setState({ nonGenericParentId: value[0].id })
+								}
+							}
 						}
 						options={[
 							{
@@ -125,8 +219,8 @@ class AddDrug extends React.Component {
 									<Row>
 											<Col className="pr-md-1" md="6">
                         <InputGroup
-                          className={classnames(this.state.drugNameState, {
-                            "input-group-focus": this.state.drugNameFocus
+                          className={classnames(this.state.nameState, {
+                            "input-group-focus": this.state.nameFocus
                           })}
                         >
                           <InputGroupAddon addonType="prepend">
@@ -135,19 +229,19 @@ class AddDrug extends React.Component {
                             </InputGroupText>
                           </InputGroupAddon>
                           <Input
-                            name="drugName"
+                            name="name"
                             placeholder="Drug Name"
                             type="text"
-                            onChange={e => this.change(e, "drugName", "length", 1)}
-                            onFocus={e => this.setState({ drugNameFocus: true })}
-                            onBlur={e => {this.setState({ drugNameFocus: false }); this.change(e, 'drugName', 'length', 1)}}
+                            onChange={e => this.change(e, "name", "length", 1)}
+                            onFocus={e => this.setState({ nameFocus: true })}
+                            onBlur={e => {this.setState({ nameFocus: false }); this.change(e, 'name', 'length', 1)}}
                           />
                         </InputGroup>
                     </Col>
 										<Col className="pr-md-1" md="6">
                         <InputGroup
-                          className={classnames(this.state.drugManufacturerState, {
-                            "input-group-focus": this.state.drugManufacturerFocus
+                          className={classnames(this.state.manufacturerState, {
+                            "input-group-focus": this.state.manufacturerFocus
                           })}
                         >
                           <InputGroupAddon addonType="prepend">
@@ -159,9 +253,9 @@ class AddDrug extends React.Component {
                             name="drugManufacturer"
                             placeholder="Manufacturer"
                             type="text"
-                            onChange={e => this.change(e, "drugManufacturer", "length", 1)}
-                            onFocus={e => this.setState({ drugManufacturerFocus: true })}
-                            onBlur={e => {this.setState({ drugManufacturerFocus: false }); this.change(e, 'drugManufacturer', 'length', 1)}}
+                            onChange={e => this.change(e, "manufacturer", "length", 1)}
+                            onFocus={e => this.setState({ manufacturerFocus: true })}
+                            onBlur={e => {this.setState({ manufacturerFocus: false }); this.change(e, 'manufacturer', 'length', 1)}}
                           />
                         </InputGroup>
                     </Col>
@@ -189,6 +283,11 @@ class AddDrug extends React.Component {
 										{parentDrugSelect}
 									</Row>
 								</CardBody>
+								<CardFooter>
+									<Button className="btn-fill pull-right" color="primary" type="submit" disabled={!this.state.isFormValid} onClick={e => this.createDrug()}>
+                    Create Drug
+                  </Button>
+								</CardFooter>
 							</Card>
 						</Col>
 					</Row>
