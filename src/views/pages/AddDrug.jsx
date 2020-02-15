@@ -1,5 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
+import {getDrugWithFilter} from "../../services/Drug";
 import {
   Row,
 	Col,
@@ -15,6 +16,7 @@ import {
 import classnames from "classnames";
 import Select from "react-select";
 import Switch from "react-bootstrap-switch";
+import NotificationAlert from "react-notification-alert";
 class AddDrug extends React.Component {
 	constructor(props){
 		super(props);
@@ -28,7 +30,32 @@ class AddDrug extends React.Component {
 			federalDrugIdentifier: '',
 			federalDrugIdentifierState: null,
 			isGeneric: false,
+			parentDrugs: [],
 		};
+	}
+
+	async componentDidMount(){
+		try{
+			const drugs = await getDrugWithFilter({nonGenericParentId: null});
+			this.setState({parentDrugs: drugs.map(x => {return {id: x.drugId, name: x.name}})});
+		} catch (err) {
+			var options = {};
+			options = {
+				place: 'tr',
+				message: (
+					<div>
+						<div>
+							An error occured. Please try again later
+						</div>
+					</div>
+				),
+				type: 'error',
+				icon: "tim-icons icon-bell-55",
+				autoDismiss: 7
+			};
+			this.refs.notificationAlert.notificationAlert(options);
+		}
+
 	}
 
 	render(){
@@ -63,24 +90,7 @@ class AddDrug extends React.Component {
 								label: "Non-Generic Drugs",
 								isDisabled: true
 							},
-							{ value: "2", label: "Paris " },
-							{ value: "3", label: "Bucharest" },
-							{ value: "4", label: "Rome" },
-							{ value: "5", label: "New York" },
-							{ value: "6", label: "Miami " },
-							{ value: "7", label: "Piatra Neamt" },
-							{ value: "8", label: "Paris " },
-							{ value: "9", label: "Bucharest" },
-							{ value: "10", label: "Rome" },
-							{ value: "11", label: "New York" },
-							{ value: "12", label: "Miami " },
-							{ value: "13", label: "Piatra Neamt" },
-							{ value: "14", label: "Paris " },
-							{ value: "15", label: "Bucharest" },
-							{ value: "16", label: "Rome" },
-							{ value: "17", label: "New York" },
-							{ value: "18", label: "Miami " },
-							{ value: "19", label: "Piatra Neamt" }
+							...this.state.parentDrugs,
 						]}
 					/>
 				</Col>);
@@ -101,6 +111,9 @@ class AddDrug extends React.Component {
 
 		return (
 			<>
+			  <div className="rna-container">
+          <NotificationAlert ref="notificationAlert" />
+        </div>
 				<div className="content">
 					<Row>
 						<Col md="12">

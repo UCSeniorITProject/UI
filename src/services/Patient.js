@@ -2,13 +2,12 @@ import Axios from 'axios';
 
 export async function getPatientWithFilter(filter){
 	const patients = await Axios.get(`${process.env.REACT_APP_API_URL}/api/patient-service/patient`, {params: filter});
-	console.log(patients.data.patients)
   return patients.data.patients;
 }
 
 export async function createPatient(patientInfo){
   const patient = await Axios.post(`${process.env.REACT_APP_API_URL}/api/patient-service/patient`, {patient: {...patientInfo}});
-  return patient;
+  return patient.data.patient;
 }
 
 export async function patchPatient(patientId, dataToPatch){

@@ -42,32 +42,51 @@ class AddPatient extends React.Component {
     }
 
     async onFinishButtonClick(){
-      const userInfo = {
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        username: this.state.username,
-        email: this.state.email,
-        phoneNumber: this.state.phoneNumber,
-        password: this.state.password,
-        profilePicture: '',
-        active: 'Y',
-      };
-      const user = await createUser(userInfo);
-      const patientInfo = {
-        address: this.state.address,
-        city: this.state.city,
-        coPayAmount: this.state.insuranceCoPayAmount,
-        dob: this.state.dob,
-        gender: this.state.gender,
-        insuranceName: this.state.insuranceName,
-        planNo: this.state.insurancePlanNo,
-        ssn: this.state.ssn,
-        state: this.state.state,
-        userId: user.id,
-        zipCode: this.state.zipCode
-      };
-      const patient = await createPatient(patientInfo);
-      this.props.history.push(`/admin/patient/profile/${patient.id}`);
+      try {
+        const userInfo = {
+          firstName: this.state.firstName,
+          lastName: this.state.lastName,
+          username: this.state.username,
+          email: this.state.email,
+          phoneNumber: this.state.phoneNumber,
+          password: this.state.password,
+          profilePicture: '',
+          active: 'Y',
+        };
+        const user = await createUser(userInfo);
+        const patientInfo = {
+          address: this.state.address,
+          city: this.state.city,
+          insuranceCoPayAmount: this.state.insuranceCoPayAmount,
+          dateOfBirth: this.state.dob,
+          gender: this.state.gender,
+          insuranceName: this.state.insuranceName,
+          insurancePlanNo: this.state.insurancePlanNo,
+          socialSecurityNumber: this.state.ssn,
+          state: this.state.state,
+          patientUserId: user.id,
+          zipCode: this.state.zipCode,
+          active: 'Y',
+        };
+        const patient = await createPatient(patientInfo);
+        this.props.history.push(`/admin/patient/profile/${patient.patientId}`);
+      } catch (err){
+        var options = {};
+        options = {
+          place: 'tr',
+          message: (
+            <div>
+              <div>
+                An error occured. Please try again later
+              </div>
+            </div>
+          ),
+          type: 'error',
+          icon: "tim-icons icon-bell-55",
+          autoDismiss: 7
+        };
+        this.refs.notificationAlert.notificationAlert(options);
+      }
     }
 
     steps = [
