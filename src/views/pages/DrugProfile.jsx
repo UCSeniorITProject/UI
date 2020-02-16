@@ -38,6 +38,12 @@ class DrugProfile extends React.Component{
     const drugId = this.props.match.params.id;
     try {
       const drug = await getDrugWithFilter({drugId: drugId});
+      this.setState({
+        name: drug[0].name,
+        manufacturer: drug[0].manufacturer,
+        federalDrugIdentifier:  drug[0].federalDrugIdentifier,
+        nonGenericParentId: drug[0].nonGenericParentId,
+      });
     } catch (err) {
       this.showInternalServerErrorMessage();
     }
