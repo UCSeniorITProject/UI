@@ -37,7 +37,7 @@ class DrugProfile extends React.Component{
   async componentDidMount(){
     const drugId = this.props.match.params.id;
     try {
-      const drug = await getDrugWithFilter({id: drugId});
+      const drug = await getDrugWithFilter({drugId: drugId});
     } catch (err) {
       this.showInternalServerErrorMessage();
     }
