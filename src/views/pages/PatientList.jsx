@@ -16,14 +16,11 @@ class PatientList extends React.Component  {
     super(props);
     this.state = {
       patients: [],
-      isPatientPicked: false,
-      selectedPatientID: null,
-      selectedIndex: null,
     }
   }
 
   async componentDidMount() {
-    const patients = await getPatientWithFilter();
+    const patients = await getPatientWithFilter({active: 'Y'});
     const patientList = patients.map(x => {return {patientId: x.patientUserId, firstName: x.firstName, lastName: x.lastName, birthDate: moment(x.dateOfBirth).format("MM/DD/YYYY"), gender: x.gender === 'M' ? 'Male' : 'Female', actions: (
       <div className="actions-right">
               <Button
@@ -48,7 +45,7 @@ class PatientList extends React.Component  {
           <Col md="12">
             <Card>
               <CardHeader>
-                <h5 className="title">Edit Profile</h5> 
+                <h5 className="title">Patient List</h5> 
               </CardHeader>
               <CardBody>
                   <ReactTable

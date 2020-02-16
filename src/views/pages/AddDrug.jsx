@@ -101,7 +101,7 @@ class AddDrug extends React.Component {
 
 	async componentDidMount(){
 		try{
-			const drugs = await getDrugWithFilter({nonGenericParentId: null});
+			const drugs = await getDrugWithFilter({nonGenericParentId: 0, active: 'Y'});
 			this.setState({parentDrugs: drugs.map(x => {return {id: x.drugId, label: x.name}})});
 		} catch (err) {
 			var options = {};
@@ -129,6 +129,7 @@ class AddDrug extends React.Component {
 				manufacturer: this.state.manufacturer,
 				federalDrugIdentifier: this.state.federalDrugIdentifier,
 				nonGenericParentId: this.state.nonGenericParentId,
+				active: 'Y',
 			});
 		} catch (err) {
 			var options = {};

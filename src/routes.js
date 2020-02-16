@@ -9,27 +9,10 @@ import AddPharmacy from "./views/pages/AddPharmacy";
 import PharmacyList from "./views/pages/PharmacyList";
 import PharamacyProfile from "./views/pages/PharmacyProfile";
 import AddDrug from "./views/pages/AddDrug";
+import DrugList from "./views/pages/DrugList";
+import DrugProfile from "./views/pages/DrugProfile";
 
 const routes = [
-	{
-		collapse: true,
-    name: "Drugs",
-    rtlName: "",
-    icon: "tim-icons icon-book-bookmark",
-    state: "drugCollapse",
-    requiredRoles:  [],
-    views: [
-			{
-        path: "/drug/new",
-        name: "Add Drug",
-        mini: "UP",
-        component: AddDrug,
-        isHidden: false,
-        requiredRoles:  [],
-        layout: "/admin"
-			},
-		],
-	},
   {
     collapse: true,
     name: "User",
@@ -75,6 +58,45 @@ const routes = [
     state: "pharmacyCollapse",
     requiredRoles:  ['Doctor', 'Pharmacist'],
     views: [
+      {
+        collapse: true,
+        name: "Drugs",
+        mini: 'D',
+        state: "drugCollapse",
+        requiredRoles:  [],
+        views: [
+          {
+            path: "/drug/new",
+            name: "Add Drug",
+            mini: "AD",
+            component: AddDrug,
+            isHidden: false,
+            requiredRoles:  [],
+            state: 'addDrug',
+            layout: "/admin"
+          },
+          {
+            path: "/drug/list",
+            name: "Drug List",
+            mini: "DL",
+            component: DrugList,
+            isHidden: false,
+            state: 'drugList',
+            requiredRoles:  [],
+            layout: "/admin"
+          },
+          {
+            path: "/drug/profile/:id",
+            name: "Drug Profile",
+            mini: "DL",
+            component: DrugProfile,
+            isHidden: true,
+            state: 'drugProfile',
+            requiredRoles:  [],
+            layout: "/admin"
+          },
+        ],
+      },
       {
         path: "/pharmacy/prescribe",
         name: "Prescribe",
