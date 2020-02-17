@@ -20,21 +20,25 @@ class PatientList extends React.Component  {
   }
 
   async componentDidMount() {
-    const patients = await getPatientWithFilter({active: 'Y'});
-    const patientList = patients.map(x => {return {patientId: x.patientUserId, firstName: x.firstName, lastName: x.lastName, birthDate: moment(x.dateOfBirth).format("MM/DD/YYYY"), gender: x.gender === 'M' ? 'Male' : 'Female', actions: (
-      <div className="actions-right">
-              <Button
-                color="primary"
-                size="md"
-                className="btn-fill"
-                value={x.userId}
-                onClick={e => this.props.history.push(`/admin/patient/profile/${x.patientId}/`)}
-              >
-                EDIT
-              </Button>
-      </div>
-    ), selected: false}});
-    this.setState({patients: patientList});
+    try {
+      const patients = await getPatientWithFilter({active: 'Y'});
+      const patientList = patients.map(x => {return {patientId: x.patientUserId, firstName: x.firstName, lastName: x.lastName, birthDate: moment(x.dateOfBirth).format("MM/DD/YYYY"), gender: x.gender === 'M' ? 'Male' : 'Female', actions: (
+        <div className="actions-right">
+                <Button
+                  color="primary"
+                  size="md"
+                  className="btn-fill"
+                  value={x.userId}
+                  onClick={e => this.props.history.push(`/admin/patient/profile/${x.patientId}/`)}
+                >
+                  EDIT
+                </Button>
+        </div>
+      ), selected: false}});
+      this.setState({patients: patientList});
+    } catch (err){
+      console.log(err);
+    }
   }
 
   render (){

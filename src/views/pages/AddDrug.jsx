@@ -68,37 +68,6 @@ class AddDrug extends React.Component {
     return false;
   };
 
-  handleChange(event, stateName, type, stateNameEqualTo, maxValue){
-		console.log(this.state)
-    this.setState({ [event.target.name]: event.target.value});
-    switch (type) {
-      case "length": 
-        if(this.verifyLength(event.target.value, 1)){
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
-        } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
-        }
-        break;
-      case "password":
-        if (this.verifyLength(event.target.value, 6)
-          && event.target.value.toLowerCase() !== event.target.value) {
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
-        } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
-        }
-        break;
-      case "tel":
-        if(this.verifyPhone(event.target.value)){
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
-        } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
-        }
-        break;
-      default:
-        break;
-    }
-  }
-
 	async componentDidMount(){
 		try{
 			const drugs = await getDrugWithFilter({nonGenericParentId: 0, active: 'Y'});
@@ -131,6 +100,7 @@ class AddDrug extends React.Component {
 				nonGenericParentId: this.state.nonGenericParentId,
 				active: 'Y',
 			});
+			this.props.history.push(`/admin/drug/profile/${drug.drugId}`)
 		} catch (err) {
 			var options = {};
 			options = {
@@ -151,7 +121,6 @@ class AddDrug extends React.Component {
 	}
 
 	render(){
-
 		let parentDrugSelect;
 		if(this.state.isGeneric){
 			parentDrugSelect = (
@@ -171,7 +140,6 @@ class AddDrug extends React.Component {
 						placeholder="Non-Generic Version"
 						name="multipleSelect"
 						closeMenuOnSelect={false}
-						isMulti
 						value={this.state.multipleSelect}
 						onChange={value => {
 								if(value.length > 0){
