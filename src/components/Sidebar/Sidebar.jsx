@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
-
+import jwtDecode from 'jwt-decode';
 // reactstrap components
 import { Nav, Collapse } from "reactstrap";
 
@@ -49,7 +49,7 @@ class Sidebar extends React.Component {
   createLinks = routes => {
     const { rtlActive } = this.props;
     return routes.map((prop, key) => {
-      if (prop.redirect || prop.isHidden === true) {
+      if (prop.redirect || prop.isHidden === true || !anyMatchInArray(jwtDecode(localStorage.getItem('accessToken')).roles, prop.requiredRoles) && prop.requiredRoles.length !== 0) {
         return null;
       }
       if (prop.collapse) {
@@ -176,3 +176,30 @@ Sidebar.propTypes = {
 };
 
 export default Sidebar;
+
+var anyMatchInArray = function (target, toMatch) {
+  "use strict";
+
+  var found, targetMap, i, j, cur;
+
+  found = false;
+  targetMap = {};
+
+  // Put all values in the `target` array into a map, where
+  //  the keys are the values from the array
+  for (i = 0, j = target.length; i < j; i++) {
+      cur = target[i];
+      targetMap[cur] = true;
+  }
+
+  // Loop over all items in the `toMatch` array and see if any of
+  //  their values are in the map from before
+  for (i = 0, j = toMatch.length; !found && (i < j); i++) {
+      cur = toMatch[i];
+      found = !!targetMap[cur];
+      // If found, `targetMap[cur]` will return true, otherwise it
+      //  will return `undefined`...that's what the `!!` is for
+  }
+
+  return found;
+};

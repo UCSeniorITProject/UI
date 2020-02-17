@@ -205,10 +205,15 @@
     text-transform: uppercase;
   }
 
+  #addPatient {
+    float: right;
+  }
+
   .info-text {
-    text-align: center;
+    left: 60%;
+    font-size: 130%;
+    color: white;
     font-weight: 300;
-    margin: 10px 0 30px;
   }
 
   .choice {

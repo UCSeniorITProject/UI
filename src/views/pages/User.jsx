@@ -198,16 +198,18 @@ class User extends React.Component {
 
   async componentDidMount (){
     const user = await getUserWithFilter({id: jwtDecode(localStorage.getItem('accessToken')).userID});
-    this.setState({
-      firstName: user.users[0].firstName,
-      lastName: user.users[0].lastName,
-      phoneNumber: user.users[0].phoneNumber,
-      email: user.users[0].email,
-      username: user.users[0].username,
-      profilePicture: user.users[0].profilePicture,
-    });
-    if(user.users[0].profilePicture !== ''){
-      this.refs.ImageUpload.setImage(user.users[0].profilePicture);
+    if(user.users.length){
+      this.setState({
+        firstName: user.users[0].firstName,
+        lastName: user.users[0].lastName,
+        phoneNumber: user.users[0].phoneNumber,
+        email: user.users[0].email,
+        username: user.users[0].username,
+        profilePicture: user.users[0].profilePicture,
+      });
+      if(user.users[0].profilePicture !== ''){
+        this.refs.ImageUpload.setImage(user.users[0].profilePicture);
+      }
     }
   }
   render() {
@@ -245,14 +247,14 @@ class User extends React.Component {
 
                       <Col className="pr-md-1" md="3">
                         <FormGroup>
-                        <ImageUpload
-                          avatar
-                          onChange={this.handleImageChange.bind(this)}
-                          addBtnColor="default"
-                          changeBtnColor="default"
-                          className="pull-right"
-                          ref="ImageUpload"
-                        />
+                          <ImageUpload
+                            avatar
+                            onChange={this.handleImageChange.bind(this)}
+                            addBtnColor="default"
+                            changeBtnColor="default"
+                            className="pull-right"
+                            ref="ImageUpload"
+                          />
                         </FormGroup>
                       </Col>
                     </Row>

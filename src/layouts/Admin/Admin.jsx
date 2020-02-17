@@ -80,7 +80,6 @@ class Admin extends React.Component {
       if (prop.collapse) {
         return this.getRoutes(prop.views);
       }
-      console.log(prop)
       if (prop.layout === "/admin") {
         return (
           <Route
@@ -95,7 +94,7 @@ class Admin extends React.Component {
     });
   };
   getActiveRoute = routes => {
-    let activeRoute = "Default Brand Text";
+    let activeRoute = "";
     for (let i = 0; i < routes.length; i++) {
       if (routes[i].collapse) {
         let collapseActiveRoute = this.getActiveRoute(routes[i].views);

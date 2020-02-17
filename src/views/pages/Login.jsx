@@ -61,7 +61,9 @@ class Login extends React.Component {
         icon: "tim-icons icon-bell-55",
         autoDismiss: 7
       };
-      this.refs.notificationAlert.notificationAlert(options);
+      if(this.refs){
+        this.refs.notificationAlert.notificationAlert(options);
+      }
     }
   }
   render() {
