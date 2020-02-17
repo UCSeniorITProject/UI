@@ -22,14 +22,30 @@ class DrugProfile extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      isFormValid: true,
-      name: '',
-      nameState: null,
-      manufacturer: '',
-      manufacturerState: null,
-      nonGenericParentId: null,
-      federalDrugIdentifier: null,
-      parentDrugs: [],
+      drug: {
+        isDrugFormValid: true,
+        name: '',
+        nameState: null,
+        manufacturer: '',
+        manufacturerState: null,
+        nonGenericParentId: null,
+        federalDrugIdentifier: null,
+        parentDrugs: [],
+      },
+      prescribable: {
+        dosage: '',
+        dosageState: null,
+        dosageUnit: '',
+        dosageUnitState: null,
+        dosageFrequency: '',
+        dosageFrequencyState: null,
+        minWeight: '',
+        minWeightState: null,
+        requiredGender: '',
+        requiredGenderState: null,
+        drugId: this.props.match.params.id,
+        isPrescribableFormValid: false,
+      }
     };
   };
 
@@ -64,6 +80,7 @@ class DrugProfile extends React.Component{
         nonGenericParentId: drug[0].nonGenericParentId,
         parentDrugs: parentDrugs.map(x => {return {value: x.drugId, label: x.name}}),
         isGeneric: drug[0].nonGenericParentId !== '0',
+        isDrugFormValid: true,
       }
 
       if(drugProfileState.isGeneric){
@@ -73,17 +90,17 @@ class DrugProfile extends React.Component{
         }
       }
 
-      this.setState(drugProfileState);
+      this.setState({drug: drugProfileState});
     } catch (err) {
       this.showInternalServerErrorMessage();
     }
   }
 
   setIsFormValid(){
-    this.setState({isFormValid: this.isFormValid()});
+    this.setState({isDrugFormValid: this.isFormValid()});
   }
 
-	change = (event, stateName, type, stateNameEqualTo, maxValue) => {
+	change = (event, stateName, type, stateNameEqualTo, stateTree) => {
 		switch (type) {
 			case "length":
 				if (this.verifyLength(event.target.value, stateNameEqualTo)) {
@@ -95,11 +112,11 @@ class DrugProfile extends React.Component{
 			default:
 				break;
 		}
-		this.setState({ [stateName]: event.target.value || ''});
+		this.setState({ [stateTree]: {...this.state[stateTree], [stateName]: event.target.value || ''}});
 	};
 
   isFormValid(){
-    return Object.entries(this.state).filter(x =>  x[0].includes('State') && x[1] !== null && x[1].includes('has-danger')).length === 0 && (!this.state.isGeneric || this.state.isGeneric && Number(this.state.nonGenericParentId) !== 0);
+    return Object.entries(this.state.drug).filter(x =>  x[0].includes('State') && x[1] !== null && x[1].includes('has-danger')).length === 0 && (!this.state.drug.isGeneric || this.state.drug.isGeneric && Number(this.state.drug.nonGenericParentId) !== 0);
   }
 
   // function that verifies if a string has a given length or not
@@ -113,12 +130,12 @@ class DrugProfile extends React.Component{
   async updateDrug(){
     const drugId = this.props.match.params.id;
     let drugFieldsToUpdate = {
-      name: this.state.name,
-      manufacturer: this.state.manufacturer,
-      federalDrugIdentifier: this.state.federalDrugIdentifier,
+      name: this.state.drug.name,
+      manufacturer: this.state.drug.manufacturer,
+      federalDrugIdentifier: this.state.drug.federalDrugIdentifier,
     };
-    if(this.state.isGeneric){
-      drugFieldsToUpdate.nonGenericParentId = this.state.nonGenericParentId;
+    if(this.state.drug.isGeneric){
+      drugFieldsToUpdate.nonGenericParentId = this.state.drug.nonGenericParentId;
     } else {
       drugFieldsToUpdate.nonGenericParentId = 0;
     }
@@ -145,15 +162,19 @@ class DrugProfile extends React.Component{
     }
   }
 
+  isPrescribableFormValid(){
+
+  }
+
   render(){
     let parentDrugSelect;
-		if(this.state.isGeneric){
+		if(this.state.drug.isGeneric){
 			parentDrugSelect = (
 			<Col className="pr-md-1" md="6">
 				<p className="category">Generic Drug</p>
 				<Switch
-					onChange={async e => this.setState({isGeneric: false, nonGenericParentId: 0})}
-					value={this.state.isGeneric}
+					onChange={async e => this.setState({drug: {...this.state.drug, isGeneric: false, nonGenericParentId: 0}})}
+					value={this.state.drug.isGeneric}
 					offColor=""
 					offText=""
 					onColor=""
@@ -165,11 +186,11 @@ class DrugProfile extends React.Component{
 						placeholder="Non-Generic Version"
 						name="select"
 						closeMenuOnSelect={false}
-						value={this.state.parentDrugSelected}
+						value={this.state.drug.parentDrugSelected}
 						onChange={async value => {
 								if(value.value){
-                  this.setState({ nonGenericParentId: value.value}, () => {
-                    this.setState({isFormValid: this.isFormValid()});
+                  this.setState({drug: {...this.state.drug, nonGenericParentId: value.value}}, () => {
+                    this.setState({drug: {...this.state.drug, isDrugFormValid: this.isFormValid()}});
                   });
 								}
 							}
@@ -180,7 +201,7 @@ class DrugProfile extends React.Component{
 								label: "Non-Generic Drugs",
 								isDisabled: true,
 							},
-              ...this.state.parentDrugs,
+              ...this.state.drug.parentDrugs,
 						]}
 					/>
 				</Col>);
@@ -189,9 +210,9 @@ class DrugProfile extends React.Component{
 			<Col className="pr-md-1" md="6">
 				<p className="category">Generic Drug</p>
 				<Switch
-					onChange={async e => this.setState({isGeneric: true}, () => {
-            this.setState({isFormValid: this.isFormValid()});
-          })}
+					onChange={async e => {this.setState({drug: {...this.state.drug, isGeneric: true}}, () => {
+            this.setState({drug: {...this.state.drug, isDrugFormValid: this.isFormValid()}});
+          })}}
 					value={false}
 					offColor=""
 					offText=""
@@ -215,15 +236,15 @@ class DrugProfile extends React.Component{
                 <CardBody>
                   <Row>
                     <Col md="6">
-                      <FormGroup className={`has-label ${this.state.nameState}`}>
+                      <FormGroup className={`has-label ${this.state.drug.nameState}`}>
                           <label>Drug Name</label>
                           <Input
                             name="name"
                             type="text"
-                            onChange={e => this.change(e, "name", "length", '1')}
-                            defaultValue={this.state.name}
+                            onChange={e => this.change(e, "name", "length", '1', 'drug')}
+                            defaultValue={this.state.drug.name}
                           />
-                          {this.state.nameState === "has-danger" ? (
+                          {this.state.drug.nameState === "has-danger" ? (
                             <label className="error">
                               Please enter a valid name
                             </label>
@@ -231,15 +252,15 @@ class DrugProfile extends React.Component{
                         </FormGroup>
                     </Col>
                     <Col md="6">
-                      <FormGroup className={`has-label ${this.state.manufacturerState}`}>
+                      <FormGroup className={`has-label ${this.state.drug.manufacturerState}`}>
                           <label>Manufacturer</label>
                           <Input
                             name="manufacturer"
                             type="text"
-                            onChange={e => this.change(e, "manufacturer", "length", '1')}
-                            defaultValue={this.state.manufacturer}
+                            onChange={e => this.change(e, "manufacturer", "length", '1', 'drug')}
+                            defaultValue={this.state.drug.manufacturer}
                           />
-                          {this.state.manufacturerState === "has-danger" ? (
+                          {this.state.drug.manufacturerState === "has-danger" ? (
                             <label className="error">
                               Please enter a valid manufacturer name
                             </label>
@@ -247,15 +268,15 @@ class DrugProfile extends React.Component{
                         </FormGroup>
                     </Col>
                     <Col md="6">
-                      <FormGroup className={`has-label ${this.state.federalDrugIdentifierState}`}>
+                      <FormGroup className={`has-label ${this.state.drug.federalDrugIdentifierState}`}>
                           <label>Federal Drug Identifier</label>
                           <Input
                             name="federaldrugidentifier"
                             type="text"
-                            onChange={e => this.change(e, "federalDrugIdentifier", "length", '1')}
-                            defaultValue={this.state.federalDrugIdentifier}
+                            onChange={e => this.change(e, "federalDrugIdentifier", "length", '1', 'drug')}
+                            defaultValue={this.state.drug.federalDrugIdentifier}
                           />
-                          {this.state.federalDrugIdentifierState === "has-danger" ? (
+                          {this.state.drug.federalDrugIdentifierState === "has-danger" ? (
                             <label className="error">
                               Please enter a valid ID
                             </label>
@@ -266,10 +287,119 @@ class DrugProfile extends React.Component{
                   </Row>
                 </CardBody>
                 <CardFooter>
-                <Button className="btn-fill pull-right" color="primary" type="submit" disabled={!this.state.isFormValid} onClick={e => this.updateDrug()}>
+                <Button className="btn-fill pull-right" color="primary" type="submit" disabled={!this.state.drug.isDrugFormValid} onClick={e => this.updateDrug()}>
                   Update Drug
                 </Button>
               </CardFooter>
+              </Card>
+            </Col>
+            <Col md="6">
+              <Card>
+                <CardHeader>
+                  <CardTitle tag="h4">Prescribable List</CardTitle>
+                </CardHeader>
+                <CardBody>
+                  <Row>
+                    
+                  </Row>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col md="12">
+              <Card>
+                <CardHeader>
+                  <CardTitle tag="h4">Add Prescribable</CardTitle>
+                </CardHeader>
+                <CardBody>
+                  <Row>
+                    <Col md="3">
+                        <FormGroup className={`has-label ${this.state.dosageState}`}>
+                          <label>Dosage</label>
+                          <Input
+                            name="dosage"
+                            type="text"
+                            onChange={e => this.change(e, "dosage", "length", '1', 'prescribable')}
+                            defaultValue={this.state.dosage}
+                          />
+                          {this.state.dosageState === "has-danger" ? (
+                            <label className="error">
+                              Please enter a valid dosage amount
+                            </label>
+                          ) : null}
+                        </FormGroup>
+                    </Col>
+                    <Col md="4">
+                        <FormGroup className={`${this.state.dosageState}`}>
+                          <label>Dosage Unit</label>
+                          <Select
+                            className="react-select info"
+                            classNamePrefix="react-select"
+                            placeholder="Dosage Unit"
+                            name="select"
+                            closeMenuOnSelect={false}
+                            onChange={async value => {
+                                if(value.value){
+                                  this.setState({prescribable: {...this.state.prescribable, dosageFrequency: value.value}}, () => {
+                                    this.setState({prescribable: {...this.state.prescribable, isPrescribableFormValid: this.isPrescribableFormValid()}});
+                                  });
+                                }
+                              }
+                            }
+                            options={[
+                              {
+                                value: "",
+                                label: "Dosage Unit",
+                                isDisabled: true,
+                              },
+                              {
+                                value: "Milligram",
+                                label: 'Milligram (mg)'
+                              },
+                              {
+                                value: 'Gram',
+                                label: 'Grams (g)'
+                              }
+                            ]}
+                          />
+                        </FormGroup>
+                    </Col>
+                    <Col md="5">
+                        <FormGroup className={`has-label ${this.state.dosageState}`}>
+                          <label>Dosage Frequency</label>
+                          <Select
+                            className="react-select info"
+                            classNamePrefix="react-select"
+                            placeholder="Dosage Frequency"
+                            name="select"
+                            closeMenuOnSelect={false}
+                            onChange={async value => {
+                                if(value.value){
+                                  this.setState({prescribable: {...this.state.prescribable, dosageFrequency: value.value}}, () => {
+                                    this.setState({prescribable: {...this.state.prescribable, isPrescribableFormValid: this.isPrescribableFormValid()}});
+                                  });
+                                }
+                              }
+                            }
+                            options={[
+                              {
+                                value: "",
+                                label: "Dosage Frequency",
+                                isDisabled: true,
+                              },
+                              {
+                                value: "Daily",
+                                label: 'Daily'
+                              },
+                              {
+                                value: 'Twice Daily',
+                                label: 'Twice Daily'
+                              }
+                            ]}
+                          />
+                        </FormGroup>
+                    </Col>
+                  </Row>
+                </CardBody>
               </Card>
             </Col>
           </Row>
