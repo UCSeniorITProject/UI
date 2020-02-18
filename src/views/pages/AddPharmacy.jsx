@@ -91,8 +91,8 @@ class AddPharmacy extends React.Component {
       address: this.state.address,
       active: this.state.active,
     };
-    await createPharmacy(pharmacy);
-    this.props.history.push('/admin/user-profile')
+    const pharmacy = await createPharmacy(pharmacy);
+    this.props.history.push(`/admin/pharmacy/profile/${pharmacy.pharmacyId}`)
   }
 
   handleImageChange = imageUrl => {
