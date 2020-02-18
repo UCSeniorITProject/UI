@@ -84,7 +84,7 @@ class AddPharmacy extends React.Component {
 
   async createPharmacy(){
     const pharmacy = {
-      pharmacyName: this.state.pharmacyName,
+      name: this.state.pharmacyName,
       state: this.state.state,
       city: this.state.city,
       zipCode: this.state.zipCode,
