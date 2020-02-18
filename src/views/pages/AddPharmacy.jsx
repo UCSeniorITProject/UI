@@ -83,7 +83,7 @@ class AddPharmacy extends React.Component {
   }
 
   async createPharmacy(){
-    const pharmacy = {
+    const pharmacyToCreate = {
       name: this.state.pharmacyName,
       state: this.state.state,
       city: this.state.city,
@@ -91,7 +91,7 @@ class AddPharmacy extends React.Component {
       address: this.state.address,
       active: this.state.active,
     };
-    const pharmacy = await createPharmacy(pharmacy);
+    const pharmacy = await createPharmacy(pharmacyToCreate);
     this.props.history.push(`/admin/pharmacy/profile/${pharmacy.pharmacyId}`)
   }
 
