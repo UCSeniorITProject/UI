@@ -132,7 +132,6 @@ class PatientProfile extends React.Component {
         try {
           await patchUser(this.state.userId,  userInfoToSave);
           await patchPatient(this.props.match.params.id, patientInfoToSave);
-          var options = {};
           options = {
             place: 'tr',
             message: (
@@ -150,7 +149,6 @@ class PatientProfile extends React.Component {
             this.refs.notificationAlert.notificationAlert(options);
           }
         } catch (err) {
-          var options = {};
           options = {
             place: 'tr',
             message: (

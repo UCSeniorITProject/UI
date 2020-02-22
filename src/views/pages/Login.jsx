@@ -21,11 +21,15 @@ import {
 } from "reactstrap";
 
 class Login extends React.Component {
-  componentDidMount() {
-    this.state = {
+	constructor(props){
+		super(props);
+		this.state = {
       username: '',
       password: '',
 		};
+	}
+  componentDidMount() {
+
 		document.addEventListener('keyup', (e) => {
 			if(e.keyCode === 13){
 				this.handleSubmit();

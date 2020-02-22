@@ -133,7 +133,7 @@ class BasicInfo extends React.Component {
   }
 
   isFormValid(){
-    return Object.entries(this.state).filter(x => x[0].includes('State') && x[1] ===null || x[0].includes('State') && x[1].includes('has-danger')).length === 0;
+    return Object.entries(this.state).filter(x => x[0].includes('State') && (x[1] ===null || x[0].includes('State')) && x[1].includes('has-danger')).length === 0;
   }
 
   setIsFormValid(){

@@ -55,7 +55,7 @@ class DrugProfile extends React.Component{
   };
   
   isPrescribableFormValid(){
-    return Object.entries(this.state.prescribable).filter(x => (x[0].includes('State') && x[1] === null || x[1] === 'has-danger')).length === 0;
+    return Object.entries(this.state.prescribable).filter(x => (x[0].includes('State') && (x[1] === null || x[1] === 'has-danger'))).length === 0;
   }
 
   showInternalServerErrorMessage(){
@@ -111,6 +111,7 @@ class DrugProfile extends React.Component{
         minWeightFocus: null,
 				requiredGenderFocus: null,
 				drugFrequencySelect: null,
+				dosageFrequencySelect: null,
 				dosageUnitSelect: null,
       }});
 
@@ -184,7 +185,7 @@ class DrugProfile extends React.Component{
 	};
 
   isFormValid(){
-    return Object.entries(this.state.drug).filter(x =>  x[0].includes('State') && x[1] !== null && x[1].includes('has-danger')).length === 0 && (!this.state.drug.isGeneric || this.state.drug.isGeneric && Number(this.state.drug.nonGenericParentId) !== 0);
+    return Object.entries(this.state.drug).filter(x =>  x[0].includes('State') && x[1] !== null && x[1].includes('has-danger')).length === 0 && ((!this.state.drug.isGeneric || this.state.drug.isGeneric) && Number(this.state.drug.nonGenericParentId) !== 0);
   }
 
   setIsPrescribableFormValid(){
@@ -385,9 +386,9 @@ class DrugProfile extends React.Component{
                           <label>Dosage</label>
                           <Input
                             name="dosage"
-                            type="text"
+														type="text"
+														value={this.state.prescribable.dosage}
                             onChange={e => this.change(e, "dosage", "length", '1', 'prescribable')}
-                            defaultValue={this.state.prescribable.dosage}
                           />
                           {this.state.prescribable.dosageState === "has-danger" ? (
                             <label className="error">
@@ -472,7 +473,6 @@ class DrugProfile extends React.Component{
 														type="text"
 														value={this.state.prescribable.minWeight}
                             onChange={e => this.change(e, "minWeight", "length", '1', 'prescribable')}
-                            defaultValue={this.state.prescribable.minWeight}
                           />
                           {this.state.prescribable.minWeightState === "has-danger" ? (
                             <label className="error">
@@ -482,18 +482,18 @@ class DrugProfile extends React.Component{
                         </FormGroup>
                     </Col>
                     <Col md="1">
-                        <FormGroup className={`has-label checkbox-radio ${this.state.prescribable.requiredGender}`} onClick={e => this.setState({prescribable: {...this.state.prescribable, requiredGenderState: 'has-success', requiredGender: this.state.prescribable.requiredGender !== null ? null :'M',}}, this.setIsPrescribableFormValid)}>
+                        <FormGroup className={`has-label checkbox-radio`}>
                           <label>Required Gender</label>
                           <FormGroup check>
                           <Label check>
-                            <Input type="checkbox" checked={this.state.prescribable.requiredGender === 'M'}/>
+                            <Input type="checkbox" checked={this.state.prescribable.requiredGender === 'M'} onChange={e => this.setState({prescribable: {...this.state.prescribable, requiredGenderState: 'has-success', requiredGender: this.state.prescribable.requiredGender !== null ? null :'M',}}, this.setIsPrescribableFormValid)}/>
                             <span className="form-check-sign" />
                             Male
                           </Label>
                         </FormGroup>
                           <FormGroup check>
-                            <Label check onClick={e => this.setState({prescribable: {...this.state.prescribable, requiredGenderState: 'has-success', requiredGender: this.state.prescribable.requiredGender !== null ? null : 'F',}}, this.setIsPrescribableFormValid)}>
-                              <Input type="checkbox" checked={this.state.prescribable.requiredGender === 'F'}/>
+                            <Label check>
+                              <Input type="checkbox" checked={this.state.prescribable.requiredGender === 'F'} onChange={e => this.setState({prescribable: {...this.state.prescribable, requiredGenderState: 'has-success', requiredGender: this.state.prescribable.requiredGender !== null ? null : 'F',}}, this.setIsPrescribableFormValid)}/>
                               <span className="form-check-sign" />
                               Female
                             </Label>
@@ -508,7 +508,6 @@ class DrugProfile extends React.Component{
                             type="text"
 														onChange={e => this.change(e, "name", "length", '1', 'prescribable')}
 														value={this.state.prescribable.name}
-                            defaultValue={this.state.prescribable.name}
                           />
                           {this.state.prescribable.nameState === "has-danger" ? (
                             <label className="error">
