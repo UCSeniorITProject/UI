@@ -175,7 +175,7 @@ class DrugProfile extends React.Component{
 								size="md"
 								className="btn-fill"
 								value={x.userId}
-								onClick={e => this.props.history.push(`/admin/drug/profile/${x.drugId}/`)}
+								onClick={e => this.props.history.push(`/admin/prescribable/profile/${x.prescribableId}/`)}
 							>
 								EDIT
 							</Button>

@@ -11,3 +11,9 @@ export async function getPrescribableWithFilter(filter){
 
 	return prescribables.data.prescribables;
 }
+
+export async function patchPrescribable(prescribableId, infoToPatch){
+	const prescribable = await Axios.patch(`${process.env.REACT_APP_API_URL}/api/pharmacy-service/prescribable/${prescribableId}`, {prescribable: infoToPatch});
+
+	return prescribable.data.prescribable;
+}

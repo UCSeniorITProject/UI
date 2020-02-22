@@ -11,6 +11,7 @@ import PharamacyProfile from "./views/pages/PharmacyProfile";
 import AddDrug from "./views/pages/AddDrug";
 import DrugList from "./views/pages/DrugList";
 import DrugProfile from "./views/pages/DrugProfile";
+import PrescribableProfile from "./views/pages/PrescribableProfile";
 
 const routes = [
   {
@@ -94,7 +95,17 @@ const routes = [
             state: 'drugProfile',
             requiredRoles:  [],
             layout: "/admin"
-          },
+					},
+					{
+						path: "/prescribable/profile/:id",
+            name: "Prescribable Profile",
+            mini: "PP",
+            component: PrescribableProfile,
+            isHidden: true,
+            state: 'prescribableProfile',
+            requiredRoles:  [],
+            layout: "/admin"
+					}
         ],
       },
       {
