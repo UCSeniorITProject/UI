@@ -47,7 +47,9 @@ class DrugProfile extends React.Component{
         drugId: this.props.match.params.id,
         isPrescribableFormValid: false,
         name: '',
-        nameState: null,
+				nameState: null,
+				drugFrequencySelect: null,
+				dosageUnitSelect: null,
       },
     };
   };
@@ -107,7 +109,9 @@ class DrugProfile extends React.Component{
         dosageUnitFocus: null,
         dosageFrequencyFocus: null,
         minWeightFocus: null,
-        requiredGenderFocus: null,
+				requiredGenderFocus: null,
+				drugFrequencySelect: null,
+				dosageUnitSelect: null,
       }});
 
       var options = {};
@@ -400,10 +404,11 @@ class DrugProfile extends React.Component{
                             classNamePrefix="react-select"
                             placeholder="Dosage Unit"
                             name="select"
-                            closeMenuOnSelect={false}
+														closeMenuOnSelect={false}
+														value={this.state.prescribable.dosageUnitSelect}
                             onChange={async value => {
                                 if(value.value){
-                                  this.setState({prescribable: {...this.state.prescribable, dosageUnit: value.value, dosageUnitState: 'has-success'}}, this.setIsPrescribableFormValid);
+                                  this.setState({prescribable: {...this.state.prescribable, dosageUnit: value.value, dosageUnitState: 'has-success',  dosageUnitSelect: {value: value.value, label: value.label}}}, this.setIsPrescribableFormValid);
                                 }
                               }
                             }
@@ -433,10 +438,11 @@ class DrugProfile extends React.Component{
                             classNamePrefix="react-select"
                             placeholder="Dosage Frequency"
                             name="select"
-                            closeMenuOnSelect={false}
+														closeMenuOnSelect={false}
+														value={this.state.prescribable.dosageFrequencySelect}
                             onChange={async value => {
                                 if(value.value){
-                                  this.setState({prescribable: {...this.state.prescribable, dosageFrequency: value.value, dosageFrequencyState: 'has-success'}}, this.setIsPrescribableFormValid);
+                                  this.setState({prescribable: {...this.state.prescribable, dosageFrequency: value.value, dosageFrequencySelect: {value: value.value, label: value.label}, dosageFrequencyState: 'has-success'}}, this.setIsPrescribableFormValid);
                                 }
                               }
                             }
@@ -463,7 +469,8 @@ class DrugProfile extends React.Component{
                           <label>Minimum Weight (lbs)</label>
                           <Input
                             name="minweight"
-                            type="text"
+														type="text"
+														value={this.state.prescribable.minWeight}
                             onChange={e => this.change(e, "minWeight", "length", '1', 'prescribable')}
                             defaultValue={this.state.prescribable.minWeight}
                           />
@@ -474,32 +481,33 @@ class DrugProfile extends React.Component{
                           ) : null}
                         </FormGroup>
                     </Col>
-                    <Col md="3">
+                    <Col md="1">
                         <FormGroup className={`has-label checkbox-radio ${this.state.prescribable.requiredGender}`} onClick={e => this.setState({prescribable: {...this.state.prescribable, requiredGenderState: 'has-success', requiredGender: this.state.prescribable.requiredGender !== null ? null :'M',}}, this.setIsPrescribableFormValid)}>
                           <label>Required Gender</label>
                           <FormGroup check>
                           <Label check>
-                            <Input type="checkbox" />
+                            <Input type="checkbox" checked={this.state.prescribable.requiredGender === 'M'}/>
                             <span className="form-check-sign" />
                             Male
                           </Label>
                         </FormGroup>
                           <FormGroup check>
-                            <Label check onClick={e => this.setState({prescribable: {...this.state.prescribable, requiredGenderState: 'has-success', requiredGender: this.state.prescribable.reuiredGender !== null ? null : 'F',}}, this.setIsPrescribableFormValid)}>
-                              <Input type="checkbox" />
+                            <Label check onClick={e => this.setState({prescribable: {...this.state.prescribable, requiredGenderState: 'has-success', requiredGender: this.state.prescribable.requiredGender !== null ? null : 'F',}}, this.setIsPrescribableFormValid)}>
+                              <Input type="checkbox" checked={this.state.prescribable.requiredGender === 'F'}/>
                               <span className="form-check-sign" />
                               Female
                             </Label>
                           </FormGroup>
                         </FormGroup>
                     </Col>
-                    <Col md="3">
+                    <Col md="4">
                         <FormGroup className={`has-label ${this.state.prescribable.nameState}`}>
                           <label>Name</label>
                           <Input
-                            name="dosage"
+                            name="name"
                             type="text"
-                            onChange={e => this.change(e, "name", "length", '1', 'prescribable')}
+														onChange={e => this.change(e, "name", "length", '1', 'prescribable')}
+														value={this.state.prescribable.name}
                             defaultValue={this.state.prescribable.name}
                           />
                           {this.state.prescribable.nameState === "has-danger" ? (
