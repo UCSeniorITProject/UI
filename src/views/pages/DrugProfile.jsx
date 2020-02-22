@@ -42,7 +42,7 @@ class DrugProfile extends React.Component{
         dosageFrequencyState: null,
         minWeight: '',
         minWeightState: null,
-        requiredGender: '',
+        requiredGender: null,
         requiredGenderState: null,
         drugId: this.props.match.params.id,
         isPrescribableFormValid: false,
@@ -99,7 +99,7 @@ class DrugProfile extends React.Component{
         dosageFrequencyState: null,
         minWeight: '',
         minWeightState: null,
-        requiredGender: null,
+        requiredGender: '',
         requiredGenderState: null,
         drugId: this.props.match.params.id,
         isPrescribableFormValid: false,
@@ -236,6 +236,7 @@ class DrugProfile extends React.Component{
   }
 
   render(){
+		console.log(this.state.prescribable)
     let parentDrugSelect;
 		if(this.state.drug.isGeneric){
 			parentDrugSelect = (
@@ -486,14 +487,14 @@ class DrugProfile extends React.Component{
                           <label>Required Gender</label>
                           <FormGroup check>
                           <Label check>
-                            <Input type="checkbox" defaultChecked={this.state.prescribable.requiredGender === 'M'} onClick={e => this.setState({prescribable: {...this.state.prescribable, requiredGenderState: 'has-success', requiredGender: this.state.prescribable.requiredGender !== null ? null :'M',}}, this.setIsPrescribableFormValid)}/>
+                            <Input type="checkbox" checked={(this.state.prescribable.requiredGender === 'M' || this.state.prescribable.requiredGender === 'B') && this.state.prescribable.requiredGender !== null} onChange={e => this.setState({prescribable: {...this.state.prescribable, requiredGenderState: 'has-success', requiredGender: this.state.prescribable.requiredGender === null ? 'M' : this.state.prescribable.requiredGender === 'B' ? 'F' : this.state.prescribable.requiredGender ==='M' ? null : 'B',}}, this.setIsPrescribableFormValid)}/>
                             <span className="form-check-sign" />
                             Male
                           </Label>
                         </FormGroup>
                           <FormGroup check>
                             <Label check>
-                              <Input type="checkbox" defaultChecked={this.state.prescribable.requiredGender === 'F'} onClick={e => this.setState({prescribable: {...this.state.prescribable, requiredGenderState: 'has-success', requiredGender: this.state.prescribable.requiredGender !== null ? null : 'F',}}, this.setIsPrescribableFormValid)}/>
+                              <Input type="checkbox" checked={(this.state.prescribable.requiredGender === 'F' || this.state.prescribable.requiredGender === 'B') && this.state.prescribable.requiredGender !== null} onChange={e => this.setState({prescribable: {...this.state.prescribable, requiredGenderState: 'has-success', requiredGender:  this.state.prescribable.requiredGender === null ? 'F' : this.state.prescribable.requiredGender === 'B' ? 'M' : this.state.prescribable.requiredGender ==='F' ? null :  'B',}}, this.setIsPrescribableFormValid)}/>
                               <span className="form-check-sign" />
                               Female
                             </Label>
