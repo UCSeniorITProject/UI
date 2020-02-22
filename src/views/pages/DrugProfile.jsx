@@ -5,7 +5,9 @@ import NotificationAlert from "react-notification-alert";
 import Select from "react-select";
 import Switch from "react-bootstrap-switch";
 import {updateDrug} from "../../services/Drug";
-import {createPrescribable} from "../../services/Prescribable";
+import ReactTable from "react-table";
+import {createPrescribable, getPrescribableWithFilter} from "../../services/Prescribable";
+
 import {
   Button,
   Card,
@@ -50,7 +52,8 @@ class DrugProfile extends React.Component{
 				nameState: null,
 				drugFrequencySelect: null,
 				dosageUnitSelect: null,
-      },
+			},
+			prescribables: [],
     };
   };
   
@@ -132,7 +135,6 @@ class DrugProfile extends React.Component{
       this.refs.notificationAlert.notificationAlert(options);
 
     } catch (err) {
-      console.log(err)
       this.showInternalServerErrorMessage();
     }
   }
@@ -141,8 +143,8 @@ class DrugProfile extends React.Component{
     const drugId = this.props.match.params.id;
     try {
       const drug = await getDrugWithFilter({drugId: drugId});
-      const parentDrugs = await getDrugWithFilter({nonGenericParentId: 0, active: 'Y'});
-      const parentDrug = await getDrugWithFilter({drugId: drug[0].nonGenericParentId});
+      const [parentDrugs, parentDrug, prescribables] = await Promise.all([getDrugWithFilter({nonGenericParentId: 0, active: 'Y'}), getDrugWithFilter({drugId: drug[0].nonGenericParentId}), getPrescribableWithFilter({active: 'Y', drugId})]);
+
       let drugProfileState = {
         name: drug[0].name,
         manufacturer: drug[0].manufacturer,
@@ -158,9 +160,57 @@ class DrugProfile extends React.Component{
           value: drug[0].nonGenericParentId,
           label: parentDrug[0].name,
         }
-      }
+			}
+			
+			/**
+			 * 
+			 * 
+			 *                             {
+                              Header: "Prescribable ID",
+                              accessor: "prescribableId",
+                            },
+                            {
+                              Header: "Name",
+                              accessor: "name"
+                            },
+                            {
+                              Header: "Dosage",
+                              accessor: "dosage"
+                            },
+                            {
+                              Header: "Dosage Frequency",
+                              accessor: "dosageFrequency"
+                            },
+                            {
+                              Header: "Actions",
+                              accessor: "actions",
+                              sortable: false,
+                              filterable: false
+                            }
+			 */
 
-      this.setState({drug: drugProfileState});
+      this.setState({drug: drugProfileState, prescribables: prescribables.map(x => {
+				console.log(x)
+				return {
+					prescribableId: x.prescribableId,
+					name: x.name,
+					dosage: x.dosage,
+					dosageFrequency: x.dosageFrequency,
+					actions: (
+						<div className="actions-right">
+							<Button
+								color="primary"
+								size="md"
+								className="btn-fill"
+								value={x.userId}
+								onClick={e => this.props.history.push(`/admin/drug/profile/${x.drugId}/`)}
+							>
+								EDIT
+							</Button>
+        		</div>
+					)
+				};
+			})});
     } catch (err) {
       this.showInternalServerErrorMessage();
     }
@@ -236,7 +286,6 @@ class DrugProfile extends React.Component{
   }
 
   render(){
-		console.log(this.state.prescribable)
     let parentDrugSelect;
 		if(this.state.drug.isGeneric){
 			parentDrugSelect = (
@@ -364,18 +413,6 @@ class DrugProfile extends React.Component{
               </Card>
             </Col>
             <Col md="6">
-              <Card>
-                <CardHeader>
-                  <CardTitle tag="h4">Prescribable List</CardTitle>
-                </CardHeader>
-                <CardBody>
-                  <Row>
-                    
-                  </Row>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col md="12">
               <Card>
                 <CardHeader>
                   <CardTitle tag="h4">Add Prescribable</CardTitle>
@@ -517,12 +554,54 @@ class DrugProfile extends React.Component{
                           ) : null}
                         </FormGroup>
                     </Col>
-                    <Col md="12">
-                      <Button className="btn-fill pull-right" color="primary" type="submit" disabled={!this.state.prescribable.isPrescribableFormValid} onClick={e => this.addPrescribable()}>
-                        Add Prescribable
-                      </Button>
-                    </Col>
                   </Row>
+                </CardBody>
+								<CardFooter>
+										<Button className="btn-fill pull-right" color="primary" type="submit" disabled={!this.state.prescribable.isPrescribableFormValid} onClick={e => this.addPrescribable()}>
+											Add Prescribable
+										</Button>
+								</CardFooter>
+              </Card>
+            </Col>
+						<Col md="12">
+              <Card>
+                <CardHeader>
+                  <CardTitle tag="h4">Prescribable List</CardTitle>
+                </CardHeader>
+                <CardBody>
+									<ReactTable
+                          data={this.state.prescribables}
+                          filterable
+                          resizable={false}
+                          columns={[
+                            {
+                              Header: "Prescribable ID",
+                              accessor: "prescribableId",
+                            },
+                            {
+                              Header: "Name",
+                              accessor: "name"
+                            },
+                            {
+                              Header: "Dosage",
+                              accessor: "dosage"
+                            },
+                            {
+                              Header: "Dosage Frequency",
+                              accessor: "dosageFrequency"
+                            },
+                            {
+                              Header: "Actions",
+                              accessor: "actions",
+                              sortable: false,
+                              filterable: false
+                            }
+                          ]}
+                          defaultPageSize={10}
+                          showPaginationTop
+                          showPaginationBottom={false}
+                          className="-striped -highlight"
+                        />
                 </CardBody>
               </Card>
             </Col>
