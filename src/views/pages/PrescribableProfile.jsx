@@ -158,7 +158,7 @@ class PrescribableProfile extends React.Component {
 			<div className="content">
 				<Row>
 					<Col md="12">
-					<Card>
+						<Card>
                 <CardHeader>
                   <CardTitle tag="h4">Update Prescribable (Parent Drug: {this.state.parentDrugName})</CardTitle>
                 </CardHeader>
