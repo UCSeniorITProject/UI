@@ -162,35 +162,7 @@ class DrugProfile extends React.Component{
         }
 			}
 			
-			/**
-			 * 
-			 * 
-			 *                             {
-                              Header: "Prescribable ID",
-                              accessor: "prescribableId",
-                            },
-                            {
-                              Header: "Name",
-                              accessor: "name"
-                            },
-                            {
-                              Header: "Dosage",
-                              accessor: "dosage"
-                            },
-                            {
-                              Header: "Dosage Frequency",
-                              accessor: "dosageFrequency"
-                            },
-                            {
-                              Header: "Actions",
-                              accessor: "actions",
-                              sortable: false,
-                              filterable: false
-                            }
-			 */
-
       this.setState({drug: drugProfileState, prescribables: prescribables.map(x => {
-				console.log(x)
 				return {
 					prescribableId: x.prescribableId,
 					name: x.name,

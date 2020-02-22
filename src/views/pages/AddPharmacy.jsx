@@ -41,7 +41,7 @@ class AddPharmacy extends React.Component {
 
 
   isFormValid(){
-    return Object.entries(this.state).filter(x => x[0].includes('State') && (x[1] ===null || x[0].includes('State')) && x[1].includes('has-danger')).length === 0;
+    return Object.entries(this.state).filter(x=> x[0].includes('State') && x[1] === null || x[0].includes('State') && x[1] === 'has-danger').length === 0
   }
 
   // function that verifies if a string has a given length or not
@@ -84,15 +84,15 @@ class AddPharmacy extends React.Component {
 
   async createPharmacy(){
     const pharmacy = {
-      pharmacyName: this.state.pharmacyName,
+      name: this.state.pharmacyName,
       state: this.state.state,
       city: this.state.city,
       zipCode: this.state.zipCode,
       address: this.state.address,
       active: this.state.active,
     };
-    await createPharmacy(pharmacy);
-    this.props.history.push('/admin/user-profile')
+    const pharmacySaved = await createPharmacy(pharmacy);
+    this.props.history.push(`/admin/pharmacy/profile/${pharmacySaved.pharmacyId}`);
   }
 
   handleImageChange = imageUrl => {
