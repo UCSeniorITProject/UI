@@ -1,6 +1,7 @@
 import React from "react";
 import NotificationAlert from "react-notification-alert";
 import {patchPrescribable, getPrescribableWithFilter} from "../../services/Prescribable";
+import {getDrugWithFilter} from "../../services/Drug";
 import {
   Button,
   Card,
@@ -35,6 +36,7 @@ class PrescribableProfile extends React.Component {
 			nameState: null,
 			drugFrequencySelect: null,
 			dosageUnitSelect: null,
+			parentDrugName: '',
 		}
 	}
 
@@ -71,6 +73,7 @@ class PrescribableProfile extends React.Component {
 		const prescribableId = this.props.match.params.id;
 		try {
 			const prescribable = await getPrescribableWithFilter({prescribableId});
+			const drug = await getDrugWithFilter({drugId: prescribable[0].drugId})
 			this.setState({
 				dosage: prescribable[0].dosage,
 				dosageState: null,
@@ -89,6 +92,7 @@ class PrescribableProfile extends React.Component {
 				requiredGender: prescribable[0].requiredGender === 'B' || prescribable[0].requiredGender === '' ? 'B' : prescribable[0].requiredGender,
 				name: prescribable[0].name,
 				nameState: null,
+				parentDrugName: drug[0].name,
 			});
 		} catch (err) {
       this.showInternalServerErrorMessage();
@@ -156,7 +160,7 @@ class PrescribableProfile extends React.Component {
 					<Col md="12">
 					<Card>
                 <CardHeader>
-                  <CardTitle tag="h4">Update Prescribable</CardTitle>
+                  <CardTitle tag="h4">Update Prescribable (Parent Drug: {this.state.parentDrugName})</CardTitle>
                 </CardHeader>
                 <CardBody>
                   <Row>
