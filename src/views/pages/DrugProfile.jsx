@@ -486,14 +486,14 @@ class DrugProfile extends React.Component{
                           <label>Required Gender</label>
                           <FormGroup check>
                           <Label check>
-                            <Input type="checkbox" checked={this.state.prescribable.requiredGender === 'M'} onChange={e => this.setState({prescribable: {...this.state.prescribable, requiredGenderState: 'has-success', requiredGender: this.state.prescribable.requiredGender !== null ? null :'M',}}, this.setIsPrescribableFormValid)}/>
+                            <Input type="checkbox" defaultChecked={this.state.prescribable.requiredGender === 'M'} onClick={e => this.setState({prescribable: {...this.state.prescribable, requiredGenderState: 'has-success', requiredGender: this.state.prescribable.requiredGender !== null ? null :'M',}}, this.setIsPrescribableFormValid)}/>
                             <span className="form-check-sign" />
                             Male
                           </Label>
                         </FormGroup>
                           <FormGroup check>
                             <Label check>
-                              <Input type="checkbox" checked={this.state.prescribable.requiredGender === 'F'} onChange={e => this.setState({prescribable: {...this.state.prescribable, requiredGenderState: 'has-success', requiredGender: this.state.prescribable.requiredGender !== null ? null : 'F',}}, this.setIsPrescribableFormValid)}/>
+                              <Input type="checkbox" defaultChecked={this.state.prescribable.requiredGender === 'F'} onClick={e => this.setState({prescribable: {...this.state.prescribable, requiredGenderState: 'has-success', requiredGender: this.state.prescribable.requiredGender !== null ? null : 'F',}}, this.setIsPrescribableFormValid)}/>
                               <span className="form-check-sign" />
                               Female
                             </Label>
