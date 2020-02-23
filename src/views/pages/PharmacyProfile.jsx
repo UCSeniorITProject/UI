@@ -5,7 +5,6 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  FormGroup,
   Form,
   Input,
   Row,
@@ -17,7 +16,7 @@ import {
 import React from 'react';
 import classnames from 'classnames';
 import NotificationAlert from "react-notification-alert";
-import {getPharmacyWithFilter, deletePharmacy, patchPharmacy} from '../../services/Pharmacy';
+import {getPharmacyWithFilter, patchPharmacy} from '../../services/Pharmacy';
 
 class PharmacyProfile extends React.Component {
   constructor(props) {
@@ -107,7 +106,6 @@ class PharmacyProfile extends React.Component {
     };
     try {
       await patchPharmacy(pharmacyId, pharmacyInfo);
-      var options = {};
       options = {
         place: 'tr',
         message: (
@@ -125,7 +123,6 @@ class PharmacyProfile extends React.Component {
         this.refs.notificationAlert.notificationAlert(options);
       }
     } catch (error){
-      var options = {};
       options = {
         place: 'tr',
         message: (

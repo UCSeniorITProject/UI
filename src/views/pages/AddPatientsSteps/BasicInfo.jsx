@@ -133,7 +133,7 @@ class BasicInfo extends React.Component {
   }
 
   isFormValid(){
-    return Object.entries(this.state).filter(x => x[0].includes('State') && x[1] ===null || x[0].includes('State') && x[1].includes('has-danger')).length === 0;
+    return Object.entries(this.state).filter(x=> x[0].includes('State') && (x[1] === null || x[1] === 'has-danger')).length === 0;
   }
 
   setIsFormValid(){
@@ -215,9 +215,33 @@ class BasicInfo extends React.Component {
       this.props.onChildStateChange(stateName, event.target.value || '');
       this.setState({ [stateName]: event.target.value || ''});
     } else {
-      this.props.onChildStateChange(stateName, event.toDate());
+      if(typeof e !== 'string'){
+        this.props.onChildStateChange(stateName, event.toDate());
+      } else {
+        this.showInvalidDateMessage()
+      }
     }
   };
+
+  showInvalidDateMessage(){
+    var options = {};
+    options = {
+      place: 'tr',
+      message: (
+        <div>
+          <div>
+            You entered an invalid date!
+          </div>
+        </div>
+      ),
+      type: 'warning',
+      icon: "tim-icons icon-bell-55",
+      autoDismiss: 7,
+    };
+    if(this.refs){
+      this.refs.notificationAlert.notificationAlert(options);
+    }
+  }
   
   verifySSN = (value) => {
     const ssnRegex = /^(\d{3}?\d{2}?\d{4}|XXX-XX-XXXX)$/;
@@ -228,7 +252,16 @@ class BasicInfo extends React.Component {
   };
 
   isValidated = () => {
-    return this.isFormValid();
+		const isFormValid = this.isFormValid();
+		if(!isFormValid){
+			const stateProps = Object.entries(this.state).filter(x=> x[0].includes('State') && (x[1] === null || x[1] === 'has-danger'));
+			let invalidStateProps = {};
+			stateProps.forEach(x => {
+				invalidStateProps[x[0]] = 'has-danger';
+			});
+			this.setState({...invalidStateProps})
+		}
+    return isFormValid;
   };
 
   render() {
@@ -478,7 +511,13 @@ class BasicInfo extends React.Component {
                   className: "form-control",
                   placeholder: "Date of Birth"
                 }}
-                onBlur={e => {this.setState({dob: e.toDate()}); this.change(e, 'dob', 'dob',  0)}}
+                onBlur={e => {
+                  if(typeof e !== 'string') {
+                    this.setState({dob: e.toDate()}); this.change(e, 'dob', 'dob',  0)
+                  } else {
+                    this.showInvalidDateMessage();
+                  }
+                }}
                 timeFormat={false}
               />
             </FormGroup>

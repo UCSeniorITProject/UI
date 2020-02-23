@@ -25,7 +25,6 @@ class Prescribe extends React.Component {
               validate
               steps={steps}
               navSteps
-              validate
               title="Create a prescription"
               description="This wizard will facilitate the patient prescription process"
               headerTextCenter

@@ -120,7 +120,6 @@ class AddPatient extends React.Component {
                 validate
                 steps={this.steps}
                 navSteps
-                validate
                 onChildStateChange={this.onChildStateChange}
                 finishButtonClick={this.onFinishButtonClick.bind(this)}
                 title="Create a patient"

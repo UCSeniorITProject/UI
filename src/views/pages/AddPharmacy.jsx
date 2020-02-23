@@ -41,7 +41,7 @@ class AddPharmacy extends React.Component {
 
 
   isFormValid(){
-    return Object.entries(this.state).filter(x => x[0].includes('State') && x[1] ===null || x[0].includes('State') && x[1].includes('has-danger')).length === 0;
+    return Object.entries(this.state).filter(x=> x[0].includes('State') && (x[1] === null || x[0].includes('State')) && x[1] === 'has-danger').length === 0
   }
 
   // function that verifies if a string has a given length or not

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {refreshAccessToken} from '../services/User';
+
 export default async (store, history) => {
       //does not matter if token is null -- this makes routes that require no token easier
       axios.interceptors.request.use(async request => {

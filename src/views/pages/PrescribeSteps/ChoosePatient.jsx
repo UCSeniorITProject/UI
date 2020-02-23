@@ -7,7 +7,7 @@ import {
   Row,
   Col
 } from "reactstrap";
-import jwtDecode from 'jwt-decode';
+
 import {getPatientWithFilter} from '../../../services/Patient';
 import ReactTable from "react-table";
 import moment from "moment";
@@ -24,7 +24,6 @@ class PickPatient extends React.Component {
   }
 
   async componentDidMount() {
-    const decodedToken = jwtDecode(localStorage.getItem('accessToken'));
     const patients = await getPatientWithFilter();
     console.log(patients)
     const patientList = patients.map(x => {return {patientId: x.patientUserId, firstName: x.firstName, lastName: x.lastName, birthDate: moment(x.dateOfBirth).format("MM/DD/YYYY"), gender: x.gender === 'M' ? 'Male' : 'Female', actions: (
