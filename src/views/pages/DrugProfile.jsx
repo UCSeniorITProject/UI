@@ -42,6 +42,9 @@ class DrugProfile extends React.Component{
         dosageUnitState: null,
         dosageFrequency: '',
         dosageFrequencyState: null,
+        directions: '',
+        directionsState: null,
+        directionsSelect: null,
         minWeight: '',
         minWeightState: null,
         requiredGender: null,
@@ -89,6 +92,7 @@ class DrugProfile extends React.Component{
         minWeight: this.state.prescribable.minWeight,
         requiredGender: this.state.prescribable.requiredGender,
         drugId: this.state.prescribable.drugId,
+        directions: this.state.prescribable.directions,
         active: 'Y',
       };
 
@@ -491,7 +495,7 @@ class DrugProfile extends React.Component{
                           ) : null}
                         </FormGroup>
                     </Col>
-                    <Col md="1">
+                    <Col md="2">
                         <FormGroup className={`has-label checkbox-radio`}>
                           <label>Required Gender</label>
                           <FormGroup check>
@@ -524,6 +528,40 @@ class DrugProfile extends React.Component{
                               Please enter a valid name
                             </label>
                           ) : null}
+                        </FormGroup>
+                    </Col>
+                    <Col md="3">
+                        <FormGroup className={`has-label`}>
+                          <label>Directions</label>
+                          <Select
+                            className="react-select info"
+                            classNamePrefix="react-select"
+                            placeholder="Directions"
+                            name="select"
+														closeMenuOnSelect={false}
+														value={this.state.prescribable.directionsSelect}
+                            onChange={async value => {
+                                if(value.value){
+                                  this.setState({prescribable: {...this.state.prescribable, directions: value.value, directionsSelect: {value: value.value, label: value.label}, directionsState: 'has-success'}}, this.setIsPrescribableFormValid);
+                                }
+                              }
+                            }
+                            options={[
+                              {
+                                value: "",
+                                label: "Directions",
+                                isDisabled: true,
+                              },
+                              {
+                                value: "Mouth",
+                                label: 'Mouth'
+                              },
+                              {
+                                value: 'Subcutaneously',
+                                label: 'Subcutaneously'
+                              }
+                            ]}
+                          />
                         </FormGroup>
                     </Col>
                   </Row>

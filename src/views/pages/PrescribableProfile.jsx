@@ -21,7 +21,9 @@ class PrescribableProfile extends React.Component {
 		super(props);
 		this.state = {
 			dosage: '',
-			dosageState: null,
+      dosageState: null,
+      directions: '',
+      directionsState: null,
 			dosageUnit: '',
 			dosageUnitState: null,
 			dosageFrequency: '',
@@ -35,7 +37,10 @@ class PrescribableProfile extends React.Component {
 			name: '',
 			nameState: null,
 			drugFrequencySelect: null,
-			dosageUnitSelect: null,
+      dosageUnitSelect: null,
+      directionsSelect: null,
+      directions: '',
+      directionsState: null,
 			parentDrugName: '',
 		}
 	}
@@ -73,7 +78,7 @@ class PrescribableProfile extends React.Component {
 		const prescribableId = this.props.match.params.id;
 		try {
 			const prescribable = await getPrescribableWithFilter({prescribableId});
-			const drug = await getDrugWithFilter({drugId: prescribable[0].drugId})
+      const drug = await getDrugWithFilter({drugId: prescribable[0].drugId})
 			this.setState({
 				dosage: prescribable[0].dosage,
 				dosageState: null,
@@ -92,7 +97,12 @@ class PrescribableProfile extends React.Component {
 				requiredGender: prescribable[0].requiredGender === 'B' || prescribable[0].requiredGender === '' ? 'B' : prescribable[0].requiredGender,
 				name: prescribable[0].name,
 				nameState: null,
-				parentDrugName: drug[0].name,
+        parentDrugName: drug[0].name,
+        directionsSelect: {
+          label: prescribable[0].directions,
+          value: prescribable[0].directions,
+        },
+        directions: prescribable[0].directions,
 			});
 		} catch (err) {
       this.showInternalServerErrorMessage();
@@ -106,7 +116,8 @@ class PrescribableProfile extends React.Component {
 				dosageUnit: this.state.dosageUnit,
 				dosageFrequency: this.state.dosageFrequency,
 				minWeight: this.state.minWeight,
-				requiredGender: this.state.requiredGender,
+        requiredGender: this.state.requiredGender,
+        directions: this.state.directions,
 				name: this.state.name,
 			};
 
@@ -297,6 +308,40 @@ class PrescribableProfile extends React.Component {
                               Please enter a valid name
                             </label>
                           ) : null}
+                        </FormGroup>
+                    </Col>
+                    <Col md="3">
+                        <FormGroup className={`has-label`}>
+                          <label>Directions</label>
+                          <Select
+                            className="react-select info"
+                            classNamePrefix="react-select"
+                            placeholder="Directions"
+                            name="select"
+														closeMenuOnSelect={false}
+														value={this.state.directionsSelect}
+                            onChange={async value => {
+                                if(value.value){
+                                  this.setState({prescribable: {...this.state.prescribable, directions: value.value, directionsSelect: {value: value.value, label: value.label}, directionsState: 'has-success'}}, this.setIsPrescribableFormValid);
+                                }
+                              }
+                            }
+                            options={[
+                              {
+                                value: "",
+                                label: "Directions",
+                                isDisabled: true,
+                              },
+                              {
+                                value: "Mouth",
+                                label: 'Mouth'
+                              },
+                              {
+                                value: 'Subcutaneously',
+                                label: 'Subcutaneously'
+                              }
+                            ]}
+                          />
                         </FormGroup>
                     </Col>
                   </Row>
