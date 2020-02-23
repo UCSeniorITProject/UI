@@ -133,7 +133,7 @@ class BasicInfo extends React.Component {
   }
 
   isFormValid(){
-    return Object.entries(this.state).filter(x => x[0].includes('State') && (x[1] ===null || x[0].includes('State')) && x[1].includes('has-danger')).length === 0;
+    return Object.entries(this.state).filter(x=> x[0].includes('State') && (x[1] === null || x[1] === 'has-danger')).length === 0;
   }
 
   setIsFormValid(){
@@ -252,7 +252,16 @@ class BasicInfo extends React.Component {
   };
 
   isValidated = () => {
-    return this.isFormValid();
+		const isFormValid = this.isFormValid();
+		if(!isFormValid){
+			const stateProps = Object.entries(this.state).filter(x=> x[0].includes('State') && (x[1] === null || x[1] === 'has-danger'));
+			let invalidStateProps = {};
+			stateProps.forEach(x => {
+				invalidStateProps[x[0]] = 'has-danger';
+			});
+			this.setState({...invalidStateProps})
+		}
+    return isFormValid;
   };
 
   render() {
