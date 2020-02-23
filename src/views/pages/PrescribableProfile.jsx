@@ -333,8 +333,8 @@ class PrescribableProfile extends React.Component {
                                 isDisabled: true,
                               },
                               {
-                                value: "Mouth",
-                                label: 'Mouth'
+                                value: "By Mouth",
+                                label: 'By Mouth'
                               },
                               {
                                 value: 'Subcutaneously',
