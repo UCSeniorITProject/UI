@@ -341,10 +341,34 @@ class PatientProfile extends React.Component {
     }
     isFormValid(){
       return Object.entries(this.state).filter(x => x[1] !== null && x[0].includes('State') && x[1].includes('has-danger')).length === 0;
-    }
+		}
+		
+		showInvalidDateMessage(){
+			var options = {};
+			options = {
+				place: 'tr',
+				message: (
+					<div>
+						<div>
+							You entered an invalid date!
+						</div>
+					</div>
+				),
+				type: 'warning',
+				icon: "tim-icons icon-bell-55",
+				autoDismiss: 7,
+			};
+			if(this.refs){
+				this.refs.notificationAlert.notificationAlert(options);
+			}
+		}
 
     handleDateChange(e){
-      this.setState({dob: e.toDate()});
+			if(typeof e !== 'string') {
+				this.setState({dob: e.toDate()}); this.change(e, 'dob', 'dob',  0)
+			} else {
+				this.showInvalidDateMessage();
+			}
     }
   
     setIsFormValid(){
@@ -519,7 +543,7 @@ class PatientProfile extends React.Component {
                               }}
                               onChange={this.handleDateChange.bind(this)}
                               value={moment(this.state.dob).toDate()}
-                              onBlur={async e => {await this.setState({dob: e.toDate()});}}
+                              onBlur={this.handleDateChange.bind(this)}
                               timeFormat={false}
                             />
                         </FormGroup>
