@@ -96,7 +96,7 @@ class DrugProfile extends React.Component{
         active: 'Y',
       };
 
-      await createPrescribable(prescribable);
+      const prescribableSaved = await createPrescribable(prescribable);
       this.setState({prescribable: {
         dosage: '',
         dosageState: null,
@@ -120,7 +120,26 @@ class DrugProfile extends React.Component{
 				drugFrequencySelect: null,
 				dosageFrequencySelect: null,
 				dosageUnitSelect: null,
-      }});
+      },
+      prescribables: [...this.state.prescribables, {
+        prescribableId: prescribableSaved.prescribableId,
+        name: prescribableSaved.name,
+        dosage: prescribableSaved.dosage,
+        dosageFrequency: prescribableSaved.dosageFrequency,
+        actions: (
+          <div className="actions-right">
+            <Button
+              color="primary"
+              size="md"
+              className="btn-fill"
+              onClick={e => this.props.history.push(`/admin/prescribable/profile/${prescribableSaved.prescribableId}/`)}
+            >
+              EDIT
+            </Button>
+          </div>
+        )
+      }],
+    });
 
       var options = {};
       options = {
@@ -200,6 +219,13 @@ class DrugProfile extends React.Component{
 		switch (type) {
 			case "length":
 				if (this.verifyLength(event.target.value, stateNameEqualTo)) {
+					this.setState({[stateTree] : { ...this.state[stateTree], [stateName + "State"]: "has-success", [stateName]: event.target.value || '' }}, stateTree === 'prescribable' ? this.setIsPrescribableFormValid : this.setIsFormValid.bind(this));
+				} else {
+					this.setState({[stateTree] : { ...this.state[stateTree], [stateName + "State"]: "has-danger", [stateName]: event.target.value || '' }}, stateTree === 'prescribable' ? this.setIsPrescribableFormValid : this.setIsFormValid.bind(this));
+				}
+        break;
+      case "num":
+				if (!isNaN(event.target.value)) {
 					this.setState({[stateTree] : { ...this.state[stateTree], [stateName + "State"]: "has-success", [stateName]: event.target.value || '' }}, stateTree === 'prescribable' ? this.setIsPrescribableFormValid : this.setIsFormValid.bind(this));
 				} else {
 					this.setState({[stateTree] : { ...this.state[stateTree], [stateName + "State"]: "has-danger", [stateName]: event.target.value || '' }}, stateTree === 'prescribable' ? this.setIsPrescribableFormValid : this.setIsFormValid.bind(this));
@@ -486,11 +512,11 @@ class DrugProfile extends React.Component{
                             name="minweight"
 														type="text"
 														value={this.state.prescribable.minWeight}
-                            onChange={e => this.change(e, "minWeight", "length", '1', 'prescribable')}
+                            onChange={e => this.change(e, "minWeight", "num", '1', 'prescribable')}
                           />
                           {this.state.prescribable.minWeightState === "has-danger" ? (
                             <label className="error">
-                              Please enter a valid minimum weight (in lbs.)
+                              Please enter a valid minimum weight as a number (in lbs.)
                             </label>
                           ) : null}
                         </FormGroup>
