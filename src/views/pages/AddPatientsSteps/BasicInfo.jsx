@@ -35,7 +35,7 @@ class BasicInfo extends React.Component {
       zipCodeState: null,
       ssnState: null,
       emailState: null,
-      gender: "",
+      gender: "M",
       city: "",
       streetAddress: "",
       zipCode: "",
@@ -531,7 +531,7 @@ class BasicInfo extends React.Component {
                     id="genderMale"
                     name="gender"
                     type="radio"
-                    onClick={e => this.setState({gender: 'M'})}
+                    onClick={e => {this.setState({gender: 'M'}); this.props.onChildStateChange('gender', 'M')}}
                   />
                   <span className="form-check-sign" />
                   Male
@@ -542,7 +542,7 @@ class BasicInfo extends React.Component {
                     id="genderFemale"
                     name="gender"
                     type="radio"
-                    onClick={e => this.setState({gender: 'F'})}
+                    onClick={e =>{ this.setState({gender: 'F'}); this.props.onChildStateChange('gender', 'M');}}
                   />
                   <span className="form-check-sign" />
                   Female
