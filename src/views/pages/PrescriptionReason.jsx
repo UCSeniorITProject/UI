@@ -8,6 +8,14 @@ class PrescriptionReason extends React.Component {
       longSummaryState: null,
       reasonCode: '',
       reasonCodeState: null,
+      prescriptionReasons: [],
+      currentlySelectedPrescriptionReasonId: null,
+      currentlySelectedPrescriptionReasonShortSummary: '',
+      currentlySelectedPrescriptionReasonShortSummaryState: null,
+      currentlySelectedPrescriptionReasonLongSummary: '',
+      currentlySelectedPrescriptionReasonLongSummaryState: null,
+      currentlySelectedPrescriptionReasonReasonCode: '',
+      currentlySelectedPrescriptionReasonReasonCodeState: null,
     }
   }
 }
