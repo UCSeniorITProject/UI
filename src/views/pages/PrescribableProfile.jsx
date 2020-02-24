@@ -22,8 +22,6 @@ class PrescribableProfile extends React.Component {
 		this.state = {
 			dosage: '',
       dosageState: null,
-      directions: '',
-      directionsState: null,
 			dosageUnit: '',
 			dosageUnitState: null,
 			dosageFrequency: '',
@@ -49,27 +47,26 @@ class PrescribableProfile extends React.Component {
     this.setState({isPrescribableFormValid: this.isFormValid()});
   }
 
-	change = (event, stateName, type, stateNameEqualTo, stateTree) => {
+	change = (event, stateName, type, stateNameEqualTo) => {
 		switch (type) {
 			case "length":
 				if (this.verifyLength(event.target.value, stateNameEqualTo)) {
-					this.setState({[stateTree] : { ...this.state[stateTree], [stateName + "State"]: "has-success", [stateName]: event.target.value || '' }}, stateTree === 'prescribable' ? this.setIsPrescribableFormValid : this.setIsFormValid.bind(this));
+					this.setState( {  [stateName + "State"]: "has-success", [stateName]: event.target.value || '' }, this.setIsFormValid.bind(this));
 				} else {
-					this.setState({[stateTree] : { ...this.state[stateTree], [stateName + "State"]: "has-danger", [stateName]: event.target.value || '' }}, stateTree === 'prescribable' ? this.setIsPrescribableFormValid : this.setIsFormValid.bind(this));
+					this.setState({ [stateName + "State"]: "has-danger", [stateName]: event.target.value || '' }, this.setIsFormValid.bind(this));
 				}
         break;
       case "num":
-				if (!isNaN(event.target.value)) {
-					this.setState({[stateTree] : { ...this.state[stateTree], [stateName + "State"]: "has-success", [stateName]: event.target.value || '' }}, stateTree === 'prescribable' ? this.setIsPrescribableFormValid : this.setIsFormValid.bind(this));
-				} else {
-					this.setState({[stateTree] : { ...this.state[stateTree], [stateName + "State"]: "has-danger", [stateName]: event.target.value || '' }}, stateTree === 'prescribable' ? this.setIsPrescribableFormValid : this.setIsFormValid.bind(this));
-				}
-				break;
+      if (!isNaN(event.target.value) && event.target.value.length !== 0) {
+        this.setState( {  [stateName + "State"]: "has-success", [stateName]: event.target.value || '' }, this.setIsFormValid.bind(this));
+      } else {
+        this.setState({ [stateName + "State"]: "has-danger", [stateName]: event.target.value || '' }, this.setIsFormValid.bind(this));
+      }
+      break;
 			default:
         break;
 		}
 	};
-
 
   isFormValid(){
 		return Object.entries(this.state).filter(x => x[0].includes('State') && x[1] !== null && x[1] === 'has-danger').length === 0;

@@ -225,7 +225,7 @@ class DrugProfile extends React.Component{
 				}
         break;
       case "num":
-				if (!isNaN(event.target.value)) {
+				if (!isNaN(event.target.value) && event.target.value.length !== 0) {
 					this.setState({[stateTree] : { ...this.state[stateTree], [stateName + "State"]: "has-success", [stateName]: event.target.value || '' }}, stateTree === 'prescribable' ? this.setIsPrescribableFormValid : this.setIsFormValid.bind(this));
 				} else {
 					this.setState({[stateTree] : { ...this.state[stateTree], [stateName + "State"]: "has-danger", [stateName]: event.target.value || '' }}, stateTree === 'prescribable' ? this.setIsPrescribableFormValid : this.setIsFormValid.bind(this));
