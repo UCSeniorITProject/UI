@@ -81,7 +81,7 @@ class BasicInfo extends React.Component {
   }
 
   async setSSNState(ssn){
-    const isUnique = this.isSSNUnique(ssn);
+		const isUnique = await this.isSSNUnique(ssn);
     if(!isUnique){
       var options = {};
       options = {
@@ -128,7 +128,7 @@ class BasicInfo extends React.Component {
   }
 
   async isSSNUnique(ssn){
-    const patient = await getPatientWithFilter({socialSecurityNumber: ssn});
+		const patient = await getPatientWithFilter({socialSecurityNumber: ssn});
     return patient.length === 0;
   }
 
