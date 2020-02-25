@@ -234,7 +234,15 @@ class DrugProfile extends React.Component{
 			default:
         break;
 		}
-	};
+  };
+  
+  // function that verifies if a string has a given length or not
+  verifyLength = (value, length) => {
+    if (value.length >= length) {
+      return true;
+    }
+    return false;
+  };
 
   isFormValid(){
     return Object.entries(this.state.drug).filter(x =>  x[0].includes('State') && x[1] !== null && x[1].includes('has-danger')).length === 0 && ((!this.state.drug.isGeneric || this.state.drug.isGeneric) && Number(this.state.drug.nonGenericParentId) !== 0);
@@ -243,14 +251,6 @@ class DrugProfile extends React.Component{
   setIsPrescribableFormValid(){
     this.setState({prescribable: {...this.state.prescribable, isPrescribableFormValid: this.isPrescribableFormValid()}})
   }
-
-  // function that verifies if a string has a given length or not
-  verifyLength = (value, length) => {
-    if (value.length >= length) {
-      return true;
-    }
-    return false;
-  };
 
   async updateDrug(){
     const drugId = this.props.match.params.id;

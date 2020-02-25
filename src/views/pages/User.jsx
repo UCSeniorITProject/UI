@@ -145,7 +145,7 @@ class User extends React.Component {
     }
   }
 
-  updateUser = async() => {
+  updateUser = async () => {
     try {
       const decodedUser = jwtDecode(localStorage.getItem('accessToken'));
       const user = {
