@@ -153,7 +153,6 @@ class User extends React.Component {
         lastName: this.state.lastName,
         phoneNumber: this.state.phoneNumber,
         profilePicture: this.state.profilePicture,
-        password: this.state.password,
       }
       if(this.state.password !== ''){
         user.password = this.state.password;
