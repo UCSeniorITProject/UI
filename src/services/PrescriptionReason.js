@@ -11,8 +11,8 @@ export async function getPrescriptionReasonWithFilter(filter){
 	return prescriptionReasons.data.prescriptionReasons;
 }
 
-export async function updatePrescriptionReason(prescriptionReadId, fieldsToUpdate){
-	const prescriptionReason = await Axios.put(`${process.env.REACT_APP_API_URL}/api/pharmacy-service/prescription-reason/${prescriptionReadId}`, {prescriptionReason: fieldsToUpdate});
+export async function updatePrescriptionReason(prescriptionReasonId, fieldsToUpdate){
+	const prescriptionReason = await Axios.patch(`${process.env.REACT_APP_API_URL}/api/pharmacy-service/prescription-reason/${prescriptionReasonId}`, {prescriptionReason: fieldsToUpdate});
 
 	return prescriptionReason.data.prescriptionReason;
 }
