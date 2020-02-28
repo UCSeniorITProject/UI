@@ -7,11 +7,14 @@ import {
   CardFooter,
   CardTitle,
   FormGroup,
-  Label,
   Input,
   Row,
   Col,
 } from "reactstrap";
+import ReactTable from "react-table";
+import {createPrescriptionReason, getPrescriptionReasonWithFilter} from '../../services/PrescriptionReason';
+import moment from 'moment';
+import NotificationAlert from "react-notification-alert";
 
 class PrescriptionReason extends React.Component {
   constructor(props){
@@ -43,18 +46,76 @@ class PrescriptionReason extends React.Component {
     return false;
   };
 
-  addReason(){
+  async addReason(){
     try {
       const prescriptionReason = {
         shortSummary: this.state.shortSummary,
         longSummary: this.state.longSummary,
         reasonCode: this.state.reasonCode,
         active: 'Y',
-      };
+			};
+			const savedPrescriptionReason = await createPrescriptionReason(prescriptionReason);
+			
+			this.setState({
+				shortSummary: '',
+				shortSummaryState: null,
+				longSummary: '',
+				longSummaryState: null,
+				reasonCode: '',
+				reasonCodeState: null,
+				prescriptionReasons: [...this.state.prescriptionReasons, {
+					prescriptionReasonId: savedPrescriptionReason.prescriptionReasonId,
+					reasonCode: savedPrescriptionReason.reasonCode,
+					shortSummary: savedPrescriptionReason.shortSummary,
+					createdAt: moment(savedPrescriptionReason.createdAt).format("MM/DD/YYYY"),
+					actions: (
+						<div className="actions-right">
+							<Button
+								color="primary"
+								size="md"
+								className="btn-fill"
+								onClick={e => console.log(1)}
+							>
+								Update
+							</Button>
+						</div>
+					),
+			}]});
+			this.showSuccessfulResponseMessage('Succesfully created the prescription reason');
     } catch (err) {
+			console.log(err)
       this.showInternalServerErrorMessage()
     }
-  }
+	}
+	
+	async componentDidMount(){
+		try {
+			const prescriptionReasons = await getPrescriptionReasonWithFilter({active: 'Y'});
+			const prescriptionReasonList = prescriptionReasons.map(x => {
+				return {
+					prescriptionReasonId: x.prescriptionReasonId,
+					reasonCode: x.reasonCode,
+					shortSummary: x.shortSummary,
+					createdAt: moment(x.createdAt).format("MM/DD/YYYY"),
+					actions: (
+						<div className="actions-right">
+							<Button
+								color="primary"
+								size="md"
+								className="btn-fill"
+								onClick={e => console.log(1)}
+							>
+								Update
+							</Button>
+						</div>
+					),
+				};
+			});
+			this.setState({prescriptionReasons: prescriptionReasonList});
+		} catch (err) {
+			this.showInternalServerErrorMessage();
+		}
+	}
 
   isAddFormValid(){
     return Object.entries(this.state).filter((x=> x[0].includes('State')  && !x[0].includes('currentlySelected') && (x[1] === null || x[1] === 'has-danger'))).length === 0;
@@ -85,7 +146,25 @@ class PrescriptionReason extends React.Component {
       default:
         break;
     }
-  }
+	}
+	
+	showSuccessfulResponseMessage(message){
+		var options = {};
+    options = {
+      place: 'tr',
+      message: (
+        <div>
+          <div>
+						{message}
+          </div>
+        </div>
+      ),
+      type: 'success',
+      icon: "tim-icons icon-bell-55",
+      autoDismiss: 7
+    };
+    this.refs.notificationAlert.notificationAlert(options);
+	}
 
   showInternalServerErrorMessage(){
     var options = {};
@@ -108,6 +187,9 @@ class PrescriptionReason extends React.Component {
   render() {
     return (
       <>
+			  <div className="rna-container">
+          <NotificationAlert ref="notificationAlert" />
+        </div>
         <div className="content">
           <Row>
             <Col md="6">
@@ -123,7 +205,8 @@ class PrescriptionReason extends React.Component {
                             <Input
                               name="reasoncode"
                               type="text"
-                              onChange={e => this.change(e, "reasonCode", "length", '1', 'add')}
+															onChange={e => this.change(e, "reasonCode", "length", '1', 'add')}
+															value={this.state.reasonCode}
                             />
                             {this.state.reasonCodeState === "has-danger" ? (
                               <label className="error">
@@ -138,7 +221,8 @@ class PrescriptionReason extends React.Component {
                             <Input
                               name="shortsummary"
                               type="text"
-                              onChange={e => this.change(e, "shortSummary", "length", '1', 'add')}
+															onChange={e => this.change(e, "shortSummary", "length", '1', 'add')}
+															value={this.state.shortSummary}
                             />
                             {this.state.shortSummaryState === "has-danger" ? (
                               <label className="error">
@@ -153,7 +237,8 @@ class PrescriptionReason extends React.Component {
                             <Input
                               name="longsummary"
                               type="text"
-                              onChange={e => this.change(e, "longSummary", "length", '1', 'add')}
+															onChange={e => this.change(e, "longSummary", "length", '1', 'add')}
+															value={this.state.longSummary}
                             />
                             {this.state.longSummaryState === "has-danger" ? (
                               <label className="error">
@@ -171,6 +256,107 @@ class PrescriptionReason extends React.Component {
                 </CardFooter>
               </Card>
             </Col>
+						<Col md="6">
+							<Card>
+								<CardBody>
+									<ReactTable
+											data={this.state.prescriptionReasons}
+											filterable
+											resizable={false}
+											columns={[
+												{
+													Header: "ID",
+													accessor: "prescriptionReasonId",
+												},
+												{
+													Header: "Reason Code",
+													accessor: "reasonCode"
+												},
+												{
+													Header: "Short Summary",
+													accessor: "shortSummary"
+												},
+												{
+													Header: "Created At",
+													accessor: "createdAt"
+												},
+												{
+													Header: "Actions",
+													accessor: "actions",
+													sortable: false,
+													filterable: false
+												}
+											]}
+											defaultPageSize={4}
+											showPaginationTop
+											showPaginationBottom={false}
+											className="-striped -highlight"
+										/>
+									</CardBody>
+							</Card>
+						</Col>
+						<Col md="6">
+							<Card>
+								<CardHeader>
+                  <CardTitle tag="h4">Update Prescription Reason</CardTitle>
+                </CardHeader>
+								<CardBody>
+									<Row>
+                    <Col md="6">
+                          <FormGroup className={`has-label ${this.state.reasonCodeState}`}>
+                            <label>Reason Code</label>
+                            <Input
+                              name="reasoncode"
+                              type="text"
+															onChange={e => this.change(e, "reasonCode", "length", '1', 'add')}
+															value={this.state.reasonCode}
+                            />
+                            {this.state.reasonCodeState === "has-danger" ? (
+                              <label className="error">
+                                Please enter a valid reason code
+                              </label>
+                            ) : null}
+                          </FormGroup>
+                    </Col>
+                    <Col md="6">
+                          <FormGroup className={`has-label ${this.state.shortSummaryState}`}>
+                            <label>Short Summary</label>
+                            <Input
+                              name="shortsummary"
+                              type="text"
+															onChange={e => this.change(e, "shortSummary", "length", '1', 'add')}
+															value={this.state.shortSummary}
+                            />
+                            {this.state.shortSummaryState === "has-danger" ? (
+                              <label className="error">
+                                Please enter a valid short summary
+                              </label>
+                            ) : null}
+                          </FormGroup>
+                    </Col>
+                    <Col md="12">
+                          <FormGroup className={`has-label ${this.state.longSummaryState}`}>
+                            <label>Long Summary</label>
+                            <Input
+                              name="longsummary"
+                              type="text"
+															onChange={e => this.change(e, "longSummary", "length", '1', 'add')}
+															value={this.state.longSummary}
+                            />
+                            {this.state.longSummaryState === "has-danger" ? (
+                              <label className="error">
+                                Please enter a valid long summary
+                              </label>
+                            ) : null}
+                          </FormGroup>
+                    </Col>
+                  </Row>
+								</CardBody>
+								<CardFooter>
+
+								</CardFooter>
+							</Card>
+						</Col>
           </Row>
         </div>
       </>
