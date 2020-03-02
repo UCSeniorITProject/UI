@@ -1,5 +1,5 @@
-
 import React from "react";
+import NotificationAlert from "react-notification-alert";
 
 // reactstrap components
 import {
@@ -51,12 +51,37 @@ class PickPatient extends React.Component {
   }
 
   isValidated = () => {
-    return this.state.currentlySelectedPatientName.length !== 0;
-  }
+		const isValid = this.state.currentlySelectedPatientName.length !== 0;
+		if(!isValid){
+			this.showPickPatientRequiredMessage();
+		}
+    return isValid;
+	}
+	
+	showPickPatientRequiredMessage(){
+		var options = {};
+		options = {
+			place: 'tr',
+			message: (
+				<div>
+					<div>
+						You must select a patient to create the prescription for!
+					</div>
+				</div>
+			),
+			type: 'warning',
+			icon: "tim-icons icon-bell-55",
+			autoDismiss: 7,
+		};
+		this.refs.notificationAlert.notificationAlert(options);
+	}
   
   render() {
     return (
       <>
+			<div className="rna-container">
+				<NotificationAlert ref="notificationAlert" />
+			</div>
       <Row>
         <Col md="9">
         <h5 className="info-text float-left">

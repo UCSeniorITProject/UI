@@ -1,4 +1,6 @@
 import React from "react";
+import NotificationAlert from "react-notification-alert";
+
 // reactstrap components
 import {
   Button,
@@ -25,15 +27,40 @@ class ChoosePrescribable extends React.Component {
         value: x.prescribableId,
       }
     })})
-  }
+	}
+	
+	showPickPrescribableMessage(){
+		var options = {};
+		options = {
+			place: 'tr',
+			message: (
+				<div>
+					<div>
+						You must select a prescribable to continue!
+					</div>
+				</div>
+			),
+			type: 'warning',
+			icon: "tim-icons icon-bell-55",
+			autoDismiss: 7,
+		};
+		this.refs.notificationAlert.notificationAlert(options);
+	}
 
   isValidated = () => {
-    return this.state.currentlySelectedPatientName.length !== 0;
+		const isValid = this.state.prescribables.length !== 0;
+		if(!isValid){
+			this.showPickPrescribableMessage();
+		}
+    return isValid;
   }
 
   render(){
     return (
       <>
+				<div className="rna-container">
+					<NotificationAlert ref="notificationAlert" />
+				</div>
         <Row>
           <Col md="9">
             <h5 className="info-text float-left">
@@ -58,13 +85,17 @@ class ChoosePrescribable extends React.Component {
                         <Select
                             className="react-select info"
                             classNamePrefix="react-select"
-                            placeholder="Choose City"
-                            name="multipleSelect"
+                            placeholder="Choose Prescribable(s)"
+                            name="select"
                             closeMenuOnSelect={false}
                             isMulti
                             value={this.state.multipleSelect}
                             onChange={value => {
-                                this.setState({multipleSelect: value, selectedPrescribables: value.map(x=>x.value)});
+																if(value.length === 0){
+																	this.showPickPrescribableMessage();
+																}
+																this.setState({multipleSelect: value, selectedPrescribables: value.map(x=>x.value)});
+																this.props.onChildStateChange('prescribables', value);
                               }   
                             }
                             options={this.state.prescribables}

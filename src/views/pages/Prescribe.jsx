@@ -8,33 +8,47 @@ import { Col } from "reactstrap";
 // wizard steps
 import PickPrescribable from "./PrescribeSteps/ChoosePrescribable";
 import PickPatient from "./PrescribeSteps/ChoosePatient";
+import PickPrescribableReasons from "./PrescribeSteps/ChoosePrescribableReason";
 
 class Prescribe extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      patientId: null,
-    };
+			patientId: null,
+			prescribables: [],
+			steps: [
+				{
+					stepName: "Pick Patient",
+					stepIcon: "tim-icons icon-single-02",
+					component: PickPatient,
+					stepProps: {
+						onChildStateChange: this.onChildStateChange.bind(this),
+					},
+				},
+				{
+					stepName: "Pick Prescribable",
+					stepIcon: "tim-icons icon-single-02",
+					component: PickPrescribable,
+					stepProps: {
+						onChildStateChange: this.onChildStateChange.bind(this),
+					},
+				},
+				{
+					stepName: "Pick Reasons",
+					stepIcon: "tim-icons icon-single-02",
+					component: PickPrescribableReasons,
+					stepProps: {
+						onChildStateChange: this.onChildStateChange.bind(this),
+						getParentStateValue: this.getParentStateValue.bind(this),
+					},
+				}
+			],
+		};
   }
 
-  steps = [
-    {
-      stepName: "Pick Patient",
-      stepIcon: "tim-icons icon-single-02",
-      component: PickPatient,
-      stepProps: {
-        onChildStateChange: this.onChildStateChange.bind(this),
-      },
-    },
-    {
-      stepName: "Pick Prescribable",
-      stepIcon: "tim-icons icon-single-02",
-      component: PickPrescribable,
-      stepProps: {
-        onChildStateChange: this.onChildStateChange.bind(this),
-      },
-    }
-  ];
+	getParentStateValue(stateName){
+		return this.state[stateName];
+	}
 
   onChildStateChange(stateName, value){
     return this.setState({[stateName]: value});
@@ -47,8 +61,7 @@ class Prescribe extends React.Component {
           <Col className="mr-auto ml-auto" md="10">
             <ReactWizard
               validate
-              steps={this.steps}
-              onChildStateChange={this.onChildStateChange}
+              steps={this.state.steps}
               title="Create a prescription"
               description="This wizard will facilitate the patient prescription process"
               headerTextCenter
