@@ -16,6 +16,7 @@ class Prescribe extends React.Component {
     this.state = {
 			patientId: null,
 			prescribables: [],
+			isChoosePrescribablePageDone: false,
 			steps: [
 				{
 					stepName: "Pick Patient",

@@ -52,6 +52,7 @@ class ChoosePrescribable extends React.Component {
 		if(!isValid){
 			this.showPickPrescribableMessage();
 		}
+		this.props.onChildStateChange('isChoosePrescribablePageDone', true);
     return isValid;
   }
 

@@ -11,8 +11,12 @@ class PickPrescribableReasons extends React.Component {
 			chosenPrescribables: [],
 			selectedPrescribable: null,
 		}
-		setInterval(() => {
-			this.setState({chosenPrescribables: this.props.getParentStateValue('prescribables')});
+		const setStateInterval = setInterval(() => {
+			const chosenPrescribables=this.props.getParentStateValue('prescribables');
+			this.setState({chosenPrescribables: chosenPrescribables});
+			if(chosenPrescribables.length !== 0 && this.props.getParentStateValue('isChoosePrescribablePageDone')){
+				clearInterval(setStateInterval);
+			}
 		}, 1000);
 	}
 
