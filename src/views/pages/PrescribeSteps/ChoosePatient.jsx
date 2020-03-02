@@ -1,6 +1,6 @@
 
 import React from "react";
-import { withRouter } from 'react-router';
+
 // reactstrap components
 import {
   Button,
@@ -20,19 +20,19 @@ class PickPatient extends React.Component {
       isPatientPicked: false,
       selectedPatientID: null,
       selectedIndex: null,
+      currentlySelectedPatientName: '',
     }
   }
 
   async componentDidMount() {
     const patients = await getPatientWithFilter();
-    console.log(patients)
-    const patientList = patients.map(x => {return {patientId: x.patientUserId, firstName: x.firstName, lastName: x.lastName, birthDate: moment(x.dateOfBirth).format("MM/DD/YYYY"), gender: x.gender === 'M' ? 'Male' : 'Female', actions: (
+    const patientList = patients.map(x => {return {patientId: x.patientId, firstName: x.firstName, lastName: x.lastName, birthDate: moment(x.dateOfBirth).format("MM/DD/YYYY"), gender: x.gender === 'M' ? 'Male' : 'Female', actions: (
       <div className="actions-right">
               <Button
                 color="warning"
                 size="sm"
                 className="btn-icon btn-link like btn-neutral"
-                onClick={e => this.props.history.push(`/admin/patient/profile/${x.userId}/`)}
+                onClick={e => this.props.history.push(`/admin/patient/profile/${x.patientId}/`)}
               >
                 <i className="tim-icons icon-pencil" />
               </Button >{" "}
@@ -41,6 +41,7 @@ class PickPatient extends React.Component {
                 className="btn-icon btn-link like btn-neutral"
                 size="sm"
                 color="warning"
+                onClick={e=> {this.props.onChildStateChange('patientId', x.patientId); this.setState({currentlySelectedPatientName: `${x.firstName} ${x.lastName}`})}}
               >
                 <i className="tim-icons icon-check-2" />
               </Button>{" "}
@@ -49,21 +50,17 @@ class PickPatient extends React.Component {
     this.setState({patients: patientList});
   }
 
-  isValidated(){
-    return this.state.isPatientPicked;
+  isValidated = () => {
+    return this.state.currentlySelectedPatientName.length !== 0;
   }
-
-  onPatientSelect(){
-
-  }
-
+  
   render() {
     return (
       <>
       <Row>
         <Col md="9">
         <h5 className="info-text float-left">
-            <b>Patient Picker</b>
+            <b>Patient Picker (Currently Selected Patient: {this.state.currentlySelectedPatientName})</b>
           </h5>
         </Col>
         <Col md="3">
@@ -121,4 +118,4 @@ class PickPatient extends React.Component {
   }
 }
 
-export default withRouter(PickPatient);
+export default PickPatient;

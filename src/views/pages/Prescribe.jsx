@@ -6,16 +6,40 @@ import ReactWizard from "react-bootstrap-wizard";
 import { Col } from "reactstrap";
 
 // wizard steps
+import PickPrescribable from "./PrescribeSteps/ChoosePrescribable";
 import PickPatient from "./PrescribeSteps/ChoosePatient";
 
-var steps = [
-  {
-    stepName: "Pick Patient",
-    stepIcon: "tim-icons icon-single-02",
-    component: PickPatient
-  },
-];
 class Prescribe extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      patientId: null,
+    };
+  }
+
+  steps = [
+    {
+      stepName: "Pick Patient",
+      stepIcon: "tim-icons icon-single-02",
+      component: PickPatient,
+      stepProps: {
+        onChildStateChange: this.onChildStateChange.bind(this),
+      },
+    },
+    {
+      stepName: "Pick Prescribable",
+      stepIcon: "tim-icons icon-single-02",
+      component: PickPrescribable,
+      stepProps: {
+        onChildStateChange: this.onChildStateChange.bind(this),
+      },
+    }
+  ];
+
+  onChildStateChange(stateName, value){
+    return this.setState({[stateName]: value});
+  }
+
   render() {
     return (
       <>
@@ -23,8 +47,8 @@ class Prescribe extends React.Component {
           <Col className="mr-auto ml-auto" md="10">
             <ReactWizard
               validate
-              steps={steps}
-              navSteps
+              steps={this.steps}
+              onChildStateChange={this.onChildStateChange}
               title="Create a prescription"
               description="This wizard will facilitate the patient prescription process"
               headerTextCenter
