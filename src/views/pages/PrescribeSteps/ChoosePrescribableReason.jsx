@@ -10,6 +10,8 @@ class PickPrescribableReasons extends React.Component {
 		this.state = {
 			chosenPrescribables: [],
 			selectedPrescribable: null,
+			selectedReasons: [],
+			prescribableReasons: [],
 		}
 		const setStateInterval = setInterval(() => {
 			const chosenPrescribables=this.props.getParentStateValue('prescribables');
@@ -24,7 +26,53 @@ class PickPrescribableReasons extends React.Component {
 		this.setState({chosenPrescribables: this.props.getParentStateValue('prescribables')});
 	}
 
+	showPickReason(){
+		var options = {};
+		options = {
+			place: 'tr',
+			message: (
+				<div>
+					<div>
+						You must select a reason to assign to a prescribable!
+					</div>
+				</div>
+			),
+			type: 'warning',
+			icon: "tim-icons icon-bell-55",
+			autoDismiss: 7,
+		};
+		this.refs.notificationAlert.notificationAlert(options);
+	}
+
 	render(){
+		let reasonSelect;
+		if(this.state.selectedPrescribable !== null){
+			reasonSelect = (
+				<Select
+					className="react-select info"
+					classNamePrefix="react-select"
+					placeholder="Pick Reasons To Assign Prescribable To"
+					name="multipleSelect"
+					closeMenuOnSelect={false}
+					multi
+					value={this.state.selectedReasons}
+					onChange={value => {
+							if(value.length === 0){
+								this.showPickReason();
+							}
+							this.setState({selectedReasons: value});
+						}   
+					}
+					options={[							{
+						value: "",
+						label: "Prescribables",
+						isDisabled: true,
+					}, ...this.state.prescribableReasons]}
+				/>
+			);
+		} else {
+			reasonSelect = null;
+		}
 		return (
 			<>
 				<Row>
@@ -58,6 +106,11 @@ class PickPrescribableReasons extends React.Component {
 									isDisabled: true,
 								}, ...this.state.chosenPrescribables]}
 							/>
+						</Col>
+						<Col md="3"></Col>
+						<Col md="3"></Col>
+						<Col md="6">
+								{reasonSelect}
 						</Col>
 				</Row>
 			</>
