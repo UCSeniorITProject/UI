@@ -4,6 +4,7 @@ import {
 	Row
 } from "reactstrap";
 import Select from "react-select";
+import { getPrescriptionReasonWithFilter } from "../../../services/PrescriptionReason";
 class PickPrescribableReasons extends React.Component {
 	constructor(props){
 		super(props);
@@ -22,8 +23,14 @@ class PickPrescribableReasons extends React.Component {
 		}, 1000);
 	}
 
-	componentDidMount(){
-		this.setState({chosenPrescribables: this.props.getParentStateValue('prescribables')});
+	async componentDidMount(){
+		const reasons = await getPrescriptionReasonWithFilter({active: 'Y'});
+		this.setState(
+				{
+					chosenPrescribables: this.props.getParentStateValue('prescribables'),
+					prescribableReasons: reasons.map(x => {return {label: x.reasonCode``, value: x.prescriptionReasonId}})
+				}
+			);
 	}
 
 	showPickReason(){
@@ -54,18 +61,24 @@ class PickPrescribableReasons extends React.Component {
 					placeholder="Pick Reasons To Assign Prescribable To"
 					name="multipleSelect"
 					closeMenuOnSelect={false}
-					multi
+					isMulti
 					value={this.state.selectedReasons}
 					onChange={value => {
 							if(value.length === 0){
 								this.showPickReason();
 							}
-							this.setState({selectedReasons: value});
+							const prescribableReasonsMapped = this.state.selectedReasons.map(x => {
+								if(x.id === this.selectedPrescribable.value){
+									
+								}
+								return x;
+							});
+
 						}   
 					}
 					options={[							{
 						value: "",
-						label: "Prescribables",
+						label: "Reason",
 						isDisabled: true,
 					}, ...this.state.prescribableReasons]}
 				/>
