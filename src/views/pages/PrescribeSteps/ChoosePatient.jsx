@@ -7,7 +7,7 @@ import {
   Row,
   Col
 } from "reactstrap";
-
+import className from "classnames";
 import {getPatientWithFilter} from '../../../services/Patient';
 import ReactTable from "react-table";
 import moment from "moment";
@@ -17,9 +17,7 @@ class PickPatient extends React.Component {
     super(props);
     this.state = {
       patients: [],
-      isPatientPicked: false,
       selectedPatientID: null,
-      selectedIndex: null,
       currentlySelectedPatientName: '',
     }
   }
@@ -36,12 +34,11 @@ class PickPatient extends React.Component {
               >
                 <i className="tim-icons icon-pencil" />
               </Button >{" "}
-
               <Button
-                className="btn-icon btn-link like btn-neutral"
+                className={className("btn-icon", "btn-link", "like", {"btn-neutral": this.state.selectedPatientID === Number(x.patientId)})}
                 size="sm"
-                color="warning"
-                onClick={e=> {this.props.onChildStateChange('patientId', x.patientId); this.setState({currentlySelectedPatientName: `${x.firstName} ${x.lastName}`})}}
+                color={this.state.selectedPatientID === Number(x.patientId) ? "white" : 'blue'}
+                onClick={e=> {this.props.onChildStateChange('patientId', x.patientId); this.setState({currentlySelectedPatientName: `${x.firstName} ${x.lastName}`, selectedPatientID: Number(x.patientId)}, () => console.log(this.state))}}
               >
                 <i className="tim-icons icon-check-2" />
               </Button>{" "}

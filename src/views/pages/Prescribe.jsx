@@ -17,6 +17,7 @@ class Prescribe extends React.Component {
 			patientId: null,
 			prescribables: [],
 			isChoosePrescribablePageDone: false,
+			prescribableReasonsMapped: [],
 			steps: [
 				{
 					stepName: "Pick Patient",
