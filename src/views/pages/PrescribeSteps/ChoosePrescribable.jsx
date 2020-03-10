@@ -65,7 +65,7 @@ class ChoosePrescribable extends React.Component {
         <Row>
           <Col md="9">
             <h5 className="info-text float-left">
-              <b>Pick Prescribable</b>
+              <b>Pick Prescribable(s)</b>
             </h5>
           </Col>
           <Col md="3">

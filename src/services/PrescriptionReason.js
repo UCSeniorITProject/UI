@@ -8,7 +8,7 @@ export async function createPrescriptionReason(prescriptionReasonToSave){
 
 export async function getPrescriptionReasonWithFilter(filter){
 	const prescriptionReasons = await Axios.get(`${process.env.REACT_APP_API_URL}/api/pharmacy-service/prescription-reason`, {params: filter});
-	return prescriptionReasons.data.prescriptionReasons;
+	return prescriptionReasons.data ? prescriptionReasons.data.prescriptionReasons : [];
 }
 
 export async function updatePrescriptionReason(prescriptionReasonId, fieldsToUpdate){

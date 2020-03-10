@@ -5,6 +5,8 @@ import {
 } from "reactstrap";
 import Select from "react-select";
 import { getPrescriptionReasonWithFilter } from "../../../services/PrescriptionReason";
+import NotificationAlert from "react-notification-alert";
+
 class PickPrescribableReasons extends React.Component {
 	constructor(props){
 		super(props);
@@ -41,7 +43,7 @@ class PickPrescribableReasons extends React.Component {
 			message: (
 				<div>
 					<div>
-						You must select a reason to assign to a prescribable!
+						You must select a reason to assign to a prescribable for each prescribable!
 					</div>
 				</div>
 			),
@@ -50,6 +52,15 @@ class PickPrescribableReasons extends React.Component {
 			autoDismiss: 7,
 		};
 		this.refs.notificationAlert.notificationAlert(options);
+	}
+
+	isValidated(){
+		const isValid = this.state.prescribableReasonsMapped.filter(x=> x.reasons.length === 0).length === 0;
+		console.log(this.state.prescribableReasonsMapped.filter(x=> x.reasons.length === 0))
+		if(!isValid){
+			this.showPickReason();
+		}
+		return isValid;
 	}
 
 	render(){
@@ -77,10 +88,9 @@ class PickPrescribableReasons extends React.Component {
 								}
 								return x;
 							});
-							if(isPrescribableReasonFound === false &&  prescribableReasonsMapped.filter(x=>x.prescribableId===currentlySelectedPrescribable).length === 0){
+							if(!isPrescribableReasonFound &&  prescribableReasonsMapped.filter(x=>x.prescribableId===currentlySelectedPrescribable).length === 0){
 								prescribableReasonsMapped.push({prescribableId:currentlySelectedPrescribable, reasons: value});
 							}
-							console.log(prescribableReasonsMapped)
 							this.setState({prescribableReasonsMapped, selectedReasons: value});
 						}   
 					}
@@ -96,6 +106,9 @@ class PickPrescribableReasons extends React.Component {
 		}
 		return (
 			<>
+				<div className="rna-container">
+					<NotificationAlert ref="notificationAlert" />
+				</div>
 				<Row>
 					<Col md="9">
 							<h5 className="info-text float-left">
@@ -119,7 +132,7 @@ class PickPrescribableReasons extends React.Component {
 											this.showPickPrescribableMessage();
 										}
 										const reasons = this.state.prescribableReasonsMapped.filter(x=>x.prescribableId===value.value);
-										this.setState({selectedPrescribable: value, selectedReasons: reasons});
+										this.setState({selectedPrescribable: value, selectedReasons: reasons.length > 0 ? reasons[0].reasons : []});
 									}   
 								}
 								options={[							{
