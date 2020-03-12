@@ -12,10 +12,10 @@ class ChoosePharmacy extends React.Component {
   }
 
   isValidated(){
-    return selectedPharmacy !== null;
+    return this.state.selectedPharmacy !== null;
   }
   
-  componentDidMount(){
+  async componentDidMount(){
     const pharmacies = await getPharmacyWithFilter({active: 'Y'});
     this.setState({pharmacies});
   }

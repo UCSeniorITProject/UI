@@ -38,7 +38,7 @@ class PickPatient extends React.Component {
                 className={className("btn-icon", "btn-link", "like", {"btn-neutral": this.state.selectedPatientID === Number(x.patientId)})}
                 size="sm"
                 color={this.state.selectedPatientID === Number(x.patientId) ? "white" : 'blue'}
-                onClick={e=> {this.props.onChildStateChange('patientId', x.patientId); this.setState({currentlySelectedPatientName: `${x.firstName} ${x.lastName}`, selectedPatientID: Number(x.patientId)}, () => console.log(this.state))}}
+                onClick={e=> {this.props.onChildStateChange('patientId', x.patientId); this.setState({currentlySelectedPatientName: `${x.firstName} ${x.lastName}`, selectedPatientID: Number(x.patientId)})}}
               >
                 <i className="tim-icons icon-check-2" />
               </Button>{" "}
