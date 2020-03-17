@@ -9,6 +9,7 @@ import { Col } from "reactstrap";
 import PickPrescribable from "./PrescribeSteps/ChoosePrescribable";
 import PickPatient from "./PrescribeSteps/ChoosePatient";
 import PickPrescribableReasons from "./PrescribeSteps/ChoosePrescribableReason";
+import PickPharmacy from "./PrescribeSteps/ChoosePharmacy";
 
 class Prescribe extends React.Component {
   constructor(props){
@@ -39,6 +40,15 @@ class Prescribe extends React.Component {
 					stepName: "Pick Reasons",
 					stepIcon: "tim-icons icon-single-02",
 					component: PickPrescribableReasons,
+					stepProps: {
+						onChildStateChange: this.onChildStateChange.bind(this),
+						getParentStateValue: this.getParentStateValue.bind(this),
+					},
+				},
+				{
+					stepName: "Pick Pharmacy",
+					stepIcon: "tim-icons icon-single-02",
+					component: PickPharmacy,
 					stepProps: {
 						onChildStateChange: this.onChildStateChange.bind(this),
 						getParentStateValue: this.getParentStateValue.bind(this),
