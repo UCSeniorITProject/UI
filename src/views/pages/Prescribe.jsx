@@ -10,7 +10,7 @@ import PickPrescribable from "./PrescribeSteps/ChoosePrescribable";
 import PickPatient from "./PrescribeSteps/ChoosePatient";
 import PickPrescribableReasons from "./PrescribeSteps/ChoosePrescribableReason";
 import PickPharmacy from "./PrescribeSteps/ChoosePharmacy";
-
+import {createPrescription} from "../../services/Prescription";
 class Prescribe extends React.Component {
   constructor(props){
     super(props);
@@ -19,6 +19,8 @@ class Prescribe extends React.Component {
 			prescribables: [],
 			isChoosePrescribablePageDone: false,
 			prescribableReasonsMapped: [],
+			pharmacyId: null,
+			prescriptionStartDate: null,
 			steps: [
 				{
 					stepName: "Pick Patient",
@@ -30,7 +32,7 @@ class Prescribe extends React.Component {
 				},
 				{
 					stepName: "Pick Prescribable",
-					stepIcon: "tim-icons icon-single-02",
+					stepIcon: "tim-icons icon-bullet-list-67",
 					component: PickPrescribable,
 					stepProps: {
 						onChildStateChange: this.onChildStateChange.bind(this),
@@ -38,7 +40,7 @@ class Prescribe extends React.Component {
 				},
 				{
 					stepName: "Pick Reasons",
-					stepIcon: "tim-icons icon-single-02",
+					stepIcon: "tim-icons icon-book-bookmark",
 					component: PickPrescribableReasons,
 					stepProps: {
 						onChildStateChange: this.onChildStateChange.bind(this),
@@ -47,7 +49,7 @@ class Prescribe extends React.Component {
 				},
 				{
 					stepName: "Pick Pharmacy",
-					stepIcon: "tim-icons icon-single-02",
+					stepIcon: "tim-icons icon-bank",
 					component: PickPharmacy,
 					stepProps: {
 						onChildStateChange: this.onChildStateChange.bind(this),
@@ -60,6 +62,14 @@ class Prescribe extends React.Component {
 
 	getParentStateValue(stateName){
 		return this.state[stateName];
+	}
+
+	async finishButtonClick(){
+		//first create prescription
+		const prescription = await createPrescription();
+		//create prescriptionPrescribableDrug
+
+		//create prescriptionPrescribableDrugReason
 	}
 
   onChildStateChange(stateName, value){
@@ -77,7 +87,8 @@ class Prescribe extends React.Component {
               title="Create a prescription"
               description="This wizard will facilitate the patient prescription process"
               headerTextCenter
-              finishButtonClasses="btn-wd btn-info"
+							finishButtonClasses="btn-wd btn-info"
+							finishButtonText="Prescribe"
               nextButtonClasses="btn-wd btn-info"
               previousButtonClasses="btn-wd"
               progressbar

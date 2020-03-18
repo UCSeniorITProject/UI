@@ -23,7 +23,7 @@ class PickPrescribableReasons extends React.Component {
 			if(chosenPrescribables.length !== 0 && this.props.getParentStateValue('isChoosePrescribablePageDone')){
 				clearInterval(setStateInterval);
 			}
-		}, 1000);
+		}, 80);
 	}
 
 	async componentDidMount(){
@@ -31,7 +31,7 @@ class PickPrescribableReasons extends React.Component {
 		this.setState(
 				{
 					chosenPrescribables: this.props.getParentStateValue('prescribables'),
-					prescribableReasons: reasons.map(x => {return {label: x.reasonCode, value: x.prescriptionReasonId}})
+					prescribableReasons: reasons.map(x => {return {label: `${x.reasonCode}: ${x.shortSummary}`, value: x.prescriptionReasonId}})
 				}
 			);
 	}
@@ -56,7 +56,6 @@ class PickPrescribableReasons extends React.Component {
 
 	isValidated(){
 		const isValid = this.state.prescribableReasonsMapped.filter(x=> x.reasons.length === 0).length === 0;
-		console.log(this.state.prescribableReasonsMapped.filter(x=> x.reasons.length === 0))
 		if(!isValid){
 			this.showPickReason();
 		}

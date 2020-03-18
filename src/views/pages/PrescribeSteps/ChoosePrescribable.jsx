@@ -5,11 +5,11 @@ import NotificationAlert from "react-notification-alert";
 import {
   Button,
   Row,
-  Col
+	Col,
 } from "reactstrap";
 import Select from "react-select";
 import { getPrescribableWithFilter } from "../../../services/Prescribable";
-
+import ReactDatetime from "react-datetime";
 class ChoosePrescribable extends React.Component {
   constructor(props){
     super(props);
@@ -54,7 +54,35 @@ class ChoosePrescribable extends React.Component {
 		}
 		this.props.onChildStateChange('isChoosePrescribablePageDone', true);
     return isValid;
-  }
+	}
+	
+	handlePrescribableDateChange = (e) => {
+		if(typeof e !== 'string') {
+			this.props.onChildStateChange('prescriptionStartDate', e.toDate())
+		} else {
+			this.showInvalidDateMessage();
+		}
+	}
+
+	showInvalidDateMessage(){
+		var options = {};
+		options = {
+			place: 'tr',
+			message: (
+				<div>
+					<div>
+						You entered an invalid date!
+					</div>
+				</div>
+			),
+			type: 'warning',
+			icon: "tim-icons icon-bell-55",
+			autoDismiss: 7,
+		};
+		if(this.refs){
+			this.refs.notificationAlert.notificationAlert(options);
+		}
+	}
 
   render(){
     return (
@@ -96,12 +124,30 @@ class ChoosePrescribable extends React.Component {
 																	this.showPickPrescribableMessage();
 																}
 																this.setState({multipleSelect: value, selectedPrescribables: value.map(x=>x.value)});
-																this.props.onChildStateChange('prescribables', value);
                               }   
                             }
                             options={this.state.prescribables}
                           />
           </Col>
+					<Col md ="6">
+
+					</Col>
+					<Col md="3">
+
+					</Col>
+					<Col md="4">
+					</Col>
+					<Col md="4">
+						<ReactDatetime
+							inputProps={{
+								className: "form-control",
+								placeholder: "Prescription Start Date"
+							}}
+							onChange={this.handlePrescribableDateChange.bind(this)}
+							onBlur={this.handlePrescribableDateChange.bind(this)}
+							timeFormat={false}
+						/>
+					</Col>
         </Row>
       </>
     )
