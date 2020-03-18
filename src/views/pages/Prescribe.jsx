@@ -1,7 +1,7 @@
 import React from "react";
 // react plugin used to create a form with multiple steps
 import ReactWizard from "react-bootstrap-wizard";
-
+import jwtDecode from 'jwt-decode';
 // reactstrap components
 import { Col } from "reactstrap";
 
@@ -11,6 +11,7 @@ import PickPatient from "./PrescribeSteps/ChoosePatient";
 import PickPrescribableReasons from "./PrescribeSteps/ChoosePrescribableReason";
 import PickPharmacy from "./PrescribeSteps/ChoosePharmacy";
 import {createPrescription} from "../../services/Prescription";
+import {createPrescriptionPrescribableDrug} from "../../services/PrescriptionPrescribableDrug"
 class Prescribe extends React.Component {
   constructor(props){
     super(props);
@@ -66,9 +67,24 @@ class Prescribe extends React.Component {
 
 	async finishButtonClick(){
 		//first create prescription
-		const prescription = await createPrescription();
+		const prescriptionToCreate = {
+			doctorId: jwtDecode(localStorage.getItem('accessToken')).userID,
+			patientId: this.state.patientId,
+			active: 'Y',
+			pharmacyId: this.state.pharmacyId,
+		};
+		const prescription = await createPrescription(prescriptionToCreate);
 		//create prescriptionPrescribableDrug
-
+		const prescriptionPrescribableDrugsToCreate = [];
+		for(let i = 0; i < this.state.prescribableReasonsMapped; i++){
+			prescriptionPrescribableDrugsToCreate = createPrescriptionPrescribableDrug({
+				prescriptionId: prescription.prescriptionId,
+				prescribableId: this.state.prescribableReasonsMapped[i].prescribableId,
+				active: 'Y',
+				prescriptionStartDate: this.state.prescriptionStartDate,
+			});
+		}
+		await Promise.all(prescriptionPrescribableDrugsToCreate);
 		//create prescriptionPrescribableDrugReason
 	}
 
