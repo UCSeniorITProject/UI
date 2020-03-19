@@ -77,12 +77,12 @@ class Prescribe extends React.Component {
 		//create prescriptionPrescribableDrug
 		const prescriptionPrescribableDrugsToCreate = [];
 		for(let i = 0; i < this.state.prescribableReasonsMapped; i++){
-			prescriptionPrescribableDrugsToCreate = createPrescriptionPrescribableDrug({
+			prescriptionPrescribableDrugsToCreate.push(createPrescriptionPrescribableDrug({
 				prescriptionId: prescription.prescriptionId,
 				prescribableId: this.state.prescribableReasonsMapped[i].prescribableId,
 				active: 'Y',
 				prescriptionStartDate: this.state.prescriptionStartDate,
-			});
+			}));
 		}
 		await Promise.all(prescriptionPrescribableDrugsToCreate);
 		//create prescriptionPrescribableDrugReason
