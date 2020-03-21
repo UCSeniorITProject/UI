@@ -22,8 +22,6 @@ class PrescribableProfile extends React.Component {
 		this.state = {
 			dosage: '',
       dosageState: null,
-      directions: '',
-      directionsState: null,
 			dosageUnit: '',
 			dosageUnitState: null,
 			dosageFrequency: '',
@@ -57,7 +55,14 @@ class PrescribableProfile extends React.Component {
 				} else {
 					this.setState({ [stateName + "State"]: "has-danger", [stateName]: event.target.value || '' }, this.setIsFormValid.bind(this));
 				}
-				break;
+        break;
+      case "num":
+      if (!isNaN(event.target.value) && event.target.value.length !== 0) {
+        this.setState( {  [stateName + "State"]: "has-success", [stateName]: event.target.value || '' }, this.setIsFormValid.bind(this));
+      } else {
+        this.setState({ [stateName + "State"]: "has-danger", [stateName]: event.target.value || '' }, this.setIsFormValid.bind(this));
+      }
+      break;
 			default:
         break;
 		}
@@ -266,11 +271,11 @@ class PrescribableProfile extends React.Component {
                             name="minweight"
 														type="text"
 														value={this.state.minWeight}
-                            onChange={e => this.change(e, "minWeight", "length", '1')}
+                            onChange={e => this.change(e, "minWeight", "num", '1')}
                           />
                           {this.state.minWeightState === "has-danger" ? (
                             <label className="error">
-                              Please enter a valid minimum weight (in lbs.)
+                              Please enter a valid minimum weight as a number (in lbs.)
                             </label>
                           ) : null}
                         </FormGroup>

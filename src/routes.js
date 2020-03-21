@@ -12,6 +12,7 @@ import AddDrug from "./views/pages/AddDrug";
 import DrugList from "./views/pages/DrugList";
 import DrugProfile from "./views/pages/DrugProfile";
 import PrescribableProfile from "./views/pages/PrescribableProfile";
+import PrescriptionReason from "./views/pages/PrescriptionReason";
 
 const routes = [
   {
@@ -107,6 +108,15 @@ const routes = [
             layout: "/admin"
 					}
         ],
+      },
+      {
+        path: "/pharmacy/prescription/reason",
+        name: "Prescription Reasons",
+        mini: "PR",
+        requiredRoles:  ['Doctor'],
+        component: PrescriptionReason,
+        isHidden: false,
+        layout: "/admin"
       },
       {
         path: "/pharmacy/prescribe",

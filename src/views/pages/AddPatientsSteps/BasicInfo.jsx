@@ -35,7 +35,7 @@ class BasicInfo extends React.Component {
       zipCodeState: null,
       ssnState: null,
       emailState: null,
-      gender: "",
+      gender: "M",
       city: "",
       streetAddress: "",
       zipCode: "",
@@ -81,7 +81,7 @@ class BasicInfo extends React.Component {
   }
 
   async setSSNState(ssn){
-    const isUnique = this.isSSNUnique(ssn);
+		const isUnique = await this.isSSNUnique(ssn);
     if(!isUnique){
       var options = {};
       options = {
@@ -128,7 +128,7 @@ class BasicInfo extends React.Component {
   }
 
   async isSSNUnique(ssn){
-    const patient = await getPatientWithFilter({socialSecurityNumber: ssn});
+		const patient = await getPatientWithFilter({socialSecurityNumber: ssn});
     return patient.length === 0;
   }
 
@@ -531,7 +531,7 @@ class BasicInfo extends React.Component {
                     id="genderMale"
                     name="gender"
                     type="radio"
-                    onClick={e => this.setState({gender: 'M'})}
+                    onClick={e => {this.setState({gender: 'M'}); this.props.onChildStateChange('gender', 'M')}}
                   />
                   <span className="form-check-sign" />
                   Male
@@ -542,7 +542,7 @@ class BasicInfo extends React.Component {
                     id="genderFemale"
                     name="gender"
                     type="radio"
-                    onClick={e => this.setState({gender: 'F'})}
+                    onClick={e =>{ this.setState({gender: 'F'}); this.props.onChildStateChange('gender', 'M');}}
                   />
                   <span className="form-check-sign" />
                   Female

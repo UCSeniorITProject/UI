@@ -22,7 +22,7 @@ class PatientList extends React.Component  {
   async componentDidMount() {
     try {
       const patients = await getPatientWithFilter({active: 'Y'});
-      const patientList = patients.map(x => {return {patientId: x.patientUserId, firstName: x.firstName, lastName: x.lastName, birthDate: moment(x.dateOfBirth).format("MM/DD/YYYY"), gender: x.gender === 'M' ? 'Male' : 'Female', actions: (
+      const patientList = patients.map(x => {return {patientId: x.patientId, firstName: x.firstName, lastName: x.lastName, birthDate: moment(x.dateOfBirth).format("MM/DD/YYYY"), gender: x.gender === 'M' ? 'Male' : 'Female', actions: (
         <div className="actions-right">
                 <Button
                   color="primary"

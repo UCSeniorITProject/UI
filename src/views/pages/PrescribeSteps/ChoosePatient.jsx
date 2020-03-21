@@ -1,13 +1,13 @@
-
 import React from "react";
-import { withRouter } from 'react-router';
+import NotificationAlert from "react-notification-alert";
+
 // reactstrap components
 import {
   Button,
   Row,
   Col
 } from "reactstrap";
-
+import className from "classnames";
 import {getPatientWithFilter} from '../../../services/Patient';
 import ReactTable from "react-table";
 import moment from "moment";
@@ -17,30 +17,28 @@ class PickPatient extends React.Component {
     super(props);
     this.state = {
       patients: [],
-      isPatientPicked: false,
       selectedPatientID: null,
-      selectedIndex: null,
+      currentlySelectedPatientName: '',
     }
   }
 
   async componentDidMount() {
     const patients = await getPatientWithFilter();
-    console.log(patients)
-    const patientList = patients.map(x => {return {patientId: x.patientUserId, firstName: x.firstName, lastName: x.lastName, birthDate: moment(x.dateOfBirth).format("MM/DD/YYYY"), gender: x.gender === 'M' ? 'Male' : 'Female', actions: (
+    const patientList = patients.map(x => {return {patientId: x.patientId, firstName: x.firstName, lastName: x.lastName, birthDate: moment(x.dateOfBirth).format("MM/DD/YYYY"), gender: x.gender === 'M' ? 'Male' : 'Female', actions: (
       <div className="actions-right">
               <Button
                 color="warning"
                 size="sm"
                 className="btn-icon btn-link like btn-neutral"
-                onClick={e => this.props.history.push(`/admin/patient/profile/${x.userId}/`)}
+                onClick={e => this.props.history.push(`/admin/patient/profile/${x.patientId}/`)}
               >
                 <i className="tim-icons icon-pencil" />
               </Button >{" "}
-
               <Button
-                className="btn-icon btn-link like btn-neutral"
+                className={className("btn-icon", "btn-link", "like", {"btn-neutral": this.state.selectedPatientID === Number(x.patientId)})}
                 size="sm"
-                color="warning"
+                color={this.state.selectedPatientID === Number(x.patientId) ? "white" : 'blue'}
+                onClick={e=> {this.props.onChildStateChange('patientId', x.patientId); this.setState({currentlySelectedPatientName: `${x.firstName} ${x.lastName}`, selectedPatientID: Number(x.patientId)})}}
               >
                 <i className="tim-icons icon-check-2" />
               </Button>{" "}
@@ -49,21 +47,42 @@ class PickPatient extends React.Component {
     this.setState({patients: patientList});
   }
 
-  isValidated(){
-    return this.state.isPatientPicked;
-  }
-
-  onPatientSelect(){
-
-  }
-
+  isValidated = () => {
+		const isValid = this.state.currentlySelectedPatientName.length !== 0;
+		if(!isValid){
+			this.showPickPatientRequiredMessage();
+		}
+    return isValid;
+	}
+	
+	showPickPatientRequiredMessage(){
+		var options = {};
+		options = {
+			place: 'tr',
+			message: (
+				<div>
+					<div>
+						You must select a patient to create the prescription for!
+					</div>
+				</div>
+			),
+			type: 'warning',
+			icon: "tim-icons icon-bell-55",
+			autoDismiss: 7,
+		};
+		this.refs.notificationAlert.notificationAlert(options);
+	}
+  
   render() {
     return (
       <>
+			<div className="rna-container">
+				<NotificationAlert ref="notificationAlert" />
+			</div>
       <Row>
         <Col md="9">
         <h5 className="info-text float-left">
-            <b>Patient Picker</b>
+            <b>Patient Picker (Currently Selected Patient: {this.state.currentlySelectedPatientName})</b>
           </h5>
         </Col>
         <Col md="3">
@@ -121,4 +140,4 @@ class PickPatient extends React.Component {
   }
 }
 
-export default withRouter(PickPatient);
+export default PickPatient;
