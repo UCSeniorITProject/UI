@@ -23,7 +23,7 @@ class PickPrescribableReasons extends React.Component {
 			if(chosenPrescribables.length !== 0 && this.props.getParentStateValue('isChoosePrescribablePageDone')){
 				clearInterval(setStateInterval);
 			}
-		}, 80);
+		}, 200);
 	}
 
 	async componentDidMount(){

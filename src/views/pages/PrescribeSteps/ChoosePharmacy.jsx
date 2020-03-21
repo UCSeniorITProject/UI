@@ -19,7 +19,7 @@ class ChoosePharmacy extends React.Component {
   }
 
   isValidated(){
-    return this.state.selectedPharmacy !== null;
+    return this.state.selectedPharmacyId !== null;
   }
   
   async componentDidMount(){
