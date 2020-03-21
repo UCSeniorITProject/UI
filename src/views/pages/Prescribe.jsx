@@ -129,7 +129,6 @@ class Prescribe extends React.Component {
 				this.props.history.push(`/patient/profile/${this.state.patientId}`);
 			}, 3000);
 		} catch (err){
-			await deletePrescription(prescription.prescriptionId);
 			this.showNotAbleToBePrescribed();
 			setTimeout(() => {
 				window.location.reload();

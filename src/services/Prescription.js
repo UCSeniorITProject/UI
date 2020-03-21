@@ -7,4 +7,5 @@ export async function createPrescription(prescriptionInfo){
 
 export async function deletePrescription(prescriptionId){
 	await Axios.delete(`${process.env.REACT_APP_API_URL}/api/pharmacy-service/prescription/${prescriptionId}`);
+	return {};
 }

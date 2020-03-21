@@ -9,9 +9,11 @@ export default async (store, history) => {
       });
 
       axios.interceptors.response.use(response => response, async error => {
-        if(error.response.status === 401){
-          history.push('/auth/login');
-        }
-        return error;
+				if(error.response){
+					if(error.response.status === 401){
+						history.push('/auth/login');
+					}
+				}
+				return error;
     });
 };
