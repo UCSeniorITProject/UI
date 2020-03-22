@@ -120,7 +120,7 @@ class PrescriptionReason extends React.Component {
 		try {
 			await updatePrescriptionReason(this.state.currentlySelectedPrescriptionReasonId, {
 				shortSummary: this.state.currentlySelectedPrescriptionReasonShortSummary,
-				longSummary: this.state.currentlySelectedPrescriptionReasonShortSummary,
+				longSummary: this.state.currentlySelectedPrescriptionReasonLongSummary,
 				reasonCode: this.state.currentlySelectedPrescriptionReasonReasonCode,
 			});
 
