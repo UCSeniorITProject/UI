@@ -117,7 +117,8 @@ class PatientProfile extends React.Component {
           zipCode: this.state.zipCode,
           insuranceCoPayAmount: this.state.insuranceCoPayAmount,
           dateOfBirth: this.state.dob,
-          gender: this.state.gender,
+					gender: this.state.gender,
+					state: this.state.state,
           insuranceName: this.state.insuranceName,
 					insurancePlanNo: this.state.insurancePlanNo,
           socialSecurityNumber: this.state.ssn,
@@ -441,7 +442,7 @@ class PatientProfile extends React.Component {
                               onChange={e => this.change(e, "address", "length", 1)}
                               defaultValue={this.state.address}
                             />
-                            {this.state.registerEmailState === "has-danger" ? (
+                            {this.state.addressState === "has-danger" ? (
                               <label className="error">
                                 Please enter a valid address.
                               </label>

@@ -416,7 +416,7 @@ class BasicInfo extends React.Component {
                 type="text"
                 onChange={e => this.change(e, "state", "length", 1)}
                 onFocus={e => this.setState({ stateFocus: true })}
-                onBlur={e =>{ this.setState({ stateFocus: false }); this.change(e, 'address', 'length', 1)}}
+                onBlur={e =>{ this.setState({ stateFocus: false }); this.change(e, 'state', 'length', 1)}}
               />
               {this.state.stateState === "has-danger" ? (
                 <label className="error">This field is required.</label>
