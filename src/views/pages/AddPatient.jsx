@@ -2,9 +2,7 @@ import BasicInfo from './AddPatientsSteps/BasicInfo';
 import InsuranceInfo from './AddPatientsSteps/InsuranceInfo';
 import UserInfo from './AddPatientsSteps/UserInfo';
 import { withRouter } from 'react-router';
-import {
-  Col
-} from "reactstrap";
+import { Col } from "reactstrap";
 import {createUser} from '../../services/User';
 import ReactWizard from "react-bootstrap-wizard";
 import React from "react";

@@ -126,7 +126,7 @@ class Prescribe extends React.Component {
 			});
 			await Promise.all(prescriptionPrescribableDrugsToCreate);
 			setTimeout(() => {
-				this.props.history.push(`/patient/profile/${this.state.patientId}`);
+				this.props.history.push(`/admin/patient/profile/${this.state.patientId}`);
 			}, 3000);
 		} catch (err){
 			this.showNotAbleToBePrescribed();
