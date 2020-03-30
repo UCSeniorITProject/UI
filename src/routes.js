@@ -13,6 +13,7 @@ import DrugList from "./views/pages/DrugList";
 import DrugProfile from "./views/pages/DrugProfile";
 import PrescribableProfile from "./views/pages/PrescribableProfile";
 import PrescriptionReason from "./views/pages/PrescriptionReason";
+import PatientAnalytics from "./views/pages/PatientAnalytics";
 
 const routes = [
   {
@@ -188,6 +189,15 @@ const routes = [
         requiredRoles:  ['Doctor'],
         component: PatientList,
         isHidden: false,
+        layout: "/admin"
+			},
+			{
+        path: "/patient/:id/analytics",
+        name: "Analytics",
+        mini: "A",
+        requiredRoles:  [],
+        component: PatientAnalytics,
+        isHidden: true,
         layout: "/admin"
       },
     ],

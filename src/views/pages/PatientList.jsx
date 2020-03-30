@@ -25,6 +25,15 @@ class PatientList extends React.Component  {
       const patientList = patients.map(x => {return {patientId: x.patientId, firstName: x.firstName, lastName: x.lastName, birthDate: moment(x.dateOfBirth).format("MM/DD/YYYY"), gender: x.gender === 'M' ? 'Male' : 'Female', actions: (
         <div className="actions-right">
                 <Button
+                  color="blue"
+                  size="md"
+                  className="btn-fill"
+                  value={x.userId}
+                  onClick={e => this.props.history.push(`/admin/patient/${x.patientId}/analytics`)}
+                >
+                  Analytics
+                </Button>
+								<Button
                   color="primary"
                   size="md"
                   className="btn-fill"
