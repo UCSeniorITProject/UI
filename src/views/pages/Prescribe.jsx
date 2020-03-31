@@ -10,7 +10,7 @@ import PickPrescribable from "./PrescribeSteps/ChoosePrescribable";
 import PickPatient from "./PrescribeSteps/ChoosePatient";
 import PickPrescribableReasons from "./PrescribeSteps/ChoosePrescribableReason";
 import PickPharmacy from "./PrescribeSteps/ChoosePharmacy";
-import {createPrescription, deletePrescription} from "../../services/Prescription";
+import {createPrescription} from "../../services/Prescription";
 import {createPrescriptionPrescribableDrug} from "../../services/PrescriptionPrescribableDrug"
 import {createPrescriptionPrescribableDrugReason} from "../../services/PrescriptionPrescribableDrugReason";
 import NotificationAlert from "react-notification-alert";
@@ -125,6 +125,7 @@ class Prescribe extends React.Component {
 				});
 			});
 			await Promise.all(prescriptionPrescribableDrugsToCreate);
+			this.showAbleToBePrescribed();
 			setTimeout(() => {
 				this.props.history.push(`/admin/patient/profile/${this.state.patientId}`);
 			}, 3000);
@@ -138,6 +139,25 @@ class Prescribe extends React.Component {
 
   onChildStateChange(stateName, value){
     return this.setState({[stateName]: value});
+	}
+	showAbleToBePrescribed(){
+		var options = {};
+		options = {
+			place: 'tr',
+			message: (
+				<div>
+					<div>
+						Succesfully prescribed the drug! Redirecting...
+					</div>
+				</div>
+			),
+			type: 'success',
+			icon: "tim-icons icon-bell-55",
+			autoDismiss: 7,
+		};
+		if(this.refs){
+			this.refs.notificationAlert.notificationAlert(options);
+		}
 	}
 	
 	showNotAbleToBePrescribed(){

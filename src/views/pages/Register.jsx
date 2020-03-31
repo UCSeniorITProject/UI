@@ -240,7 +240,7 @@ class Register extends React.Component {
                   <div className="description">
                     <h3 className="info-title">Compliance</h3>
                     <p className="description">
-                      We are increasing the responsibility of organizations to prescribe responsibility.
+                      We are increasing the responsibility of organizations to prescribe responsibly.
                     </p>
                   </div>
                 </div>

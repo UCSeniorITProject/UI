@@ -17,3 +17,8 @@ export async function patchPrescribable(prescribableId, infoToPatch){
 
 	return prescribable.data.prescribable;
 }
+
+export async function getPrescribableByMonth(patientId){
+	const prescribableByMonth = await Axios.get(`${process.env.REACT_APP_API_URL}/api/pharmacy-service/prescribable/${patientId}/by-month`);
+	return prescribableByMonth.data.data;
+}
