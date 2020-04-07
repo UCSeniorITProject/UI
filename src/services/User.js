@@ -16,6 +16,11 @@ export async function createUser(userInfo){
   return user.data.user;
 }
 
+export async function bulkGetUserById(userIds){
+	const users = await Axios.get(`${process.env.REACT_APP_API_URL}/api/security-management/user/bulk`, {params: {ids: userIds}});
+	return users.data.users;
+}
+
 export async function refreshAccessToken(refreshToken){
   const tokens = await Axios.post(`${process.env.REACT_APP_API_URL}/api/security-management/token/refresh`, {
     refreshToken,

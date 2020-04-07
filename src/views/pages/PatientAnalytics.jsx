@@ -53,7 +53,6 @@ class PatientAnalytics extends React.Component {
 				prescribableByMonths: this.getPrescribableByMonthChart(prescribableByMonth),
 			}); 
 		} catch (err) {
-			console.log(err)
 			this.showErrorLoadingDataMessage();
 		}
 	}

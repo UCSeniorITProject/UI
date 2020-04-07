@@ -11,6 +11,7 @@ import {getPatientWithFilter} from '../../services/Patient';
 import ReactTable from "react-table";
 import { withRouter } from 'react-router';
 import moment from 'moment';
+import NotificationAlert from "react-notification-alert";
 class PatientList extends React.Component  {
   constructor(props) {
     super(props);
@@ -21,7 +22,7 @@ class PatientList extends React.Component  {
 
   async componentDidMount() {
     try {
-      const patients = await getPatientWithFilter({active: 'Y'});
+			const patients = await getPatientWithFilter({active: 'Y'});
       const patientList = patients.map(x => {return {patientId: x.patientId, firstName: x.firstName, lastName: x.lastName, birthDate: moment(x.dateOfBirth).format("MM/DD/YYYY"), gender: x.gender === 'M' ? 'Male' : 'Female', actions: (
         <div className="actions-right">
                 <Button
@@ -46,13 +47,36 @@ class PatientList extends React.Component  {
       ), selected: false}});
       this.setState({patients: patientList});
     } catch (err){
-      console.log(err);
+      this.showInternalServerMessage();
     }
-  }
+	}
+	
+	showInternalServerMessage(){
+		var options = {};
+		options = {
+			place: 'tr',
+			message: (
+				<div>
+					<div>
+						An error occurred while loading the patient list.
+					</div>
+				</div>
+			),
+			type: 'warning',
+			icon: "tim-icons icon-bell-55",
+			autoDismiss: 7,
+		};
+		if(this.refs){
+			this.refs.notificationAlert.notificationAlert(options);
+		}
+	}
 
   render (){
     return (
       <>
+			<div className="rna-container">
+				<NotificationAlert ref="notificationAlert" />
+			</div>
       <div className="content">
         <Row>
           <Col md="12">
