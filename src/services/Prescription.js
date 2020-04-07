@@ -13,3 +13,8 @@ export async function getPrescriptionByMonth(patientId){
 	const data = await Axios.get(`${process.env.REACT_APP_API_URL}/api/pharmacy-service/prescription/${patientId}/month`);
 	return data.data.data;
 }
+
+export async function getPrescriptionByMonthForDoctor(doctorId){
+	const data = await Axios.get(`${process.env.REACT_APP_API_URL}/api/pharmacy-service/prescription/doctor/${doctorId}/month`);
+	return data.data.data;
+};

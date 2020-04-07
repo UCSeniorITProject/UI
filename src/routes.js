@@ -14,6 +14,8 @@ import DrugProfile from "./views/pages/DrugProfile";
 import PrescribableProfile from "./views/pages/PrescribableProfile";
 import PrescriptionReason from "./views/pages/PrescriptionReason";
 import PatientAnalytics from "./views/pages/PatientAnalytics";
+import DoctorList from "./views/pages/DoctorList";
+import DoctorAnalytics from "./views/pages/DoctorAnalytics";
 
 const routes = [
   {
@@ -201,7 +203,35 @@ const routes = [
         layout: "/admin"
       },
     ],
-  },
+	},
+	{
+		collapse: true,
+		name: 'Doctors',
+		rtlName: "",
+		icon: "tim-icons icon-heart-2",
+		state: 'roleCollapse',
+		requiredRoles: [],
+		views: [
+			{
+				path: "/doctor/list",
+        name: "Doctor List",
+        mini: "DL",
+        component: DoctorList,
+        isHidden: false,
+        requiredRoles:  [],
+        layout: "/admin"
+			},
+			{
+				path: "/doctor/:id/analytics",
+        name: "Doctor Analytics",
+        mini: "DL",
+        component: DoctorAnalytics,
+        isHidden: true,
+        requiredRoles:  [],
+        layout: "/admin"
+			},
+		],
+	},
 ];
 
 export default routes;
