@@ -156,6 +156,7 @@ class ChoosePrescribable extends React.Component {
                             isMulti
                             value={this.state.multipleSelect}
                             onChange={value => {
+																document.dispatchEvent(new CustomEvent('prescribableChanged', {detail: value}))
 																if(value.length === 0){
 																	this.showPickPrescribableMessage();
 																}
