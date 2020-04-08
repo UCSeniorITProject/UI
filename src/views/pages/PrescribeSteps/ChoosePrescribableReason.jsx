@@ -18,7 +18,6 @@ class PickPrescribableReasons extends React.Component {
 			prescribableReasonsMapped: [],
 		}
 		document.addEventListener('prescribableChanged', (e) => {
-			console.log(e);
 			this.setState({chosenPrescribables: e.detail});
 		});
 	}
@@ -55,6 +54,8 @@ class PickPrescribableReasons extends React.Component {
 		const isValid = this.state.prescribableReasonsMapped.filter(x=> x.reasons.length === 0).length === 0;
 		if(!isValid){
 			this.showPickReason();
+		} else {
+			document.removeEventListener('prescribableChanged');
 		}
 		return isValid;
 	}
