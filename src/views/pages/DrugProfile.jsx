@@ -61,6 +61,7 @@ class DrugProfile extends React.Component{
   };
   
   isPrescribableFormValid(){
+		console.log(Object.entries(this.state.prescribable).filter(x => (x[0].includes('State') && (x[1] === null || x[1] === 'has-danger'))))
     return Object.entries(this.state.prescribable).filter(x => (x[0].includes('State') && (x[1] === null || x[1] === 'has-danger'))).length === 0;
   }
 
@@ -104,19 +105,17 @@ class DrugProfile extends React.Component{
         dosageUnitState: null,
         dosageFrequency: '',
         dosageFrequencyState: null,
+        directions: '',
+        directionsState: null,
+        directionsSelect: null,
         minWeight: '',
         minWeightState: null,
-        requiredGender: '',
+        requiredGender: null,
         requiredGenderState: null,
         drugId: this.props.match.params.id,
         isPrescribableFormValid: false,
         name: '',
-        nameStateFocus: null,
-        dosageFocus: null,
-        dosageUnitFocus: null,
-        dosageFrequencyFocus: null,
-        minWeightFocus: null,
-				requiredGenderFocus: null,
+				nameState: null,
 				drugFrequencySelect: null,
 				dosageFrequencySelect: null,
 				dosageUnitSelect: null,
@@ -139,7 +138,7 @@ class DrugProfile extends React.Component{
           </div>
         )
       }],
-    });
+    }, () => {console.log(this.state)});
 
       var options = {};
       options = {
@@ -482,6 +481,7 @@ class DrugProfile extends React.Component{
 														closeMenuOnSelect={false}
 														value={this.state.prescribable.dosageFrequencySelect}
                             onChange={async value => {
+															console.log(value)
                                 if(value.value){
                                   this.setState({prescribable: {...this.state.prescribable, dosageFrequency: value.value, dosageFrequencySelect: {value: value.value, label: value.label}, dosageFrequencyState: 'has-success'}}, this.setIsPrescribableFormValid);
                                 }
