@@ -14,8 +14,8 @@ import {
   InputGroup,
   Col,
 } from "reactstrap";
-
-import {createPharmacy} from '../../services/Pharmacy';
+import NotificationAlert from "react-notification-alert";
+import {createPharmacy, getPharmacyWithFilter} from '../../services/Pharmacy';
 import classnames from "classnames";
 class AddPharmacy extends React.Component {
   constructor(props){
@@ -41,7 +41,8 @@ class AddPharmacy extends React.Component {
 
 
   isFormValid(){
-    return Object.entries(this.state).filter(x=> x[0].includes('State') && (x[1] === null || x[0].includes('State')) && x[1] === 'has-danger').length === 0
+		console.log(Object.entries(this.state))
+		return Object.entries(this.state).filter(x => {return x[0].includes('State') && (x[1] === null || x[1].includes('has-danger'))}).length === 0;
   }
 
   // function that verifies if a string has a given length or not
@@ -79,6 +80,62 @@ class AddPharmacy extends React.Component {
         break;
       default:
         break;
+    }
+	}
+	
+	async isFieldUnique(e){
+    try {
+			const pharmacies = await getPharmacyWithFilter({[e.target.name]: e.target.value});
+			return pharmacies.length === 0;
+    } catch (err) {
+			console.log(err)
+      var options = {};
+      options = {
+        place: 'tr',
+        message: (
+          <div>
+            <div>
+              An internal server error occured. Please try again later.
+            </div>
+          </div>
+        ),
+        type: 'warning',
+        icon: "tim-icons icon-bell-55",
+        autoDismiss: 7
+      };
+      if(this.refs !== undefined){
+        this.refs.notificationAlert.notificationAlert(options);
+      }
+    }
+	}
+	
+	async handleOnBlur(event, stateName){
+    event.persist();
+    const fieldIsUnique = await this.isFieldUnique(event);
+    if(this.state[`${stateName}State`] === 'has-danger'){
+      return;
+    }
+    if(!fieldIsUnique){
+      var options = {};
+      options = {
+        place: 'tr',
+        message: (
+          <div>
+            <div>
+              A pharmacy is already registered with {event.target.value}!
+            </div>
+          </div>
+        ),
+        type: 'warning',
+        icon: "tim-icons icon-bell-55",
+        autoDismiss: 7
+      };
+      if(this.refs){
+        this.refs.notificationAlert.notificationAlert(options);
+      }
+      this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+    } else {
+      this.setState({ [stateName + "State"]: "has-success"}, this.setIsFormValid.bind(this));
     }
   }
 
@@ -156,6 +213,9 @@ class AddPharmacy extends React.Component {
   render() {
     return (
       <>
+			  <div className="rna-container">
+          <NotificationAlert ref="notificationAlert" />
+        </div>
         <div className="content">
           <Row>
             <Col md="12">
@@ -204,7 +264,7 @@ class AddPharmacy extends React.Component {
                             type="text"
                             onChange={e => this.change(e, "address", "length", 1)}
                             onFocus={e => this.setState({ addressFocus: true })}
-                            onBlur={e => {this.setState({ addressFocus: false }); this.change(e, 'address', 'length', 1)}}
+                            onBlur={e => {this.setState({ addressFocus: false }); this.change(e, 'address', 'length', 1); this.handleOnBlur(e, 'address');}}
                           />
                         </InputGroup>
                       </Col>
