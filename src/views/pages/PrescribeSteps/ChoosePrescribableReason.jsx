@@ -55,7 +55,6 @@ class PickPrescribableReasons extends React.Component {
 		if(!isValid){
 			this.showPickReason();
 		} else {
-			document.removeEventListener('prescribableChanged');
 		}
 		return isValid;
 	}
