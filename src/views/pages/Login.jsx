@@ -135,16 +135,6 @@ class Login extends React.Component {
                         </a>
                       </h6>
                     </div>
-                    <div className="pull-right">
-                      <h6>
-                        <a
-                          className="link footer-link"
-                          href="/auth/register"
-                        >
-                          Forgot password?
-                        </a>
-                      </h6>
-                    </div>
                   </CardFooter>
                 </Card>
               </Form>
