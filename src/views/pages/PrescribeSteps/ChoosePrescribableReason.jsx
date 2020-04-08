@@ -51,7 +51,7 @@ class PickPrescribableReasons extends React.Component {
 	}
 
 	isValidated(){
-		const isValid = this.state.prescribableReasonsMapped.filter(x=> x.reasons.length === 0).length === 0;
+		const isValid = this.state.prescribableReasonsMapped.filter(x=> x.reasons.length === 0).length === 0 && this.state.prescribableReasonsMapped.length !== 0;
 		if(!isValid){
 			this.showPickReason();
 		} else {
