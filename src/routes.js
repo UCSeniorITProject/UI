@@ -61,14 +61,14 @@ const routes = [
     rtlName: "tim-icons icon-tap-02",
     icon: "tim-icons icon-tap-02",
     state: "pharmacyCollapse",
-    requiredRoles:  ['Doctor', 'Pharmacist'],
+    requiredRoles:  ['Doctor', 'Pharmacist', 'Admin'],
     views: [
       {
         collapse: true,
         name: "Drugs",
         mini: 'D',
         state: "drugCollapse",
-        requiredRoles:  [],
+        requiredRoles:  ['Doctor', 'Pharmacist', 'Admin'],
         views: [
           {
             path: "/drug/new",
@@ -76,7 +76,7 @@ const routes = [
             mini: "AD",
             component: AddDrug,
             isHidden: false,
-            requiredRoles:  [],
+            requiredRoles:  ['Pharmacist', 'Admin'],
             state: 'addDrug',
             layout: "/admin"
           },
@@ -152,7 +152,8 @@ const routes = [
         path: "/pharmacy/profile/:id/",
         name: "Pharmacy Profile",
         mini: "PP",
-        component: PharamacyProfile,
+				component: PharamacyProfile,
+				requiredRoles:  ['Doctor', 'Pharmacist', 'Admin'],
         isHidden: true,
         layout: "/admin" 
       }
@@ -210,7 +211,7 @@ const routes = [
 		rtlName: "",
 		icon: "tim-icons icon-heart-2",
 		state: 'roleCollapse',
-		requiredRoles: [],
+		requiredRoles: ['Admin'],
 		views: [
 			{
 				path: "/doctor/list",

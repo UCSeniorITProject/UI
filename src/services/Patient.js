@@ -1,6 +1,7 @@
 import Axios from 'axios';
 
 export async function getPatientWithFilter(filter){
+	console.log(filter)
 	const patients = await Axios.get(`${process.env.REACT_APP_API_URL}/api/patient-service/patient`, {params: filter});
   return patients.data.patients;
 }

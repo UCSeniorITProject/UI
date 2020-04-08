@@ -25,7 +25,9 @@ class DoctorList extends React.Component {
 			const roles = await getRoleWithFilter({roleName: 'Doctor', active:'Y'});
 			if(roles.length){
 				const userRoles = await getUserRoleWithFilter({roleId: roles[0].id, active: 'Y'});
+				console.log(userRoles)
 				const users = await bulkGetUserById(userRoles.map(x=>x.userID));
+				console.log(users)
 				const doctorList = users.map(x => {
 					return {
 						doctorId: x.id,
