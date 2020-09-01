@@ -7,6 +7,7 @@ import Switch from "react-bootstrap-switch";
 import {updateDrug} from "../../services/Drug";
 import ReactTable from "react-table";
 import {createPrescribable, getPrescribableWithFilter} from "../../services/Prescribable";
+import {getDrugTypesWithFilter} from "../../services/DrugType";
 
 import {
   Button,
@@ -33,7 +34,11 @@ class DrugProfile extends React.Component{
         manufacturerState: null,
         nonGenericParentId: null,
         federalDrugIdentifier: null,
-        parentDrugs: [],
+				parentDrugs: [],
+				drugType: null,
+				drugTypeSelect: null,
+				drugTypes: [],
+				drugTypeState: null,
       },
       prescribable: {
         dosage: '',
@@ -138,7 +143,7 @@ class DrugProfile extends React.Component{
           </div>
         )
       }],
-    }, () => {console.log(this.state)});
+    });
 
       var options = {};
       options = {
@@ -165,16 +170,36 @@ class DrugProfile extends React.Component{
     const drugId = this.props.match.params.id;
     try {
       const drug = await getDrugWithFilter({drugId: drugId});
-      const [parentDrugs, parentDrug, prescribables] = await Promise.all([getDrugWithFilter({nonGenericParentId: 0, active: 'Y'}), getDrugWithFilter({drugId: drug[0].nonGenericParentId}), getPrescribableWithFilter({active: 'Y', drugId})]);
-
+      const [parentDrugs, parentDrug, prescribables, drugTypes] = await Promise.all([getDrugWithFilter({nonGenericParentId: 0, active: 'Y'}), getDrugWithFilter({drugId: drug[0].nonGenericParentId}), getPrescribableWithFilter({active: 'Y', drugId}), getDrugTypesWithFilter({})]);
+			this.setState({drug: {...this.state.drug, drugTypes: drugTypes.map(x => {
+				return {
+					label: x.drugTypeName,
+					id: x.drugTypeId,
+					value: x.drugTypeId,
+				}
+			}),
+		}})
+			const presentDrugType = drugTypes.find(x => x.drugTypeId === drug[0].drugType);
       let drugProfileState = {
         name: drug[0].name,
         manufacturer: drug[0].manufacturer,
         federalDrugIdentifier:  drug[0].federalDrugIdentifier,
         nonGenericParentId: drug[0].nonGenericParentId,
         parentDrugs: parentDrugs.map(x => {return {value: x.drugId, label: x.name}}),
-        isGeneric: drug[0].nonGenericParentId !== '0',
-        isDrugFormValid: true,
+        isGeneric: drug[0].nonGenericParentId !== 0,
+				isDrugFormValid: true,
+				drugTypeSelect:{
+					label: presentDrugType.drugTypeName,
+					value: presentDrugType.drugTypeId,
+					id: presentDrugType.drugTypeId,
+				},
+				drugTypes: drugTypes.map(x => {
+					return {
+						label: x.drugTypeName,
+						id: x.drugTypeId,
+						value: x.drugTypeId,
+					}
+				})
       }
 
       if(drugProfileState.isGeneric){
@@ -256,7 +281,8 @@ class DrugProfile extends React.Component{
     let drugFieldsToUpdate = {
       name: this.state.drug.name,
       manufacturer: this.state.drug.manufacturer,
-      federalDrugIdentifier: this.state.drug.federalDrugIdentifier,
+			federalDrugIdentifier: this.state.drug.federalDrugIdentifier,
+			drugType: this.state.drug.drugType,
     };
     if(this.state.drug.isGeneric){
       drugFieldsToUpdate.nonGenericParentId = this.state.drug.nonGenericParentId;
@@ -407,6 +433,33 @@ class DrugProfile extends React.Component{
                   </Row>
                 </CardBody>
                 <CardFooter>
+									<Col md="6">
+									<Select
+												className="react-select info"
+												classNamePrefix="react-select"
+												placeholder="Drug Types"
+												name="drugSelect"
+												closeMenuOnSelect={false}
+												value={this.state.drug.drugTypeSelect}
+												onChange={value => {
+														if(value){
+															this.setState({drug: { ...this.state.drug, drugType: value.id, drugTypeSelect: value, drugTypeState: 'has-success' }}, this.setIsFormValid())
+														}
+													}
+												}
+												options={
+													[
+														{
+															value: "",
+															label: "Drug Types",
+															isDisabled: true
+														},
+														...this.state.drug.drugTypes,
+													]
+												}
+											/>
+									</Col>
+									
                 <Button className="btn-fill pull-right" color="primary" type="submit" disabled={!this.state.drug.isDrugFormValid} onClick={e => this.updateDrug()}>
                   Update Drug
                 </Button>

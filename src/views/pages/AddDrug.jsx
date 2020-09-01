@@ -15,6 +15,7 @@ import {
 	CardFooter,
 	Button,
 } from "reactstrap";
+import {getDrugTypesWithFilter} from "../../services/DrugType";
 import classnames from "classnames";
 import Select from "react-select";
 import Switch from "react-bootstrap-switch";
@@ -33,8 +34,12 @@ class AddDrug extends React.Component {
 			federalDrugIdentifierState: null,
 			isGeneric: false,
 			parentDrugs: [],
+			drugType: null,
+			drugTypeSelect: null,
+			drugTypes: [],
+			drugTypeState: null,
 		};
-	}
+	} 
 
 	setIsFormValid(){
     this.setState({isFormValid: this.isFormValid()});
@@ -70,8 +75,16 @@ class AddDrug extends React.Component {
 
 	async componentDidMount(){
 		try{
-			const drugs = await getDrugWithFilter({nonGenericParentId: 0, active: 'Y'});
-			this.setState({parentDrugs: drugs.map(x => {return {id: x.drugId, label: x.name}})});
+			const [drugTypes, drugs] = await Promise.all([getDrugTypesWithFilter({}), getDrugWithFilter({nonGenericParentId: 0, active: 'Y'})]);
+			this.setState({drugTypes: drugTypes.map(x => {
+				return {
+					label: x.drugTypeName,
+					id: x.drugTypeId,
+					value: x.drugTypeId,
+				}
+			}),
+			parentDrugs: drugs.map(x => {return {id: x.drugId, label: x.name}})
+		})
 		} catch (err) {
 			var options = {};
 			options = {
@@ -96,12 +109,14 @@ class AddDrug extends React.Component {
 			const drug = await createDrug({
 				name: this.state.name,
 				manufacturer: this.state.manufacturer,
-				federalDrugIdentifier: this.state.federalDrugIdentifier,
-				nonGenericParentId: this.state.nonGenericParentId,
+				federalDrugIdentifier: Number.parseInt(this.state.federalDrugIdentifier),
+				nonGenericParentId: this.state.nonGenericParentId === null ? null : this.state.nonGenericParentId,
+				drugType: this.state.drugType,
 				active: 'Y',
 			});
 			this.props.history.push(`/admin/drug/profile/${drug.drugId}`)
 		} catch (err) {
+			console.log(err)
 			var options = {};
 			options = {
 				place: 'tr',
@@ -119,6 +134,25 @@ class AddDrug extends React.Component {
 			this.refs.notificationAlert.notificationAlert(options);
 		}
 	}
+
+	showPickDrugTypeMessage(){
+		var options = {};
+		options = {
+			place: 'tr',
+			message: (
+				<div>
+					<div>
+						You must select a drug type to continue!
+					</div>
+				</div>
+			),
+			type: 'warning',
+			icon: "tim-icons icon-bell-55",
+			autoDismiss: 7,
+		};
+		this.refs.notificationAlert.notificationAlert(options);
+	}
+
 
 	render(){
 		let parentDrugSelect;
@@ -250,6 +284,30 @@ class AddDrug extends React.Component {
                         </InputGroup>
                     </Col>
 										{parentDrugSelect}
+										<Col className="pr-md-1" md="3">
+											<Select
+												className="react-select info"
+												classNamePrefix="react-select"
+												placeholder="Drug Types"
+												name="drugSelect"
+												closeMenuOnSelect={false}
+												value={this.state.drugTypeSelect}
+												onChange={value => {
+														if(value){
+															this.setState({ drugType: value.id, drugTypeSelect: value, drugTypeState: 'has-success' }, this.setIsFormValid())
+														}
+													}
+												}
+												options={[
+													{
+														value: "",
+														label: "Drug Types",
+														isDisabled: true
+													},
+													...this.state.drugTypes,
+												]}
+											/>
+										</Col>
 									</Row>
 								</CardBody>
 								<CardFooter>
