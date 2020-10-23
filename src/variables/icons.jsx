@@ -1,4 +1,3 @@
- 
 const icons = [
   { name: "icon-alert-circle-exc" },
   { name: "icon-align-center" },
@@ -99,7 +98,7 @@ const icons = [
   { name: "icon-button-pause" },
   { name: "icon-simple-remove" },
   { name: "icon-simple-add" },
-  { name: "icon-simple-delete" }
+  { name: "icon-simple-delete" },
 ];
 
 export default icons;

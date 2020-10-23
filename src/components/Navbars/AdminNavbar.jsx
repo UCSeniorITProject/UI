@@ -1,10 +1,9 @@
- 
 import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
-import { withRouter } from 'react-router';
-import jwtDecode from 'jwt-decode';
-import {getUserWithFilter} from '../../services/User';
+import { withRouter } from "react-router";
+import jwtDecode from "jwt-decode";
+import { getUserWithFilter } from "../../services/User";
 // reactstrap components
 import {
   Button,
@@ -20,15 +19,15 @@ import {
   Nav,
   Container,
   Modal,
-  UncontrolledTooltip
+  UncontrolledTooltip,
 } from "reactstrap";
 
 class AdminNavbar extends React.Component {
   constructor(props) {
     super(props);
-    const decodedToken = jwtDecode(localStorage.getItem('accessToken'));
-    if(!decodedToken){
-      this.props.history.push('/auth/login');
+    const decodedToken = jwtDecode(localStorage.getItem("accessToken"));
+    if (!decodedToken) {
+      this.props.history.push("/auth/login");
     }
     this.state = {
       collapseOpen: false,
@@ -38,10 +37,16 @@ class AdminNavbar extends React.Component {
     };
   }
   async componentDidMount() {
-    const user = await getUserWithFilter({id: jwtDecode(localStorage.getItem('accessToken')).userID});
-    if(user.users.length){
+    const user = await getUserWithFilter({
+      id: jwtDecode(localStorage.getItem("accessToken")).userID,
+    });
+    if (user.users.length) {
       this.setState({
-        profilePicture: user.users[0].profilePicture === '' || user.users[0].profilePicture === undefined ? 'https://via.placeholder.com/150?text=ProfilePicture' : user.users[0].profilePicture,
+        profilePicture:
+          user.users[0].profilePicture === "" ||
+          user.users[0].profilePicture === undefined
+            ? "https://via.placeholder.com/150?text=ProfilePicture"
+            : user.users[0].profilePicture,
       });
     }
     window.addEventListener("resize", this.updateColor);
@@ -49,20 +54,20 @@ class AdminNavbar extends React.Component {
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateColor);
   }
-  logout(){
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    this.props.history.push('/auth/login');
+  logout() {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    this.props.history.push("/auth/login");
   }
   // function that adds color white/transparent to the navbar on resize (this is for the collapse)
   updateColor = () => {
     if (window.innerWidth < 993 && this.state.collapseOpen) {
       this.setState({
-        color: "bg-white"
+        color: "bg-white",
       });
     } else {
       this.setState({
-        color: "navbar-transparent"
+        color: "navbar-transparent",
       });
     }
   };
@@ -70,21 +75,21 @@ class AdminNavbar extends React.Component {
   toggleCollapse = () => {
     if (this.state.collapseOpen) {
       this.setState({
-        color: "navbar-transparent"
+        color: "navbar-transparent",
       });
     } else {
       this.setState({
-        color: "bg-white"
+        color: "bg-white",
       });
     }
     this.setState({
-      collapseOpen: !this.state.collapseOpen
+      collapseOpen: !this.state.collapseOpen,
     });
   };
   // this function is to open the Search modal
   toggleModalSearch = () => {
     this.setState({
-      modalSearch: !this.state.modalSearch
+      modalSearch: !this.state.modalSearch,
     });
   };
   render() {
@@ -93,7 +98,7 @@ class AdminNavbar extends React.Component {
         <Navbar
           className={classNames("navbar-absolute", {
             [this.state.color]:
-              this.props.location.pathname.indexOf("full-screen-map") === -1
+              this.props.location.pathname.indexOf("full-screen-map") === -1,
           })}
           expand="lg"
         >
@@ -119,7 +124,7 @@ class AdminNavbar extends React.Component {
               </div>
               <div
                 className={classNames("navbar-toggle d-inline", {
-                  toggled: this.props.sidebarOpened
+                  toggled: this.props.sidebarOpened,
                 })}
               >
                 <button
@@ -132,7 +137,7 @@ class AdminNavbar extends React.Component {
                   <span className="navbar-toggler-bar bar3" />
                 </button>
               </div>
-              <NavbarBrand href="#pablo" onClick={e => e.preventDefault()}>
+              <NavbarBrand href="#pablo" onClick={(e) => e.preventDefault()}>
                 {this.props.brandText}
               </NavbarBrand>
             </div>
@@ -157,22 +162,36 @@ class AdminNavbar extends React.Component {
                     color="default"
                     data-toggle="dropdown"
                     nav
-                    onClick={e => e.preventDefault()}
+                    onClick={(e) => e.preventDefault()}
                   >
-                    
                     <div className="photo">
-                      <img alt="https://via.placeholder.com/150?text=ProfilePicture" src={this.state.profilePicture} />
+                      <img
+                        alt="https://via.placeholder.com/150?text=ProfilePicture"
+                        src={this.state.profilePicture}
+                      />
                     </div>
                     <b className="caret d-none d-lg-block d-xl-block" />
                     <p className="d-lg-none">Log out</p>
                   </DropdownToggle>
                   <DropdownMenu className="dropdown-navbar" right tag="ul">
                     <NavLink tag="li">
-                      <DropdownItem className="nav-item" onClick={e => this.props.history.push('/admin/user-profile')}>Profile</DropdownItem>
+                      <DropdownItem
+                        className="nav-item"
+                        onClick={(e) =>
+                          this.props.history.push("/admin/user-profile")
+                        }
+                      >
+                        Profile
+                      </DropdownItem>
                     </NavLink>
                     <DropdownItem divider tag="li" />
                     <NavLink tag="li">
-                      <DropdownItem className="nav-item" onClick={e => this.logout()}>Log out</DropdownItem>
+                      <DropdownItem
+                        className="nav-item"
+                        onClick={(e) => this.logout()}
+                      >
+                        Log out
+                      </DropdownItem>
                     </NavLink>
                   </DropdownMenu>
                 </UncontrolledDropdown>

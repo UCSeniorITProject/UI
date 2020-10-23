@@ -36,7 +36,7 @@
 
 .offline-doc .page-header:before {
   content: "";
-  background: rgba(0, 0, 0, .75);
+  background: rgba(0, 0, 0, 0.75);
 }
 
 .offline-doc .page-header {

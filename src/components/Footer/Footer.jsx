@@ -1,4 +1,3 @@
-
 /*eslint-disable*/
 import React from "react";
 import { Container, Row } from "reactstrap";
@@ -12,8 +11,7 @@ class Footer extends React.Component {
         className={"footer" + (this.props.default ? " footer-default" : "")}
       >
         <Container fluid={this.props.fluid ? true : false}>
-          <div className="copyright">
-          </div>
+          <div className="copyright"></div>
         </Container>
       </footer>
     );
@@ -22,7 +20,7 @@ class Footer extends React.Component {
 
 Footer.propTypes = {
   default: PropTypes.bool,
-  fluid: PropTypes.bool
+  fluid: PropTypes.bool,
 };
 
 export default Footer;

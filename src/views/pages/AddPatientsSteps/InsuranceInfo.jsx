@@ -8,19 +8,19 @@ import {
   InputGroupText,
   InputGroup,
   Row,
-  Col
+  Col,
 } from "reactstrap";
 
 class InsuranceInfo extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       isFormValid: false,
-      insuranceName: '',
+      insuranceName: "",
       insuranceNameState: null,
-      insuranceCoPayAmount: '',
+      insuranceCoPayAmount: "",
       insuranceCoPayAmountState: null,
-      insurancePlanNo: '',
+      insurancePlanNo: "",
       insurancePlanNoState: null,
     };
   }
@@ -33,60 +33,72 @@ class InsuranceInfo extends React.Component {
     return false;
   };
 
-
   change = async (event, stateName, type, stateNameEqualTo, maxValue) => {
     switch (type) {
       case "length":
         if (this.verifyLength(event.target.value, stateNameEqualTo)) {
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+          this.setState(
+            { [stateName + "State"]: "has-success" },
+            this.setIsFormValid.bind(this)
+          );
         } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+          this.setState(
+            { [stateName + "State"]: "has-danger" },
+            this.setIsFormValid.bind(this)
+          );
         }
         break;
       default:
         break;
     }
 
-    if(event.target.value){
+    if (event.target.value) {
       this.props.onChildStateChange(stateName, event.target.value);
     }
     this.setState({ [stateName]: event.target.value });
   };
 
-  setIsFormValid(){
-    this.setState({isFormValid: this.isFormValid()});
+  setIsFormValid() {
+    this.setState({ isFormValid: this.isFormValid() });
   }
 
-  isFormValid(){
-    return Object.entries(this.state).filter(x=> x[0].includes('State') && (x[1] === null || x[1] === 'has-danger')).length === 0;
+  isFormValid() {
+    return (
+      Object.entries(this.state).filter(
+        (x) =>
+          x[0].includes("State") && (x[1] === null || x[1] === "has-danger")
+      ).length === 0
+    );
   }
 
   isValidated = () => {
-		const isFormValid = this.isFormValid();
-		if(!isFormValid){
-			const stateProps = Object.entries(this.state).filter(x=> x[0].includes('State') && (x[1] === null || x[1] === 'has-danger'));
-			let invalidStateProps = {};
-			stateProps.forEach(x => {
-				invalidStateProps[x[0]] = 'has-danger';
-			});
-			this.setState({...invalidStateProps})
-		}
+    const isFormValid = this.isFormValid();
+    if (!isFormValid) {
+      const stateProps = Object.entries(this.state).filter(
+        (x) =>
+          x[0].includes("State") && (x[1] === null || x[1] === "has-danger")
+      );
+      let invalidStateProps = {};
+      stateProps.forEach((x) => {
+        invalidStateProps[x[0]] = "has-danger";
+      });
+      this.setState({ ...invalidStateProps });
+    }
     return isFormValid;
   };
 
-  render () {
-    return (<>
+  render() {
+    return (
+      <>
         <div className="rna-container">
           <NotificationAlert ref="notificationAlert" />
         </div>
-        <h5 className="info-text">
-          Now, onto the insurance information.
-        </h5>
+        <h5 className="info-text">Now, onto the insurance information.</h5>
         <Row className="justify-content-center mt-5">
           <Col sm="6">
-          <InputGroup
+            <InputGroup
               className={classnames(this.state.insuranceNameState, {
-                "input-group-focus": this.state.insuranceNameFocus
+                "input-group-focus": this.state.insuranceNameFocus,
               })}
             >
               <InputGroupAddon addonType="prepend">
@@ -98,9 +110,9 @@ class InsuranceInfo extends React.Component {
                 name="insurancename"
                 placeholder="Insurance Name"
                 type="text"
-                onChange={e => this.change(e, "insuranceName", "length", 1)}
-                onFocus={e => this.setState({ insuranceNameFocus: true })}
-                onBlur={e => this.setState({ insuranceNameFocus: false })}
+                onChange={(e) => this.change(e, "insuranceName", "length", 1)}
+                onFocus={(e) => this.setState({ insuranceNameFocus: true })}
+                onBlur={(e) => this.setState({ insuranceNameFocus: false })}
               />
               {this.state.insuranceNameState === "has-danger" ? (
                 <label className="error">This field is required.</label>
@@ -109,54 +121,61 @@ class InsuranceInfo extends React.Component {
           </Col>
           <Col sm="6">
             <InputGroup
-                className={classnames(this.state.insurancePlanNoState, {
-                  "input-group-focus": this.state.insurancePlanNoFocus
-                })}
-              >
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText>
-                    <i className="tim-icons icon-caps-small" />
-                  </InputGroupText>
-                </InputGroupAddon>
-                <Input
-                  name="insurancePlanNo"
-                  placeholder="Plan Number"
-                  type="text"
-                  onChange={e => this.change(e, "insurancePlanNo", "length", 1)}
-                  onFocus={e => this.setState({ insurancePlanNoFocus: true })}
-                  onBlur={e => this.setState({ insurancePlanNoFocus: false })}
-                />
-                {this.state.insurancePlanNoState === "has-danger" ? (
-                  <label className="error">This field is required.</label>
-                ) : null}
-              </InputGroup>
+              className={classnames(this.state.insurancePlanNoState, {
+                "input-group-focus": this.state.insurancePlanNoFocus,
+              })}
+            >
+              <InputGroupAddon addonType="prepend">
+                <InputGroupText>
+                  <i className="tim-icons icon-caps-small" />
+                </InputGroupText>
+              </InputGroupAddon>
+              <Input
+                name="insurancePlanNo"
+                placeholder="Plan Number"
+                type="text"
+                onChange={(e) => this.change(e, "insurancePlanNo", "length", 1)}
+                onFocus={(e) => this.setState({ insurancePlanNoFocus: true })}
+                onBlur={(e) => this.setState({ insurancePlanNoFocus: false })}
+              />
+              {this.state.insurancePlanNoState === "has-danger" ? (
+                <label className="error">This field is required.</label>
+              ) : null}
+            </InputGroup>
           </Col>
           <Col sm="6">
             <InputGroup
-                className={classnames(this.state.insuranceCoPayAmountState, {
-                  "input-group-focus": this.state.insuranceCoPayAmountFocus
-                })}
-              >
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText>
-                    <i className="tim-icons icon-money-coins" />
-                  </InputGroupText>
-                </InputGroupAddon>
-                <Input
-                  name="insuranceCoPayAmount"
-                  placeholder="Co-Pay Amount"
-                  type="text"
-                  onChange={e => this.change(e, "insuranceCoPayAmount", "length", 1)}
-                  onFocus={e => this.setState({ insuranceCoPayAmountFocus: true })}
-                  onBlur={e => this.setState({ insuranceCoPayAmountFocus: false })}
-                />
-                {this.state.insuranceCoPayAmountState === "has-danger" ? (
-                  <label className="error">This field is required.</label>
-                ) : null}
-              </InputGroup>
+              className={classnames(this.state.insuranceCoPayAmountState, {
+                "input-group-focus": this.state.insuranceCoPayAmountFocus,
+              })}
+            >
+              <InputGroupAddon addonType="prepend">
+                <InputGroupText>
+                  <i className="tim-icons icon-money-coins" />
+                </InputGroupText>
+              </InputGroupAddon>
+              <Input
+                name="insuranceCoPayAmount"
+                placeholder="Co-Pay Amount"
+                type="text"
+                onChange={(e) =>
+                  this.change(e, "insuranceCoPayAmount", "length", 1)
+                }
+                onFocus={(e) =>
+                  this.setState({ insuranceCoPayAmountFocus: true })
+                }
+                onBlur={(e) =>
+                  this.setState({ insuranceCoPayAmountFocus: false })
+                }
+              />
+              {this.state.insuranceCoPayAmountState === "has-danger" ? (
+                <label className="error">This field is required.</label>
+              ) : null}
+            </InputGroup>
           </Col>
         </Row>
-      </>)
+      </>
+    );
   }
 }
 

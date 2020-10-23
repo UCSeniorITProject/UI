@@ -1,26 +1,39 @@
-import Axios from 'axios';
+import Axios from "axios";
 
-export async function createPharmacy(pharmacy){
-  const pharm = await Axios.post(`${process.env.REACT_APP_API_URL}/api/pharmacy-service/pharmacy`, {pharmacy});
+export async function createPharmacy(pharmacy) {
+  const pharm = await Axios.post(
+    `${process.env.REACT_APP_API_URL}/api/pharmacy-service/pharmacy`,
+    { pharmacy }
+  );
   return pharm.data.pharmacy;
 }
 
-export async function getPharmacyWithFilter(filter){
-  const pharmacies = await Axios.get(`${process.env.REACT_APP_API_URL}/api/pharmacy-service/pharmacy`, {params: filter});
+export async function getPharmacyWithFilter(filter) {
+  const pharmacies = await Axios.get(
+    `${process.env.REACT_APP_API_URL}/api/pharmacy-service/pharmacy`,
+    { params: filter }
+  );
   return pharmacies.data.pharmacies;
-};
+}
 
-export async function getPharmacyById(pharmacyId){
-  const pharmacy = await Axios.get(`${process.env.REACT_APP_API_URL}/api/pharmacy-service/pharmacy/${pharmacyId}`);
+export async function getPharmacyById(pharmacyId) {
+  const pharmacy = await Axios.get(
+    `${process.env.REACT_APP_API_URL}/api/pharmacy-service/pharmacy/${pharmacyId}`
+  );
   return pharmacy.data.pharmacy;
 }
 
-export async function deletePharmacy(pharmacyId){
-  await Axios.delete(`${process.env.REACT_APP_API_URL}/api/pharmacy-service/pharmacy/${pharmacyId}`);
+export async function deletePharmacy(pharmacyId) {
+  await Axios.delete(
+    `${process.env.REACT_APP_API_URL}/api/pharmacy-service/pharmacy/${pharmacyId}`
+  );
   return {};
 }
 
-export async function patchPharmacy(pharmacyId, pharmacyInfo){
-  const pharmacy = await Axios.patch(`${process.env.REACT_APP_API_URL}/api/pharmacy-service/pharmacy/${pharmacyId}`, {pharmacy: pharmacyInfo});
+export async function patchPharmacy(pharmacyId, pharmacyInfo) {
+  const pharmacy = await Axios.patch(
+    `${process.env.REACT_APP_API_URL}/api/pharmacy-service/pharmacy/${pharmacyId}`,
+    { pharmacy: pharmacyInfo }
+  );
   return pharmacy.data.pharmacy;
 }

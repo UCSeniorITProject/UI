@@ -1,11 +1,10 @@
- 
 /*eslint-disable*/
 import React from "react";
 import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
-import jwtDecode from 'jwt-decode';
+import jwtDecode from "jwt-decode";
 // reactstrap components
 import { Nav, Collapse } from "reactstrap";
 
@@ -18,14 +17,14 @@ class Sidebar extends React.Component {
   }
   // this creates the intial state of this component based on the collapse routes
   // that it gets through this.props.routes
-  getCollapseStates = routes => {
+  getCollapseStates = (routes) => {
     let initialState = {};
     routes.map((prop, key) => {
       if (prop.collapse) {
         initialState = {
           [prop.state]: this.getCollapseInitialState(prop.views),
           ...this.getCollapseStates(prop.views),
-          ...initialState
+          ...initialState,
         };
       }
       return null;
@@ -46,10 +45,18 @@ class Sidebar extends React.Component {
     return false;
   }
   // this function creates the links and collapses that appear in the sidebar (left menu)
-  createLinks = routes => {
+  createLinks = (routes) => {
     const { rtlActive } = this.props;
     return routes.map((prop, key) => {
-      if (prop.redirect || prop.isHidden === true || !anyMatchInArray(jwtDecode(localStorage.getItem('accessToken')).roles, prop.requiredRoles) && prop.requiredRoles.length !== 0) {
+      if (
+        prop.redirect ||
+        prop.isHidden === true ||
+        (!anyMatchInArray(
+          jwtDecode(localStorage.getItem("accessToken")).roles,
+          prop.requiredRoles
+        ) &&
+          prop.requiredRoles.length !== 0)
+      ) {
         return null;
       }
       if (prop.collapse) {
@@ -64,7 +71,7 @@ class Sidebar extends React.Component {
               href="#pablo"
               data-toggle="collapse"
               aria-expanded={this.state[prop.state]}
-              onClick={e => {
+              onClick={(e) => {
                 e.preventDefault();
                 this.setState(st);
               }}
@@ -97,7 +104,11 @@ class Sidebar extends React.Component {
       }
       return (
         <li className={this.activeRoute(prop.layout + prop.path)} key={key}>
-          <NavLink to={prop.layout + prop.path} activeClassName="" onClick={this.props.closeSidebar}>
+          <NavLink
+            to={prop.layout + prop.path}
+            activeClassName=""
+            onClick={this.props.closeSidebar}
+          >
             {prop.icon !== undefined ? (
               <>
                 <i className={prop.icon} />
@@ -119,7 +130,7 @@ class Sidebar extends React.Component {
     });
   };
   // verifies if routeName is the one active (in browser input)
-  activeRoute = routeName => {
+  activeRoute = (routeName) => {
     return this.props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
   };
   componentDidMount() {
@@ -163,16 +174,16 @@ Sidebar.propTypes = {
     PropTypes.shape({
       innerLink: PropTypes.string.isRequired,
       imgSrc: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired
+      text: PropTypes.string.isRequired,
     }),
     PropTypes.shape({
       outterLink: PropTypes.string.isRequired,
       imgSrc: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired
-    })
+      text: PropTypes.string.isRequired,
+    }),
   ]),
   // this is used on responsive to close the sidebar on route navigation
-  closeSidebar: PropTypes.func
+  closeSidebar: PropTypes.func,
 };
 
 export default Sidebar;
@@ -188,17 +199,17 @@ var anyMatchInArray = function (target, toMatch) {
   // Put all values in the `target` array into a map, where
   //  the keys are the values from the array
   for (i = 0, j = target.length; i < j; i++) {
-      cur = target[i];
-      targetMap[cur] = true;
+    cur = target[i];
+    targetMap[cur] = true;
   }
 
   // Loop over all items in the `toMatch` array and see if any of
   //  their values are in the map from before
-  for (i = 0, j = toMatch.length; !found && (i < j); i++) {
-      cur = toMatch[i];
-      found = !!targetMap[cur];
-      // If found, `targetMap[cur]` will return true, otherwise it
-      //  will return `undefined`...that's what the `!!` is for
+  for (i = 0, j = toMatch.length; !found && i < j; i++) {
+    cur = toMatch[i];
+    found = !!targetMap[cur];
+    // If found, `targetMap[cur]` will return true, otherwise it
+    //  will return `undefined`...that's what the `!!` is for
   }
 
   return found;

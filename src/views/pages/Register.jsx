@@ -1,7 +1,6 @@
- 
 import React from "react";
-import {getUserWithFilter} from '../../services/User';
-import { withRouter } from 'react-router';
+import { getUserWithFilter } from "../../services/User";
+import { withRouter } from "react-router";
 // reactstrap components
 import {
   Button,
@@ -20,23 +19,23 @@ import {
   InputGroup,
   Container,
   Row,
-  Col
+  Col,
 } from "reactstrap";
 import ImageUpload from "components/CustomUpload/ImageUpload.jsx";
 import NotificationAlert from "react-notification-alert";
 import Axios from "axios";
 
 class Register extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      username: '',
-      password: '',
-      phoneNumber: '',
-      profilePicture: '',
-      email: '',
-      firstName: '',
-      lastName: '',
+      username: "",
+      password: "",
+      phoneNumber: "",
+      profilePicture: "",
+      email: "",
+      firstName: "",
+      lastName: "",
       tos: false,
       registerEmailState: null,
       registerPhoneNumberState: null,
@@ -54,76 +53,79 @@ class Register extends React.Component {
     document.body.classList.toggle("register-page");
   }
 
-  async handleRegister(){
+  async handleRegister() {
     try {
-      await Axios.post(`${process.env.REACT_APP_API_URL}/api/security-management/user`, {
-        user: {
-          username: this.state.username,
-          password: this.state.password,
-          phoneNumber: this.state.phoneNumber,
-          profilePicture: this.state.profilePicture,
-          email: this.state.email,
-          firstName: this.state.firstName,
-          lastName: this.state.lastName,
-          active:'Y',
+      await Axios.post(
+        `${process.env.REACT_APP_API_URL}/api/security-management/user`,
+        {
+          user: {
+            username: this.state.username,
+            password: this.state.password,
+            phoneNumber: this.state.phoneNumber,
+            profilePicture: this.state.profilePicture,
+            email: this.state.email,
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            active: "Y",
+          },
         }
-      });
-      this.props.history.push('/auth/login');
-    } catch (err) {
-    }
+      );
+      this.props.history.push("/auth/login");
+    } catch (err) {}
   }
 
-  isFormValid(){
-    return Object.entries(this.state).filter(x=> x[0].includes('State') && (x[1] === null || x[1] === 'has-danger')).length === 0;
+  isFormValid() {
+    return (
+      Object.entries(this.state).filter(
+        (x) =>
+          x[0].includes("State") && (x[1] === null || x[1] === "has-danger")
+      ).length === 0
+    );
   }
 
-  async isFieldUnique(e){
+  async isFieldUnique(e) {
     try {
-      const user = await getUserWithFilter({[e.target.name]: e.target.value});
+      const user = await getUserWithFilter({ [e.target.name]: e.target.value });
       return user.users.length === 0;
     } catch (err) {
       var options = {};
       options = {
-        place: 'tr',
+        place: "tr",
         message: (
           <div>
-            <div>
-              An internal server error occured. Please try again later.
-            </div>
+            <div>An internal server error occured. Please try again later.</div>
           </div>
         ),
-        type: 'warning',
+        type: "warning",
         icon: "tim-icons icon-bell-55",
-        autoDismiss: 7
+        autoDismiss: 7,
       };
-      if(this.refs !== undefined){
+      if (this.refs !== undefined) {
         this.refs.notificationAlert.notificationAlert(options);
       }
     }
   }
 
-  async handleOnBlur(event, stateName){
+  async handleOnBlur(event, stateName) {
     event.persist();
     const fieldIsUnique = await this.isFieldUnique(event);
-    if(this.state[`${stateName}State`] === 'has-danger'){
+    if (this.state[`${stateName}State`] === "has-danger") {
       return;
     }
-    if(!fieldIsUnique){
+    if (!fieldIsUnique) {
       var options = {};
       options = {
-        place: 'tr',
+        place: "tr",
         message: (
           <div>
-            <div>
-              A user is already registered with {event.target.value}!
-            </div>
+            <div>A user is already registered with {event.target.value}!</div>
           </div>
         ),
-        type: 'warning',
+        type: "warning",
         icon: "tim-icons icon-bell-55",
-        autoDismiss: 7
+        autoDismiss: 7,
       };
-      if(this.refs){
+      if (this.refs) {
         this.refs.notificationAlert.notificationAlert(options);
       }
       this.setState({ [stateName + "State"]: "has-danger" });
@@ -132,59 +134,86 @@ class Register extends React.Component {
     }
   }
 
-  setIsFormValid(){
-    this.setState({isFormValid: this.isFormValid()});
+  setIsFormValid() {
+    this.setState({ isFormValid: this.isFormValid() });
   }
 
-  alertUserOfPasswordRequirements(){
+  alertUserOfPasswordRequirements() {
     var options = {};
     options = {
-      place: 'tr',
+      place: "tr",
       message: (
         <div>
           <div>
-            Your password must be 6 characters or more and include one capital later.
+            Your password must be 6 characters or more and include one capital
+            later.
           </div>
         </div>
       ),
-      type: 'info',
+      type: "info",
       icon: "tim-icons icon-bell-55",
-      autoDismiss: 7
+      autoDismiss: 7,
     };
     this.refs.notificationAlert.notificationAlert(options);
   }
 
-  handleChange(event, stateName, type, stateNameEqualTo, maxValue){
-    this.setState({ [event.target.name]: event.target.value});
+  handleChange(event, stateName, type, stateNameEqualTo, maxValue) {
+    this.setState({ [event.target.name]: event.target.value });
     switch (type) {
       case "email":
-        const isValidEmail = this.verifyEmail(event.target.value)
+        const isValidEmail = this.verifyEmail(event.target.value);
         if (isValidEmail) {
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+          this.setState(
+            { [stateName + "State"]: "has-success" },
+            this.setIsFormValid.bind(this)
+          );
         } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+          this.setState(
+            { [stateName + "State"]: "has-danger" },
+            this.setIsFormValid.bind(this)
+          );
         }
         break;
       case "password":
-        if (this.verifyLength(event.target.value, 6)
-         && event.target.value.toLowerCase() !== event.target.value) {
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+        if (
+          this.verifyLength(event.target.value, 6) &&
+          event.target.value.toLowerCase() !== event.target.value
+        ) {
+          this.setState(
+            { [stateName + "State"]: "has-success" },
+            this.setIsFormValid.bind(this)
+          );
         } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+          this.setState(
+            { [stateName + "State"]: "has-danger" },
+            this.setIsFormValid.bind(this)
+          );
         }
         break;
       case "tel":
-        if(this.verifyPhone(event.target.value)){
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+        if (this.verifyPhone(event.target.value)) {
+          this.setState(
+            { [stateName + "State"]: "has-success" },
+            this.setIsFormValid.bind(this)
+          );
         } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+          this.setState(
+            { [stateName + "State"]: "has-danger" },
+            this.setIsFormValid.bind(this)
+          );
         }
         break;
-      case "length": 
-        if(this.verifyLength(event.target.value, 3)){
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+      case "length":
+        if (this.verifyLength(event.target.value, 3)) {
+          this.setState(
+            { [stateName + "State"]: "has-success" },
+            this.setIsFormValid.bind(this)
+          );
         } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+          this.setState(
+            { [stateName + "State"]: "has-danger" },
+            this.setIsFormValid.bind(this)
+          );
         }
         break;
       default:
@@ -192,19 +221,19 @@ class Register extends React.Component {
     }
   }
 
-  isValidated(){
+  isValidated() {
     return this.isFormValid();
   }
 
-  verifyPhone = value => {
+  verifyPhone = (value) => {
     const phoneRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
-    if(phoneRegex.test(value)){
+    if (phoneRegex.test(value)) {
       return true;
     }
     return false;
   };
   // function that returns true if value is email, false otherwise
-  verifyEmail = value => {
+  verifyEmail = (value) => {
     const emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (emailRex.test(value)) {
       return true;
@@ -219,9 +248,9 @@ class Register extends React.Component {
     return false;
   };
 
-  handleImageChange = imageUrl => {
-    this.setState({profilePicture: imageUrl});
-  }
+  handleImageChange = (imageUrl) => {
+    this.setState({ profilePicture: imageUrl });
+  };
 
   render() {
     return (
@@ -240,7 +269,8 @@ class Register extends React.Component {
                   <div className="description">
                     <h3 className="info-title">Compliance</h3>
                     <p className="description">
-                      We are increasing the responsibility of organizations to prescribe responsibly.
+                      We are increasing the responsibility of organizations to
+                      prescribe responsibly.
                     </p>
                   </div>
                 </div>
@@ -251,7 +281,8 @@ class Register extends React.Component {
                   <div className="description">
                     <h3 className="info-title">24/7 Accessibility</h3>
                     <p className="description">
-                      No matter where you are, or when you are using it, SafeMeds is available.
+                      No matter where you are, or when you are using it,
+                      SafeMeds is available.
                     </p>
                   </div>
                 </div>
@@ -262,7 +293,8 @@ class Register extends React.Component {
                   <div className="description">
                     <h3 className="info-title">Smart Trend Analyitics </h3>
                     <p className="description">
-                      Realize negative trends within your organization before it is too late.
+                      Realize negative trends within your organization before it
+                      is too late.
                     </p>
                   </div>
                 </div>
@@ -278,68 +310,136 @@ class Register extends React.Component {
                   </CardHeader>
                   <CardBody>
                     <Form className="form">
-                    <Col sm="9" md={{ size: 6, offset: 4 }}>
-                      <ImageUpload
-                        avatar
-                        onChange={this.handleImageChange.bind(this)}
-                        addBtnColor="default"
-                        changeBtnColor="default"
-                        className="pull-right"
-                      />
-                    </Col>
-                    <InputGroup>
+                      <Col sm="9" md={{ size: 6, offset: 4 }}>
+                        <ImageUpload
+                          avatar
+                          onChange={this.handleImageChange.bind(this)}
+                          addBtnColor="default"
+                          changeBtnColor="default"
+                          className="pull-right"
+                        />
+                      </Col>
+                      <InputGroup>
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className={`tim-icons icon-single-02 ${this.state.registerUsernameState}`} />
+                            <i
+                              className={`tim-icons icon-single-02 ${this.state.registerUsernameState}`}
+                            />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Username" name="username" type="text" onChange={e => this.handleChange(e, 'registerUsername', 'length')} onBlur={e =>this.handleOnBlur(e, 'registerUsername')}/>
+                        <Input
+                          placeholder="Username"
+                          name="username"
+                          type="text"
+                          onChange={(e) =>
+                            this.handleChange(e, "registerUsername", "length")
+                          }
+                          onBlur={(e) =>
+                            this.handleOnBlur(e, "registerUsername")
+                          }
+                        />
                       </InputGroup>
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className={`tim-icons icon-single-02 ${this.state.registerFirstNameState}`} />
+                            <i
+                              className={`tim-icons icon-single-02 ${this.state.registerFirstNameState}`}
+                            />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="First Name" name="firstName" type="text" onChange={e => this.handleChange(e, 'registerFirstName', 'length')}/>
+                        <Input
+                          placeholder="First Name"
+                          name="firstName"
+                          type="text"
+                          onChange={(e) =>
+                            this.handleChange(e, "registerFirstName", "length")
+                          }
+                        />
                       </InputGroup>
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className={`tim-icons icon-single-02 ${this.state.registerLastNameState}`} />
+                            <i
+                              className={`tim-icons icon-single-02 ${this.state.registerLastNameState}`}
+                            />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Last name" name="lastName" type="text" onChange={e => this.handleChange(e, 'registerLastName', 'length')}/>
+                        <Input
+                          placeholder="Last name"
+                          name="lastName"
+                          type="text"
+                          onChange={(e) =>
+                            this.handleChange(e, "registerLastName", "length")
+                          }
+                        />
                       </InputGroup>
                       <InputGroup className={`has-label`}>
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className={`tim-icons icon-email-85 ${this.state.registerEmailState}`} />
+                            <i
+                              className={`tim-icons icon-email-85 ${this.state.registerEmailState}`}
+                            />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Email" name="email" type="email" onChange={e => this.handleChange(e, "registerEmail", "email")} onBlur={e =>this.handleOnBlur(e, 'registerEmail')}/>
+                        <Input
+                          placeholder="Email"
+                          name="email"
+                          type="email"
+                          onChange={(e) =>
+                            this.handleChange(e, "registerEmail", "email")
+                          }
+                          onBlur={(e) => this.handleOnBlur(e, "registerEmail")}
+                        />
                       </InputGroup>
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className={`tim-icons icon-lock-circle ${this.state.registerPasswordState}`} />
+                            <i
+                              className={`tim-icons icon-lock-circle ${this.state.registerPasswordState}`}
+                            />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input onClick={e => this.alertUserOfPasswordRequirements()}placeholder="Password" name="password" type="password" onChange={e => this.handleChange(e, "registerPassword", "password")}/>
+                        <Input
+                          onClick={(e) =>
+                            this.alertUserOfPasswordRequirements()
+                          }
+                          placeholder="Password"
+                          name="password"
+                          type="password"
+                          onChange={(e) =>
+                            this.handleChange(e, "registerPassword", "password")
+                          }
+                        />
                       </InputGroup>
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className={`tim-icons icon-chat-33 ${this.state.registerPhoneNumberState}`} />
+                            <i
+                              className={`tim-icons icon-chat-33 ${this.state.registerPhoneNumberState}`}
+                            />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Phone Number" name="phoneNumber" type="text" onChange={e => this.handleChange(e, "registerPhoneNumber", "tel")} onBlur={e =>this.handleOnBlur(e, 'registerPhoneNumber')}/>
+                        <Input
+                          placeholder="Phone Number"
+                          name="phoneNumber"
+                          type="text"
+                          onChange={(e) =>
+                            this.handleChange(e, "registerPhoneNumber", "tel")
+                          }
+                          onBlur={(e) =>
+                            this.handleOnBlur(e, "registerPhoneNumber")
+                          }
+                        />
                       </InputGroup>
                       <FormGroup check className="text-left">
                         <Label check>
-                        <Input type="checkbox" name="tos" onClick={e => this.setState({tos: true})}/>
+                          <Input
+                            type="checkbox"
+                            name="tos"
+                            onClick={(e) => this.setState({ tos: true })}
+                          />
                           <span className="form-check-sign" />I agree to the{" "}
-                            terms and conditions.
+                          terms and conditions.
                         </Label>
                       </FormGroup>
                     </Form>
@@ -349,7 +449,7 @@ class Register extends React.Component {
                       className="btn-round"
                       color="primary"
                       href="#pablo"
-                      onClick={e => this.handleRegister()}
+                      onClick={(e) => this.handleRegister()}
                       disabled={!this.state.isFormValid}
                       size="lg"
                     >

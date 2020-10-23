@@ -1,4 +1,3 @@
- 
 import React from "react";
 
 // reactstrap components
@@ -21,7 +20,7 @@ import {
   Table,
   Row,
   Col,
-  UncontrolledTooltip
+  UncontrolledTooltip,
 } from "reactstrap";
 
 class ExtendedTables extends React.Component {
@@ -32,12 +31,12 @@ class ExtendedTables extends React.Component {
           <Row>
             <ol className="breadcrumb bg-transparent ml-3">
               <BreadcrumbItem>
-                <a href="#pablo" onClick={e => e.preventDefault()}>
+                <a href="#pablo" onClick={(e) => e.preventDefault()}>
                   Home
                 </a>
               </BreadcrumbItem>
               <BreadcrumbItem>
-                <a href="#pablo" onClick={e => e.preventDefault()}>
+                <a href="#pablo" onClick={(e) => e.preventDefault()}>
                   {" "}
                   Library
                 </a>
@@ -61,26 +60,26 @@ class ExtendedTables extends React.Component {
                       <DropdownMenu right>
                         <DropdownItem
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           Action
                         </DropdownItem>
                         <DropdownItem
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           Another action
                         </DropdownItem>
                         <DropdownItem
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           Something else here
                         </DropdownItem>
                         <DropdownItem
                           className="text-danger"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           Remove Data
                         </DropdownItem>
@@ -388,26 +387,26 @@ class ExtendedTables extends React.Component {
                       <DropdownMenu right>
                         <DropdownItem
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           Action
                         </DropdownItem>
                         <DropdownItem
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           Another action
                         </DropdownItem>
                         <DropdownItem
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           Something else here
                         </DropdownItem>
                         <DropdownItem
                           className="text-danger"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           Remove Data
                         </DropdownItem>
@@ -606,7 +605,7 @@ class ExtendedTables extends React.Component {
                             </div>
                           </td>
                           <td className="td-name">
-                            <a href="pablo" onClick={e => e.preventDefault()}>
+                            <a href="pablo" onClick={(e) => e.preventDefault()}>
                               Suede Biker Jacket
                             </a>
                             <br />
@@ -667,7 +666,7 @@ class ExtendedTables extends React.Component {
                             </div>
                           </td>
                           <td className="td-name">
-                            <a href="pablo" onClick={e => e.preventDefault()}>
+                            <a href="pablo" onClick={(e) => e.preventDefault()}>
                               Jersey T-Shirt
                             </a>
                             <br />
@@ -728,7 +727,7 @@ class ExtendedTables extends React.Component {
                             </div>
                           </td>
                           <td className="td-name">
-                            <a href="pablo" onClick={e => e.preventDefault()}>
+                            <a href="pablo" onClick={(e) => e.preventDefault()}>
                               Slim-Fit Swim Short
                             </a>
                             <br />

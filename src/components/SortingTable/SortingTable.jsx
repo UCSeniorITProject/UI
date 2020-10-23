@@ -1,4 +1,3 @@
- 
 import React from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
@@ -13,11 +12,11 @@ class SortingTable extends React.Component {
       bodyData: props.tbody,
       column: {
         name: -1,
-        order: ""
-      }
+        order: "",
+      },
     };
   }
-  sortTable = key => {
+  sortTable = (key) => {
     let { bodyData, column } = this.state;
     let order = "";
     if (
@@ -46,8 +45,8 @@ class SortingTable extends React.Component {
       bodyData: bodyData,
       column: {
         name: key,
-        order: order
-      }
+        order: order,
+      },
     });
   };
   render() {
@@ -63,14 +62,14 @@ class SortingTable extends React.Component {
                     "header",
                     {
                       headerSortDown:
-                        key === column.name && column.order === "asc"
+                        key === column.name && column.order === "asc",
                     },
                     {
                       headerSortUp:
-                        key === column.name && column.order === "desc"
+                        key === column.name && column.order === "desc",
                     },
                     {
-                      [prop.className]: prop.className !== undefined
+                      [prop.className]: prop.className !== undefined,
                     }
                   )}
                   key={key}
@@ -87,7 +86,7 @@ class SortingTable extends React.Component {
             return (
               <tr
                 className={classnames({
-                  [prop.className]: prop.className !== undefined
+                  [prop.className]: prop.className !== undefined,
                 })}
                 key={key}
               >
@@ -95,7 +94,7 @@ class SortingTable extends React.Component {
                   return (
                     <td
                       className={classnames({
-                        [data.className]: data.className !== undefined
+                        [data.className]: data.className !== undefined,
                       })}
                       key={k}
                     >
@@ -116,7 +115,7 @@ SortingTable.propTypes = {
   thead: PropTypes.arrayOf(
     PropTypes.shape({
       className: PropTypes.string,
-      text: PropTypes.string.isRequired
+      text: PropTypes.string.isRequired,
     })
   ).isRequired,
   tbody: PropTypes.arrayOf(
@@ -126,11 +125,11 @@ SortingTable.propTypes = {
         PropTypes.shape({
           className: PropTypes.string,
           text: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-            .isRequired
+            .isRequired,
         })
-      ).isRequired
+      ).isRequired,
     })
-  ).isRequired
+  ).isRequired,
 };
 
 export default SortingTable;

@@ -1,4 +1,3 @@
-
 import React from "react";
 // used for making the prop types of this component
 import PropTypes from "prop-types";
@@ -13,15 +12,15 @@ class ImageUpload extends React.Component {
     super(props);
     this.state = {
       file: this.props.file ? this.props.file : null,
-      imagePreviewUrl: this.props.avatar ? defaultAvatar : defaultImage
+      imagePreviewUrl: this.props.avatar ? defaultAvatar : defaultImage,
     };
     this.handleImageChange = this.handleImageChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
   }
-  setImage(image){
-    this.setState({file: image, imagePreviewUrl: image});
+  setImage(image) {
+    this.setState({ file: image, imagePreviewUrl: image });
   }
   handleImageChange(e) {
     e.preventDefault();
@@ -30,7 +29,7 @@ class ImageUpload extends React.Component {
     reader.onloadend = () => {
       this.setState({
         file: file,
-        imagePreviewUrl: reader.result
+        imagePreviewUrl: reader.result,
       });
       this.props.onChange(reader.result);
     };
@@ -48,9 +47,9 @@ class ImageUpload extends React.Component {
   handleRemove() {
     this.setState({
       file: null,
-      imagePreviewUrl: this.props.avatar ? defaultAvatar : defaultImage
+      imagePreviewUrl: this.props.avatar ? defaultAvatar : defaultImage,
     });
-    this.props.onChange('');
+    this.props.onChange("");
     this.refs.fileInput.value = null;
   }
   render() {
@@ -101,7 +100,7 @@ ImageUpload.defaultProps = {
   addBtnClasses: "btn-round",
   addBtnColor: "primary",
   changeBtnClasses: "btn-round",
-  changeBtnColor: "primary"
+  changeBtnColor: "primary",
 };
 
 ImageUpload.propTypes = {
@@ -115,7 +114,7 @@ ImageUpload.propTypes = {
     "info",
     "warning",
     "danger",
-    "link"
+    "link",
   ]),
   addBtnClasses: PropTypes.string,
   addBtnColor: PropTypes.oneOf([
@@ -126,7 +125,7 @@ ImageUpload.propTypes = {
     "info",
     "warning",
     "danger",
-    "link"
+    "link",
   ]),
   changeBtnClasses: PropTypes.string,
   changeBtnColor: PropTypes.oneOf([
@@ -137,8 +136,8 @@ ImageUpload.propTypes = {
     "info",
     "warning",
     "danger",
-    "link"
-  ])
+    "link",
+  ]),
 };
 
 export default ImageUpload;

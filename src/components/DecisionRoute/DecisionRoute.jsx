@@ -1,15 +1,21 @@
-import React from 'react';
+import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
-function PrivateRoute ({component: Component, ...rest}) {
+function PrivateRoute({ component: Component, ...rest }) {
   return (
     <Route
       {...rest}
-      render={(props) => localStorage.getItem("accessToken") !== undefined
-        ? <Component {...props} />
-        : <Redirect to={{pathname: '/auth/login', state: {from: props.location}}} />}
+      render={(props) =>
+        localStorage.getItem("accessToken") !== undefined ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{ pathname: "/auth/login", state: { from: props.location } }}
+          />
+        )
+      }
     />
-  )
+  );
 }
 
 export default PrivateRoute;

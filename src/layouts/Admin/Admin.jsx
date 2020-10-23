@@ -1,4 +1,3 @@
- 
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 // javascript plugin used to create scrollbars on windows
@@ -24,7 +23,7 @@ class Admin extends React.Component {
       activeColor: "blue",
       sidebarMini: true,
       opacity: 0,
-      sidebarOpened: false
+      sidebarOpened: false,
     };
   }
   componentDidMount() {
@@ -75,7 +74,7 @@ class Admin extends React.Component {
       this.setState({ opacity: 0 });
     }
   };
-  getRoutes = routes => {
+  getRoutes = (routes) => {
     return routes.map((prop, key) => {
       if (prop.collapse) {
         return this.getRoutes(prop.views);
@@ -93,7 +92,7 @@ class Admin extends React.Component {
       }
     });
   };
-  getActiveRoute = routes => {
+  getActiveRoute = (routes) => {
     let activeRoute = "";
     for (let i = 0; i < routes.length; i++) {
       if (routes[i].collapse) {
@@ -113,7 +112,7 @@ class Admin extends React.Component {
     }
     return activeRoute;
   };
-  handleActiveClick = color => {
+  handleActiveClick = (color) => {
     this.setState({ activeColor: color });
   };
   handleMiniClick = () => {
@@ -126,13 +125,13 @@ class Admin extends React.Component {
   };
   toggleSidebar = () => {
     this.setState({
-      sidebarOpened: !this.state.sidebarOpened
+      sidebarOpened: !this.state.sidebarOpened,
     });
     document.documentElement.classList.toggle("nav-open");
   };
   closeSidebar = () => {
     this.setState({
-      sidebarOpened: false
+      sidebarOpened: false,
     });
     document.documentElement.classList.remove("nav-open");
   };
@@ -161,7 +160,7 @@ class Admin extends React.Component {
           logo={{
             outterLink: "",
             text: "",
-            imgSrc: logo
+            imgSrc: logo,
           }}
           closeSidebar={this.closeSidebar}
         />
@@ -178,11 +177,13 @@ class Admin extends React.Component {
             toggleSidebar={this.toggleSidebar}
           />
           <Switch>{this.getRoutes(routes)}</Switch>
-          {// we don't want the Footer to be rendered on full screen maps page
-          this.props.location.pathname.indexOf("full-screen-map") !==
-          -1 ? null : (
-            <Footer fluid />
-          )}
+          {
+            // we don't want the Footer to be rendered on full screen maps page
+            this.props.location.pathname.indexOf("full-screen-map") !==
+            -1 ? null : (
+              <Footer fluid />
+            )
+          }
         </div>
       </div>
     );

@@ -1,5 +1,4 @@
- 
-import { withRouter } from 'react-router';
+import { withRouter } from "react-router";
 import NotificationAlert from "react-notification-alert";
 import React from "react";
 import Axios from "axios";
@@ -17,63 +16,63 @@ import {
   InputGroupText,
   InputGroup,
   Container,
-  Col
+  Col,
 } from "reactstrap";
 
 class Login extends React.Component {
-	constructor(props){
-		super(props);
-		this.state = {
-      username: '',
-      password: '',
-		};
-	}
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: "",
+      password: "",
+    };
+  }
   componentDidMount() {
-
-		document.addEventListener('keyup', (e) => {
-			if(e.keyCode === 13){
-				this.handleSubmit();
-			}
-		});
+    document.addEventListener("keyup", (e) => {
+      if (e.keyCode === 13) {
+        this.handleSubmit();
+      }
+    });
     document.body.classList.toggle("login-page");
-	}
-	
+  }
+
   componentWillUnmount() {
     document.body.classList.toggle("login-page");
-	}
-	
-  handleChange(e){
-		this.setState({ [e.target.name]: e.target.value});
-	}
+  }
 
-  async handleSubmit(){
+  handleChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  async handleSubmit() {
     try {
-      const tokens = await Axios.post(`${process.env.REACT_APP_API_URL}/api/security-management/login`, {
-        authDetails: {
-          username: this.state.username,
-          password: this.state.password,
+      const tokens = await Axios.post(
+        `${process.env.REACT_APP_API_URL}/api/security-management/login`,
+        {
+          authDetails: {
+            username: this.state.username,
+            password: this.state.password,
+          },
         }
-      });
+      );
 
       localStorage.setItem("accessToken", tokens.data.accessToken);
       localStorage.setItem("refreshToken", tokens.data.refreshToken);
-      this.props.history.push('/admin/user-profile');
+      this.props.history.push("/admin/user-profile");
     } catch (err) {
       var options = {};
       options = {
-        place: 'tr',
+        place: "tr",
         message: (
           <div>
-            <div>
-              Invalid username or password,
-            </div>
+            <div>Invalid username or password,</div>
           </div>
         ),
-        type: 'danger',
+        type: "danger",
         icon: "tim-icons icon-bell-55",
-        autoDismiss: 7
+        autoDismiss: 7,
       };
-      if(this.refs){
+      if (this.refs) {
         this.refs.notificationAlert.notificationAlert(options);
       }
     }
@@ -103,7 +102,12 @@ class Login extends React.Component {
                           <i className="tim-icons icon-email-85" />
                         </InputGroupText>
                       </InputGroupAddon>
-                      <Input placeholder="Username" name="username" type="text" onChange={this.handleChange.bind(this)}/>
+                      <Input
+                        placeholder="Username"
+                        name="username"
+                        type="text"
+                        onChange={this.handleChange.bind(this)}
+                      />
                     </InputGroup>
                     <InputGroup>
                       <InputGroupAddon addonType="prepend">
@@ -111,7 +115,12 @@ class Login extends React.Component {
                           <i className="tim-icons icon-lock-circle" />
                         </InputGroupText>
                       </InputGroupAddon>
-                      <Input placeholder="Password" name="password" type="password" onChange={this.handleChange.bind(this)}/>
+                      <Input
+                        placeholder="Password"
+                        name="password"
+                        type="password"
+                        onChange={this.handleChange.bind(this)}
+                      />
                     </InputGroup>
                   </CardBody>
                   <CardFooter>
@@ -127,10 +136,7 @@ class Login extends React.Component {
                     </Button>
                     <div className="pull-left">
                       <h6>
-                        <a
-                          className="link footer-link"
-                          href="/auth/register"
-                        >
+                        <a className="link footer-link" href="/auth/register">
                           Create Account
                         </a>
                       </h6>

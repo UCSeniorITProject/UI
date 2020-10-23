@@ -1,5 +1,5 @@
-import React from 'react';
-import { withRouter } from 'react-router';
+import React from "react";
+import { withRouter } from "react-router";
 import {
   Button,
   Card,
@@ -15,18 +15,18 @@ import {
   Col,
 } from "reactstrap";
 import NotificationAlert from "react-notification-alert";
-import {createPharmacy, getPharmacyWithFilter} from '../../services/Pharmacy';
+import { createPharmacy, getPharmacyWithFilter } from "../../services/Pharmacy";
 import classnames from "classnames";
 class AddPharmacy extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      pharmacyName: '',
-      zipCode: '',
-      address: '',
-      city: '',
-      state: '',
-      active: 'Y',
+      pharmacyName: "",
+      zipCode: "",
+      address: "",
+      city: "",
+      state: "",
+      active: "Y",
       pharmacyNameState: null,
       zipCodeState: null,
       addressState: null,
@@ -35,14 +35,20 @@ class AddPharmacy extends React.Component {
     };
   }
 
-  setIsFormValid(){
-    this.setState({isFormValid: this.isFormValid()});
+  setIsFormValid() {
+    this.setState({ isFormValid: this.isFormValid() });
   }
 
-
-  isFormValid(){
-		console.log(Object.entries(this.state))
-		return Object.entries(this.state).filter(x => {return x[0].includes('State') && (x[1] === null || x[1].includes('has-danger'))}).length === 0;
+  isFormValid() {
+    console.log(Object.entries(this.state));
+    return (
+      Object.entries(this.state).filter((x) => {
+        return (
+          x[0].includes("State") &&
+          (x[1] === null || x[1].includes("has-danger"))
+        );
+      }).length === 0
+    );
   }
 
   // function that verifies if a string has a given length or not
@@ -53,72 +59,92 @@ class AddPharmacy extends React.Component {
     return false;
   };
 
-  handleChange(event, stateName, type, stateNameEqualTo, maxValue){
-    this.setState({ [event.target.name]: event.target.value});
+  handleChange(event, stateName, type, stateNameEqualTo, maxValue) {
+    this.setState({ [event.target.name]: event.target.value });
     switch (type) {
-      case "length": 
-        if(this.verifyLength(event.target.value, 1)){
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+      case "length":
+        if (this.verifyLength(event.target.value, 1)) {
+          this.setState(
+            { [stateName + "State"]: "has-success" },
+            this.setIsFormValid.bind(this)
+          );
         } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+          this.setState(
+            { [stateName + "State"]: "has-danger" },
+            this.setIsFormValid.bind(this)
+          );
         }
         break;
       case "password":
-        if (this.verifyLength(event.target.value, 6)
-          && event.target.value.toLowerCase() !== event.target.value) {
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+        if (
+          this.verifyLength(event.target.value, 6) &&
+          event.target.value.toLowerCase() !== event.target.value
+        ) {
+          this.setState(
+            { [stateName + "State"]: "has-success" },
+            this.setIsFormValid.bind(this)
+          );
         } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+          this.setState(
+            { [stateName + "State"]: "has-danger" },
+            this.setIsFormValid.bind(this)
+          );
         }
         break;
       case "tel":
-        if(this.verifyPhone(event.target.value)){
-          this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
+        if (this.verifyPhone(event.target.value)) {
+          this.setState(
+            { [stateName + "State"]: "has-success" },
+            this.setIsFormValid.bind(this)
+          );
         } else {
-          this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+          this.setState(
+            { [stateName + "State"]: "has-danger" },
+            this.setIsFormValid.bind(this)
+          );
         }
         break;
       default:
         break;
     }
-	}
-	
-	async isFieldUnique(e){
+  }
+
+  async isFieldUnique(e) {
     try {
-			const pharmacies = await getPharmacyWithFilter({[e.target.name]: e.target.value});
-			return pharmacies.length === 0;
+      const pharmacies = await getPharmacyWithFilter({
+        [e.target.name]: e.target.value,
+      });
+      return pharmacies.length === 0;
     } catch (err) {
-			console.log(err)
+      console.log(err);
       var options = {};
       options = {
-        place: 'tr',
+        place: "tr",
         message: (
           <div>
-            <div>
-              An internal server error occured. Please try again later.
-            </div>
+            <div>An internal server error occured. Please try again later.</div>
           </div>
         ),
-        type: 'warning',
+        type: "warning",
         icon: "tim-icons icon-bell-55",
-        autoDismiss: 7
+        autoDismiss: 7,
       };
-      if(this.refs !== undefined){
+      if (this.refs !== undefined) {
         this.refs.notificationAlert.notificationAlert(options);
       }
     }
-	}
-	
-	async handleOnBlur(event, stateName){
+  }
+
+  async handleOnBlur(event, stateName) {
     event.persist();
     const fieldIsUnique = await this.isFieldUnique(event);
-    if(this.state[`${stateName}State`] === 'has-danger'){
+    if (this.state[`${stateName}State`] === "has-danger") {
       return;
     }
-    if(!fieldIsUnique){
+    if (!fieldIsUnique) {
       var options = {};
       options = {
-        place: 'tr',
+        place: "tr",
         message: (
           <div>
             <div>
@@ -126,20 +152,26 @@ class AddPharmacy extends React.Component {
             </div>
           </div>
         ),
-        type: 'warning',
+        type: "warning",
         icon: "tim-icons icon-bell-55",
-        autoDismiss: 7
+        autoDismiss: 7,
       };
-      if(this.refs){
+      if (this.refs) {
         this.refs.notificationAlert.notificationAlert(options);
       }
-      this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
+      this.setState(
+        { [stateName + "State"]: "has-danger" },
+        this.setIsFormValid.bind(this)
+      );
     } else {
-      this.setState({ [stateName + "State"]: "has-success"}, this.setIsFormValid.bind(this));
+      this.setState(
+        { [stateName + "State"]: "has-success" },
+        this.setIsFormValid.bind(this)
+      );
     }
   }
 
-  async createPharmacy(){
+  async createPharmacy() {
     const pharmacyToCreate = {
       name: this.state.pharmacyName,
       state: this.state.state,
@@ -149,71 +181,77 @@ class AddPharmacy extends React.Component {
       active: this.state.active,
     };
     const pharmacy = await createPharmacy(pharmacyToCreate);
-    this.props.history.push(`/admin/pharmacy/profile/${pharmacy.pharmacyId}`)
+    this.props.history.push(`/admin/pharmacy/profile/${pharmacy.pharmacyId}`);
   }
 
-  handleImageChange = imageUrl => {
-    this.setState({profilePicture: imageUrl});
-  }
+  handleImageChange = (imageUrl) => {
+    this.setState({ profilePicture: imageUrl });
+  };
 
-  verifyPhone = value => {
+  verifyPhone = (value) => {
     const phoneRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
-    if(phoneRegex.test(value)){
+    if (phoneRegex.test(value)) {
       return true;
     }
     return false;
   };
 
-    // function that returns true if value is email, false otherwise
-    verifyEmail = value => {
-      var emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      if (emailRex.test(value) && value.length !== 0) {
-        return true;
-      }
-      return false;
-    };
-    // function that verifies if a string has a given length or not
-    verifyLength = (value, length) => {
-      if (value.length >= length) {
-        return true;
-      }
-      return false;
-    };
-    verifyPhone = value => {
-      const phoneRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
-      if(phoneRegex.test(value)){
-        return true;
-      }
-      return false;
-    };
-    // function that verifies if value contains only numbers
-    verifyNumber = value => {
-      var numberRex = new RegExp("^[0-9]+$");
-      if (numberRex.test(value)) {
-        return true;
-      }
-      return false;
-    };
-    change = (event, stateName, type, stateNameEqualTo, maxValue) => {
-      switch (type) {
-        case "length":
-          if (this.verifyLength(event.target.value, stateNameEqualTo)) {
-            this.setState({ [stateName + "State"]: "has-success" }, this.setIsFormValid.bind(this));
-          } else {
-            this.setState({ [stateName + "State"]: "has-danger" }, this.setIsFormValid.bind(this));
-          }
-          break;
-        default:
-          break;
-      }
-  
-      this.setState({ [stateName]: event.target.value || ''});
-    };
+  // function that returns true if value is email, false otherwise
+  verifyEmail = (value) => {
+    var emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (emailRex.test(value) && value.length !== 0) {
+      return true;
+    }
+    return false;
+  };
+  // function that verifies if a string has a given length or not
+  verifyLength = (value, length) => {
+    if (value.length >= length) {
+      return true;
+    }
+    return false;
+  };
+  verifyPhone = (value) => {
+    const phoneRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
+    if (phoneRegex.test(value)) {
+      return true;
+    }
+    return false;
+  };
+  // function that verifies if value contains only numbers
+  verifyNumber = (value) => {
+    var numberRex = new RegExp("^[0-9]+$");
+    if (numberRex.test(value)) {
+      return true;
+    }
+    return false;
+  };
+  change = (event, stateName, type, stateNameEqualTo, maxValue) => {
+    switch (type) {
+      case "length":
+        if (this.verifyLength(event.target.value, stateNameEqualTo)) {
+          this.setState(
+            { [stateName + "State"]: "has-success" },
+            this.setIsFormValid.bind(this)
+          );
+        } else {
+          this.setState(
+            { [stateName + "State"]: "has-danger" },
+            this.setIsFormValid.bind(this)
+          );
+        }
+        break;
+      default:
+        break;
+    }
+
+    this.setState({ [stateName]: event.target.value || "" });
+  };
 
   render() {
     return (
       <>
-			  <div className="rna-container">
+        <div className="rna-container">
           <NotificationAlert ref="notificationAlert" />
         </div>
         <div className="content">
@@ -226,10 +264,10 @@ class AddPharmacy extends React.Component {
                 <CardBody>
                   <Form>
                     <Row>
-                    <Col className="pr-md-1" md="6">
+                      <Col className="pr-md-1" md="6">
                         <InputGroup
                           className={classnames(this.state.pharmacyNameState, {
-                            "input-group-focus": this.state.pharmacyNameFocus
+                            "input-group-focus": this.state.pharmacyNameFocus,
                           })}
                         >
                           <InputGroupAddon addonType="prepend">
@@ -241,16 +279,23 @@ class AddPharmacy extends React.Component {
                             name="firstName"
                             placeholder="Pharmacy Name"
                             type="text"
-                            onChange={e => this.change(e, "pharmacyName", "length", 1)}
-                            onFocus={e => this.setState({ pharmacyNameFocus: true })}
-                            onBlur={e => {this.setState({ pharmacyNameFocus: false }); this.change(e, 'pharmacyName', 'length', 1)}}
+                            onChange={(e) =>
+                              this.change(e, "pharmacyName", "length", 1)
+                            }
+                            onFocus={(e) =>
+                              this.setState({ pharmacyNameFocus: true })
+                            }
+                            onBlur={(e) => {
+                              this.setState({ pharmacyNameFocus: false });
+                              this.change(e, "pharmacyName", "length", 1);
+                            }}
                           />
                         </InputGroup>
                       </Col>
                       <Col className="pl-md-1" md="6">
                         <InputGroup
                           className={classnames(this.state.addressState, {
-                            "input-group-focus": this.state.addressFocus
+                            "input-group-focus": this.state.addressFocus,
                           })}
                         >
                           <InputGroupAddon addonType="prepend">
@@ -262,16 +307,24 @@ class AddPharmacy extends React.Component {
                             name="address"
                             placeholder="Street Address"
                             type="text"
-                            onChange={e => this.change(e, "address", "length", 1)}
-                            onFocus={e => this.setState({ addressFocus: true })}
-                            onBlur={e => {this.setState({ addressFocus: false }); this.change(e, 'address', 'length', 1); this.handleOnBlur(e, 'address');}}
+                            onChange={(e) =>
+                              this.change(e, "address", "length", 1)
+                            }
+                            onFocus={(e) =>
+                              this.setState({ addressFocus: true })
+                            }
+                            onBlur={(e) => {
+                              this.setState({ addressFocus: false });
+                              this.change(e, "address", "length", 1);
+                              this.handleOnBlur(e, "address");
+                            }}
                           />
                         </InputGroup>
                       </Col>
                       <Col className="pr-md-1" md="6">
                         <InputGroup
                           className={classnames(this.state.cityState, {
-                            "input-group-focus": this.state.cityFocus
+                            "input-group-focus": this.state.cityFocus,
                           })}
                         >
                           <InputGroupAddon addonType="prepend">
@@ -283,16 +336,21 @@ class AddPharmacy extends React.Component {
                             name="city"
                             placeholder="City"
                             type="text"
-                            onChange={e => this.change(e, "city", "length", 1)}
-                            onFocus={e => this.setState({ cityFocus: true })}
-                            onBlur={e => {this.setState({ cityFocus: false }); this.change(e, 'city', 'length', 1)}}
+                            onChange={(e) =>
+                              this.change(e, "city", "length", 1)
+                            }
+                            onFocus={(e) => this.setState({ cityFocus: true })}
+                            onBlur={(e) => {
+                              this.setState({ cityFocus: false });
+                              this.change(e, "city", "length", 1);
+                            }}
                           />
                         </InputGroup>
                       </Col>
                       <Col className="pl-md-1" md="6">
                         <InputGroup
                           className={classnames(this.state.stateState, {
-                            "input-group-focus": this.state.stateFocus
+                            "input-group-focus": this.state.stateFocus,
                           })}
                         >
                           <InputGroupAddon addonType="prepend">
@@ -304,16 +362,21 @@ class AddPharmacy extends React.Component {
                             name="state"
                             placeholder="State"
                             type="text"
-                            onChange={e => this.change(e, "state", "length", 1)}
-                            onFocus={e => this.setState({ stateFocus: true })}
-                            onBlur={e => {this.setState({ stateFocus: false }); this.change(e, 'state', 'length', 1)}}
+                            onChange={(e) =>
+                              this.change(e, "state", "length", 1)
+                            }
+                            onFocus={(e) => this.setState({ stateFocus: true })}
+                            onBlur={(e) => {
+                              this.setState({ stateFocus: false });
+                              this.change(e, "state", "length", 1);
+                            }}
                           />
                         </InputGroup>
                       </Col>
                       <Col className="pr-md-1" md="6">
                         <InputGroup
                           className={classnames(this.state.zipCodeState, {
-                            "input-group-focus": this.state.zipCodeFocus
+                            "input-group-focus": this.state.zipCodeFocus,
                           })}
                         >
                           <InputGroupAddon addonType="prepend">
@@ -325,9 +388,16 @@ class AddPharmacy extends React.Component {
                             name="zipcode"
                             placeholder="Zip Code"
                             type="text"
-                            onChange={e => this.change(e, "zipCode", "length", 1)}
-                            onFocus={e => this.setState({ zipCodeFocus: true })}
-                            onBlur={e => {this.setState({ zipCodeFocus: false }); this.change(e, 'zipCode', 'length', 1)}}
+                            onChange={(e) =>
+                              this.change(e, "zipCode", "length", 1)
+                            }
+                            onFocus={(e) =>
+                              this.setState({ zipCodeFocus: true })
+                            }
+                            onBlur={(e) => {
+                              this.setState({ zipCodeFocus: false });
+                              this.change(e, "zipCode", "length", 1);
+                            }}
                           />
                         </InputGroup>
                       </Col>
@@ -335,7 +405,13 @@ class AddPharmacy extends React.Component {
                   </Form>
                 </CardBody>
                 <CardFooter>
-                  <Button className="btn-fill pull-right" color="primary" type="submit" disabled={!this.state.isFormValid} onClick={e => this.createPharmacy()}>
+                  <Button
+                    className="btn-fill pull-right"
+                    color="primary"
+                    type="submit"
+                    disabled={!this.state.isFormValid}
+                    onClick={(e) => this.createPharmacy()}
+                  >
                     Create Pharmacy
                   </Button>
                 </CardFooter>

@@ -1,4 +1,3 @@
- 
 import React, { Component } from "react";
 import classNames from "classnames";
 // react component for creating dynamic tables
@@ -10,7 +9,7 @@ import {
   CardTitle,
   Row,
   Col,
-  Button
+  Button,
 } from "reactstrap";
 
 const dataTable = [
@@ -55,7 +54,7 @@ const dataTable = [
   ["Unity Butler", "Marketing Designer", "San Francisco", "47"],
   ["Vivian Harrell", "Financial Controller", "San Francisco", "62"],
   ["Yuri Berry", "Chief Marketing Officer (CMO)", "New York", "40"],
-  ["Tiger Nixon", "System Architect", "Edinburgh", "61"]
+  ["Tiger Nixon", "System Architect", "Edinburgh", "61"],
 ];
 
 class ReactTables extends Component {
@@ -75,7 +74,7 @@ class ReactTables extends Component {
               {/* use this button to add a like kind of action */}
               <Button
                 onClick={() => {
-                  let obj = this.state.data.find(o => o.id === key);
+                  let obj = this.state.data.find((o) => o.id === key);
                   alert(
                     "You've clicked LIKE button on \n{ \nName: " +
                       obj.name +
@@ -91,7 +90,7 @@ class ReactTables extends Component {
                 color="info"
                 size="sm"
                 className={classNames("btn-icon btn-link like", {
-                  "btn-neutral": key < 5
+                  "btn-neutral": key < 5,
                 })}
               >
                 <i className="tim-icons icon-heart-2" />
@@ -99,7 +98,7 @@ class ReactTables extends Component {
               {/* use this button to add a edit kind of action */}
               <Button
                 onClick={() => {
-                  let obj = this.state.data.find(o => o.id === key);
+                  let obj = this.state.data.find((o) => o.id === key);
                   alert(
                     "You've clicked EDIT button on \n{ \nName: " +
                       obj.name +
@@ -115,7 +114,7 @@ class ReactTables extends Component {
                 color="warning"
                 size="sm"
                 className={classNames("btn-icon btn-link like", {
-                  "btn-neutral": key < 5
+                  "btn-neutral": key < 5,
                 })}
               >
                 <i className="tim-icons icon-pencil" />
@@ -138,15 +137,15 @@ class ReactTables extends Component {
                 color="danger"
                 size="sm"
                 className={classNames("btn-icon btn-link like", {
-                  "btn-neutral": key < 5
+                  "btn-neutral": key < 5,
                 })}
               >
                 <i className="tim-icons icon-simple-remove" />
               </Button>{" "}
             </div>
-          )
+          ),
         };
-      })
+      }),
     };
   }
   render() {
@@ -190,26 +189,26 @@ class ReactTables extends Component {
                     columns={[
                       {
                         Header: "Name",
-                        accessor: "name"
+                        accessor: "name",
                       },
                       {
                         Header: "Position",
-                        accessor: "position"
+                        accessor: "position",
                       },
                       {
                         Header: "Office",
-                        accessor: "office"
+                        accessor: "office",
                       },
                       {
                         Header: "Age",
-                        accessor: "age"
+                        accessor: "age",
                       },
                       {
                         Header: "Actions",
                         accessor: "actions",
                         sortable: false,
-                        filterable: false
-                      }
+                        filterable: false,
+                      },
                     ]}
                     defaultPageSize={10}
                     showPaginationTop

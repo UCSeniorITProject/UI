@@ -1,4 +1,3 @@
- 
 import React from "react";
 import classnames from "classnames";
 import { NavLink } from "react-router-dom";
@@ -10,7 +9,7 @@ import {
   Navbar,
   NavItem,
   Nav,
-  Container
+  Container,
 } from "reactstrap";
 
 class AuthNavbar extends React.Component {
@@ -18,7 +17,7 @@ class AuthNavbar extends React.Component {
     super(props);
     this.state = {
       collapseOpen: false,
-      color: "navbar-transparent"
+      color: "navbar-transparent",
     };
   }
   componentDidMount() {
@@ -29,7 +28,7 @@ class AuthNavbar extends React.Component {
   // ad bg-white when opened
   toggleCollapse = () => {
     let newState = {
-      collapseOpen: !this.state.collapseOpen
+      collapseOpen: !this.state.collapseOpen,
     };
     if (!this.state.collapseOpen) {
       newState["color"] = "bg-white";
@@ -46,7 +45,7 @@ class AuthNavbar extends React.Component {
       >
         <Container fluid>
           <div className="navbar-wrapper">
-            <NavbarBrand href="#pablo" onClick={e => e.preventDefault()}>
+            <NavbarBrand href="#pablo" onClick={(e) => e.preventDefault()}>
               {this.props.brandText}
             </NavbarBrand>
           </div>
